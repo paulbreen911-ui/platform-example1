@@ -5,21 +5,6 @@ include 'header.php';
 ?>
 
  <!-- Original code -->
-<section class="section" id="user">
-    <div class="sec-hd"></div>
-    <div class="hero-lights"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div></div>
-    <div class="sec-hd"></div>
-    
-    <h2>Production Central</h2>
-    <p>This is the public landing page - anyone can see this without logging in.</p>
-    
-    <?php if (isset($_SESSION['user_id'])): ?>
-        <p>Hello <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>! Welcome back.</p>
-        <p><a href="myprofile.php">Access Your Profile</a></p>
-    <?php else: ?>
-        <p>Please <a href="login.php">login</a> to access your profile.</p>
-    <?php endif; ?>
-</section>
  <!-- -->
 
 <!-- HERO -->
