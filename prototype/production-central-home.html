@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Production Central</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:     #0E0E0C;
+  --dark:      #1A1A17;
+  --dark-2:    #242420;
+  --dark-3:    #2E2E2A;
+  --surface:   #FFFFFF;
+  --bg:        #F4F3EE;
+  --border:    rgba(255,255,255,0.07);
+  --border-lt: rgba(0,0,0,0.09);
+  --text-1:    #E8E6DC;
+  --text-2:    rgba(232,230,220,0.55);
+  --text-3:    rgba(232,230,220,0.28);
+  --lt-text-1: #1A1A17;
+  --lt-text-2: #5A5A54;
+  --lt-text-3: #9A9A92;
+  --gold:      #C9A84C;
+  --gold-dim:  rgba(201,168,76,0.12);
+  --gold-border: rgba(201,168,76,0.25);
+  --red:       #D94F2A;
+  --teal:      #2A8C7A;
+  --blue:      #2A5C8C;
+  --amber:     #C47C1A;
+  --green:     #3A7A44;
+  --purple:    #6A48B4;
+  --nav-h:     60px;
+  --sans:  'DM Sans', system-ui, sans-serif;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --display: 'Bebas Neue', Impact, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--black);
+  color: var(--text-1);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ════════════════════════════
+   NAV
+════════════════════════════ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  height: var(--nav-h);
+  background: rgba(14,14,12,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 36px; gap: 0;
+}
+.nav-logo {
+  font-family: var(--display);
+  font-size: 22px; letter-spacing: 2px;
+  color: var(--text-1); flex-shrink: 0;
+  margin-right: 36px;
+}
+.nav-logo span { color: var(--gold); }
+.nav-links {
+  display: flex; align-items: center; gap: 2px; flex: 1;
+}
+.nav-link {
+  font-size: 12px; letter-spacing: 0.5px;
+  color: var(--text-2); padding: 6px 12px;
+  border-radius: 5px; cursor: pointer;
+  border: none; background: none; font-family: var(--sans);
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.nav-link:hover { color: var(--text-1); background: rgba(255,255,255,0.05); }
+.nav-link.store { color: var(--gold); }
+.nav-link.store:hover { background: var(--gold-dim); }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.nav-signin {
+  font-family: var(--sans); font-size: 12px; padding: 7px 16px;
+  border-radius: 5px; border: 0.5px solid rgba(255,255,255,0.15);
+  background: transparent; color: var(--text-2); cursor: pointer;
+  transition: all 0.15s;
+}
+.nav-signin:hover { color: var(--text-1); border-color: rgba(255,255,255,0.3); }
+.nav-join {
+  font-family: var(--sans); font-size: 12px; padding: 7px 18px;
+  border-radius: 5px; background: var(--gold); color: var(--black);
+  border: none; cursor: pointer; font-weight: 500; letter-spacing: 0.3px;
+  transition: opacity 0.15s;
+}
+.nav-join:hover { opacity: 0.88; }
+
+/* ════════════════════════════
+   HERO
+════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 60px 72px;
+  position: relative;
+  background: var(--black);
+  overflow: hidden;
+}
+
+/* Grid texture */
+.hero-grid {
+  position: absolute; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 100%);
+}
+
+/* Stage light beams */
+.hero-lights {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden;
+}
+.light-beam {
+  position: absolute; top: -10%;
+  width: 1px; transform-origin: top center;
+  opacity: 0;
+  animation: beam-appear 2s ease-out forwards;
+}
+.light-beam::before {
+  content: '';
+  position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%);
+  border-style: solid;
+}
+@keyframes beam-appear {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.beam-1 { left: 18%; animation-delay: 0.2s; }
+.beam-1::before { border-width: 0 120px 100vh 120px; border-color: transparent transparent rgba(201,168,76,0.04) transparent; }
+.beam-2 { left: 42%; animation-delay: 0.5s; }
+.beam-2::before { border-width: 0 180px 100vh 180px; border-color: transparent transparent rgba(201,168,76,0.03) transparent; }
+.beam-3 { left: 68%; animation-delay: 0.8s; }
+.beam-3::before { border-width: 0 100px 100vh 100px; border-color: transparent transparent rgba(201,168,76,0.035) transparent; }
+.beam-4 { left: 85%; animation-delay: 1.1s; }
+.beam-4::before { border-width: 0 60px 100vh 60px; border-color: transparent transparent rgba(201,168,76,0.025) transparent; }
+
+/* Bottom glow */
+.hero-glow {
+  position: absolute; bottom: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 900px; height: 300px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 820px; }
+.hero-eyebrow {
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; animation: fade-up 0.6s ease-out 0.3s forwards;
+}
+.hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--gold); }
+
+.hero-h1 {
+  font-family: var(--display);
+  font-size: clamp(64px, 9vw, 120px);
+  line-height: 0.92; letter-spacing: 3px;
+  color: var(--text-1); margin-bottom: 28px;
+  opacity: 0; animation: fade-up 0.7s ease-out 0.5s forwards;
+}
+.hero-h1 .accent { color: var(--gold); }
+
+.hero-sub {
+  font-size: 16px; color: var(--text-2);
+  line-height: 1.75; max-width: 520px; margin-bottom: 40px;
+  opacity: 0; animation: fade-up 0.7s ease-out 0.7s forwards;
+}
+
+.hero-ctas {
+  display: flex; gap: 10px; align-items: center;
+  opacity: 0; animation: fade-up 0.7s ease-out 0.9s forwards;
+}
+.btn-gold {
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  padding: 12px 28px; border-radius: 6px;
+  background: var(--gold); color: var(--black);
+  border: none; cursor: pointer; letter-spacing: 0.3px;
+  transition: opacity 0.15s;
+}
+.btn-gold:hover { opacity: 0.88; }
+.btn-ghost {
+  font-family: var(--sans); font-size: 13px;
+  padding: 12px 24px; border-radius: 6px;
+  border: 0.5px solid rgba(255,255,255,0.15);
+  background: transparent; color: var(--text-2); cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-ghost:hover { color: var(--text-1); border-color: rgba(255,255,255,0.3); }
+
+.hero-stats {
+  position: absolute; right: 60px; bottom: 72px; z-index: 1;
+  display: flex; flex-direction: column; gap: 20px; align-items: flex-end;
+  opacity: 0; animation: fade-up 0.7s ease-out 1.1s forwards;
+}
+.hero-stat { text-align: right; }
+.hero-stat-n { font-family: var(--display); font-size: 36px; letter-spacing: 1px; line-height: 1; color: var(--text-1); }
+.hero-stat-l { font-size: 11px; color: var(--text-3); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.hero-stat-div { width: 40px; height: 0.5px; background: rgba(255,255,255,0.1); margin-left: auto; margin-top: 20px; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════
+   SECTION NAV CARDS
+════════════════════════════ */
+.section-nav {
+  background: var(--dark);
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  padding: 48px 60px;
+}
+.section-nav-label {
+  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 28px;
+}
+.section-cards {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px;
+}
+.section-card {
+  background: var(--dark-2);
+  border: 0.5px solid var(--border);
+  border-radius: 10px; padding: 20px 16px;
+  cursor: pointer; text-decoration: none;
+  transition: background 0.15s, border-color 0.2s, transform 0.15s;
+  display: flex; flex-direction: column; gap: 10px;
+  position: relative; overflow: hidden;
+}
+.section-card::before {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; border-radius: 0 0 10px 10px;
+  opacity: 0; transition: opacity 0.2s;
+}
+.section-card:hover { background: var(--dark-3); transform: translateY(-2px); }
+.section-card:hover::before { opacity: 1; }
+.section-card:hover .sc-arrow { opacity: 1; transform: translateX(0); }
+.sc-icon { font-size: 22px; line-height: 1; }
+.sc-name {
+  font-size: 13px; font-weight: 500; color: var(--text-1);
+  line-height: 1.3;
+}
+.sc-desc { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+.sc-arrow {
+  font-size: 12px; color: var(--text-3);
+  margin-top: auto; opacity: 0;
+  transform: translateX(-4px); transition: all 0.2s;
+}
+
+/* Per-section accent colors */
+.sc-profile  { --sc-color: var(--gold);   } .sc-profile::before  { background: var(--gold); }
+.sc-edu      { --sc-color: #4A9ECC; } .sc-edu::before      { background: #4A9ECC; }
+.sc-ref      { --sc-color: var(--teal);   } .sc-ref::before      { background: var(--teal); }
+.sc-tech     { --sc-color: #8888CC; } .sc-tech::before     { background: #8888CC; }
+.sc-tools    { --sc-color: var(--red);    } .sc-tools::before    { background: var(--red); }
+.sc-forum    { --sc-color: #CC884A; } .sc-forum::before    { background: #CC884A; }
+.sc-life     { --sc-color: var(--green);  } .sc-life::before     { background: var(--green); }
+.sc-store    { --sc-color: var(--gold);   } .sc-store::before    { background: var(--gold); }
+
+.section-card:hover .sc-name { color: var(--sc-color); }
+
+/* ════════════════════════════
+   SHARED SECTION STYLES
+════════════════════════════ */
+.section-wrap { padding: 80px 60px; }
+.section-wrap.alt { background: var(--dark); }
+.section-wrap.light { background: var(--bg); }
+.section-eyebrow {
+  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-eyebrow.dark { color: var(--lt-text-3); }
+.section-eyebrow::before { content: ''; width: 20px; height: 1px; background: currentColor; }
+.section-title {
+  font-family: var(--display); font-size: 48px; letter-spacing: 2px;
+  color: var(--text-1); line-height: 0.95; margin-bottom: 10px;
+}
+.section-title.dark { color: var(--lt-text-1); }
+.section-sub { font-size: 14px; color: var(--text-2); max-width: 520px; line-height: 1.7; margin-bottom: 40px; }
+.section-sub.dark { color: var(--lt-text-2); }
+.section-link {
+  font-size: 12px; color: var(--gold); cursor: pointer;
+  background: none; border: none; font-family: var(--sans);
+  display: flex; align-items: center; gap: 6px;
+  transition: gap 0.15s;
+}
+.section-link.dark { color: var(--lt-text-2); }
+.section-link:hover { gap: 10px; }
+.section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; }
+
+/* ════════════════════════════
+   FORUM SECTION
+════════════════════════════ */
+.forum-grid {
+  display: grid; grid-template-columns: 2fr 1fr; gap: 20px;
+}
+.forum-posts { display: flex; flex-direction: column; gap: 0; }
+.forum-post {
+  padding: 20px 22px; border-bottom: 0.5px solid var(--border);
+  cursor: pointer; transition: background 0.12s;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.forum-post:first-child { border-top: 0.5px solid var(--border); border-radius: 10px 10px 0 0; }
+.forum-post:last-child { border-radius: 0 0 10px 10px; border-bottom: 0.5px solid var(--border); }
+.forum-post:hover { background: rgba(255,255,255,0.03); }
+.forum-post-left { flex: 1; }
+.forum-cat {
+  font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+  font-weight: 500; margin-bottom: 7px; display: flex; align-items: center; gap: 6px;
+}
+.cat-dot { width: 6px; height: 6px; border-radius: 50%; }
+.forum-title { font-size: 14px; font-weight: 500; color: var(--text-1); margin-bottom: 5px; line-height: 1.4; }
+.forum-excerpt { font-size: 12px; color: var(--text-3); line-height: 1.55; }
+.forum-meta { font-size: 11px; color: var(--text-3); margin-top: 10px; display: flex; gap: 14px; }
+.forum-replies { font-size: 12px; color: var(--text-3); text-align: right; flex-shrink: 0; padding-top: 2px; }
+
+.forum-sidebar { display: flex; flex-direction: column; gap: 16px; }
+.forum-side-card {
+  background: var(--dark-2); border: 0.5px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.forum-side-header {
+  padding: 12px 16px; border-bottom: 0.5px solid var(--border);
+  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text-3);
+}
+.forum-side-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; border-bottom: 0.5px solid var(--border);
+  font-size: 13px; cursor: pointer; transition: background 0.1s;
+}
+.forum-side-row:last-child { border-bottom: none; }
+.forum-side-row:hover { background: rgba(255,255,255,0.03); }
+.forum-side-title { flex: 1; color: var(--text-2); line-height: 1.35; font-size: 12px; }
+.forum-side-count { font-size: 11px; color: var(--text-3); flex-shrink: 0; }
+
+.job-row {
+  padding: 14px 16px; border-bottom: 0.5px solid var(--border);
+  cursor: pointer; transition: background 0.1s;
+}
+.job-row:last-child { border-bottom: none; }
+.job-row:hover { background: rgba(255,255,255,0.03); }
+.job-title { font-size: 13px; font-weight: 500; color: var(--text-1); margin-bottom: 3px; }
+.job-meta { font-size: 11px; color: var(--text-3); display: flex; gap: 10px; }
+.job-type {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 500;
+  background: rgba(201,168,76,0.12); color: var(--gold);
+  border: 0.5px solid var(--gold-border);
+}
+
+/* ════════════════════════════
+   EDUCATION SECTION
+════════════════════════════ */
+.edu-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;
+}
+.edu-card {
+  background: var(--dark-2); border: 0.5px solid var(--border);
+  border-radius: 10px; overflow: hidden; cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.edu-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
+.edu-thumb {
+  height: 120px; display: flex; align-items: center; justify-content: center;
+  font-size: 36px; border-bottom: 0.5px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.edu-body { padding: 16px; }
+.edu-type {
+  font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 7px; font-weight: 500;
+}
+.edu-title { font-size: 14px; font-weight: 500; color: var(--text-1); margin-bottom: 6px; line-height: 1.4; }
+.edu-desc { font-size: 12px; color: var(--text-3); line-height: 1.55; }
+.edu-meta { margin-top: 12px; font-size: 11px; color: var(--text-3); display: flex; gap: 12px; }
+
+/* ════════════════════════════
+   TOOLS SECTION
+════════════════════════════ */
+.tools-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+}
+.tool-card {
+  background: var(--dark-2); border: 0.5px solid var(--border);
+  border-radius: 10px; padding: 22px 18px;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.tool-card:hover { background: var(--dark-3); border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+.tool-icon {
+  width: 40px; height: 40px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px; flex-shrink: 0;
+}
+.tool-name { font-size: 14px; font-weight: 500; color: var(--text-1); }
+.tool-desc { font-size: 12px; color: var(--text-3); line-height: 1.55; }
+.tool-tag {
+  display: inline-block; font-size: 10px; padding: 2px 8px;
+  border-radius: 4px; font-weight: 500; margin-top: 4px;
+  background: rgba(217,79,42,0.12); color: var(--red);
+  border: 0.5px solid rgba(217,79,42,0.25);
+}
+
+/* ════════════════════════════
+   REFERENCE SECTION
+════════════════════════════ */
+.ref-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+.ref-card {
+  background: var(--surface); border: 0.5px solid var(--border-lt);
+  border-radius: 10px; padding: 20px 22px; cursor: pointer;
+  transition: all 0.15s; display: flex; gap: 14px; align-items: flex-start;
+}
+.ref-card:hover { border-color: rgba(0,0,0,0.2); transform: translateY(-1px); }
+.ref-icon {
+  width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.ref-title { font-size: 14px; font-weight: 500; color: var(--lt-text-1); margin-bottom: 4px; }
+.ref-desc { font-size: 12px; color: var(--lt-text-3); line-height: 1.55; }
+.ref-count { font-size: 11px; color: var(--lt-text-3); margin-top: 8px; }
+
+/* ════════════════════════════
+   TECHNOLOGY SECTION
+════════════════════════════ */
+.tech-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+.tech-card {
+  background: var(--dark-2); border: 0.5px solid var(--border);
+  border-radius: 10px; overflow: hidden; cursor: pointer;
+  transition: all 0.15s; display: flex; gap: 0;
+}
+.tech-card:hover { border-color: rgba(255,255,255,0.13); transform: translateY(-1px); }
+.tech-accent { width: 4px; flex-shrink: 0; }
+.tech-body { padding: 18px 20px; flex: 1; }
+.tech-category { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-3); margin-bottom: 7px; font-weight: 500; }
+.tech-title { font-size: 14px; font-weight: 500; color: var(--text-1); margin-bottom: 5px; }
+.tech-desc { font-size: 12px; color: var(--text-3); line-height: 1.55; }
+.tech-meta { font-size: 11px; color: var(--text-3); margin-top: 10px; }
+
+/* ════════════════════════════
+   LIFE SECTION
+════════════════════════════ */
+.life-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+.life-card {
+  border-radius: 12px; padding: 28px 24px; cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+  position: relative; overflow: hidden;
+}
+.life-card:hover { transform: translateY(-2px); opacity: 0.92; }
+.life-card-icon { font-size: 28px; margin-bottom: 14px; }
+.life-card-title { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+.life-card-desc { font-size: 13px; line-height: 1.65; opacity: 0.75; }
+.life-card-link { font-size: 12px; margin-top: 16px; display: flex; align-items: center; gap: 5px; font-weight: 500; opacity: 0.7; }
+
+.life-mental { background: #1E2A3A; color: #A8C4E0; }
+.life-physical { background: #1E3020; color: #96C896; }
+.life-diet { background: #2A2010; color: #D4A84C; }
+
+/* ════════════════════════════
+   STORE SECTION
+════════════════════════════ */
+.store-section {
+  background: var(--dark);
+  padding: 80px 60px;
+  border-top: 0.5px solid var(--border);
+}
+.store-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.store-items { display: flex; flex-direction: column; gap: 10px; }
+.store-item {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--dark-2); border: 0.5px solid var(--border);
+  border-radius: 9px; padding: 14px 16px;
+  cursor: pointer; transition: all 0.15s;
+}
+.store-item:hover { border-color: rgba(201,168,76,0.25); }
+.store-item-icon { font-size: 20px; flex-shrink: 0; }
+.store-item-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text-1); }
+.store-item-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.store-item-badge {
+  font-size: 10px; padding: 3px 8px; border-radius: 4px;
+  background: var(--gold-dim); color: var(--gold);
+  border: 0.5px solid var(--gold-border); font-weight: 500; flex-shrink: 0;
+}
+
+/* ════════════════════════════
+   JOIN CTA BAND
+════════════════════════════ */
+.join-band {
+  background: var(--dark-2);
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  padding: 80px 60px;
+  text-align: center;
+}
+.join-eyebrow {
+  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 16px;
+}
+.join-title {
+  font-family: var(--display); font-size: 64px; letter-spacing: 2px;
+  color: var(--text-1); line-height: 0.95; margin-bottom: 16px;
+}
+.join-title span { color: var(--gold); }
+.join-sub { font-size: 15px; color: var(--text-2); margin-bottom: 36px; line-height: 1.7; }
+.join-features {
+  display: flex; gap: 40px; justify-content: center;
+  margin-bottom: 36px; flex-wrap: wrap;
+}
+.join-feature { font-size: 13px; color: var(--text-3); display: flex; align-items: center; gap: 7px; }
+.join-feature::before { content: '✓'; color: var(--gold); font-weight: 500; }
+.join-ctas { display: flex; gap: 10px; justify-content: center; }
+
+/* ════════════════════════════
+   FOOTER
+════════════════════════════ */
+.footer {
+  background: var(--black);
+  border-top: 0.5px solid var(--border);
+  padding: 40px 60px;
+}
+.footer-top {
+  display: grid; grid-template-columns: 280px 1fr; gap: 60px;
+  padding-bottom: 40px; border-bottom: 0.5px solid var(--border);
+  margin-bottom: 28px;
+}
+.footer-logo { font-family: var(--display); font-size: 24px; letter-spacing: 2px; margin-bottom: 10px; }
+.footer-logo span { color: var(--gold); }
+.footer-tagline { font-size: 13px; color: var(--text-3); line-height: 1.6; margin-bottom: 20px; }
+.footer-social { display: flex; gap: 10px; }
+.footer-social-btn {
+  width: 32px; height: 32px; border-radius: 6px;
+  border: 0.5px solid var(--border); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer; color: var(--text-3);
+  transition: all 0.15s;
+}
+.footer-social-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-1); }
+.footer-nav-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.footer-col-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-3); margin-bottom: 14px; }
+.footer-col-link { display: block; font-size: 13px; color: var(--text-3); margin-bottom: 10px; cursor: pointer; transition: color 0.15s; }
+.footer-col-link:hover { color: var(--text-1); }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text-3);
+}
+.footer-bottom-links { display: flex; gap: 20px; }
+.footer-bottom-links span { cursor: pointer; }
+.footer-bottom-links span:hover { color: var(--text-2); }
+</style>
+</head>
+<body>
+
+<!-- ════ NAV ════ -->
+<nav class="nav">
+  <div class="nav-logo">PRODUCTION<span>.</span>CENTRAL</div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="scroll('forum')">Forum</button>
+    <button class="nav-link" onclick="scroll('education')">Education</button>
+    <button class="nav-link" onclick="scroll('reference')">Reference</button>
+    <button class="nav-link" onclick="scroll('technology')">Technology</button>
+    <button class="nav-link" onclick="scroll('tools')">Tools</button>
+    <button class="nav-link" onclick="scroll('life')">Life</button>
+    <button class="nav-link store" onclick="scroll('store')">Store</button>
+  </div>
+  <div class="nav-right">
+    <button class="nav-signin">Sign in</button>
+    <button class="nav-join">Join free →</button>
+  </div>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-lights">
+    <div class="light-beam beam-1"></div>
+    <div class="light-beam beam-2"></div>
+    <div class="light-beam beam-3"></div>
+    <div class="light-beam beam-4"></div>
+  </div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">The industry platform for live event professionals</div>
+    <h1 class="hero-h1">PRODUCTION<br><span class="accent">CENTRAL</span></h1>
+    <p class="hero-sub">The hub for everyone behind the show — producers, stage managers, technical crew, and the full team that makes live events happen. Knowledge, tools, and community all in one place.</p>
+    <div class="hero-ctas">
+      <button class="btn-gold">Join free — it's open to all</button>
+      <button class="btn-ghost">Explore the platform ↓</button>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-n">8,400+</div>
+      <div class="hero-stat-l">Members</div>
+    </div>
+    <div class="hero-stat-div"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-n">340+</div>
+      <div class="hero-stat-l">Venues catalogued</div>
+    </div>
+    <div class="hero-stat-div"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-n">2,100+</div>
+      <div class="hero-stat-l">Forum posts</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ SECTION NAV CARDS ════ -->
+<div class="section-nav">
+  <div class="section-nav-label">Explore the platform</div>
+  <div class="section-cards">
+    <a class="section-card sc-profile" onclick="scroll('join')">
+      <div class="sc-icon">👤</div>
+      <div class="sc-name">My Profile</div>
+      <div class="sc-desc">Your productions, shows &amp; settings</div>
+      <div class="sc-arrow">→</div>
+    </a>
+    <a class="section-card sc-edu" onclick="scroll('education')">
+      <div class="sc-icon">🎓</div>
+      <div class="sc-name">Education</div>
+      <div class="sc-desc">Docs, videos &amp; courses</div>
+      <div class="sc-arrow">→</div>
+    </a>
+    <a class="section-card sc-ref" onclick="scroll('reference')">
+      <div class="sc-icon">🗂</div>
+      <div class="sc-name">Reference</div>
+      <div class="sc-desc">Venues, scans &amp; public shows</div>
+      <div class="sc-arrow">→</div>
+    </a>
+    <a class="section-card sc-tech" onclick="scroll('technology')">
+      <div class="sc-icon">⚙️</div>
+      <div class="sc-name">Technology</div>
+      <div class="sc-desc">Manuals, specs &amp; gear</div>
+      <div class="sc-arrow">→</div>
+    </a>
+    <a class="section-card sc-tools" onclick="scroll('tools')">
+      <div class="sc-icon">🔧</div>
+      <div class="sc-name">Tools</div>
+      <div class="sc-desc">Test patterns, calculators &amp; more</div>
+      <div class="sc-arrow">→</div>
+    </a>
+    <a class="section-card sc-forum" onclick="scroll('forum')">
+      <div class="sc-icon">💬</div>
+      <div class="sc-name">Forum</div>
+      <div class="sc-desc">Discussion, jobs &amp; gear talk</div>
+      <div class="sc-arrow">→</div>
+    </a>
+    <a class="section-card sc-life" onclick="scroll('life')">
+      <div class="sc-icon">🌿</div>
+      <div class="sc-name">Life</div>
+      <div class="sc-desc">Mental health, fitness &amp; diet</div>
+      <div class="sc-arrow">→</div>
+    </a>
+    <a class="section-card sc-store" onclick="scroll('store')">
+      <div class="sc-icon">🛒</div>
+      <div class="sc-name">Store</div>
+      <div class="sc-desc">Gaff tape, duvatine &amp; merch</div>
+      <div class="sc-arrow">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- ════ FORUM ════ -->
+<section class="section-wrap alt" id="forum">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Community</div>
+      <div class="section-title">FORUM</div>
+      <div class="section-sub">Open to everyone. No login required to read — join to post, reply, and connect.</div>
+    </div>
+    <button class="section-link">Browse all posts →</button>
+  </div>
+  <div class="forum-grid">
+    <div class="forum-posts">
+      <div class="forum-post">
+        <div class="forum-post-left">
+          <div class="forum-cat" style="color:#CC884A"><div class="cat-dot" style="background:#CC884A"></div>Vendor rec</div>
+          <div class="forum-title">Best wireless IEM systems for outdoor festival use in high-RF environments?</div>
+          <div class="forum-excerpt">Running a 3-day outdoor festival next month and RF is going to be a nightmare. Anyone have experience with the Shure Axient Digital vs Sony DWX series in dense RF environments?</div>
+          <div class="forum-meta"><span>Jordan K.</span><span>2h ago</span><span>🔥 Trending</span></div>
+        </div>
+        <div class="forum-replies">22<br><span style="font-size:10px;color:var(--text-3)">replies</span></div>
+      </div>
+      <div class="forum-post">
+        <div class="forum-post-left">
+          <div class="forum-cat" style="color:#4A9ECC"><div class="cat-dot" style="background:#4A9ECC"></div>Stage management</div>
+          <div class="forum-title">How are you handling live run of show updates when the client changes timing the day of?</div>
+          <div class="forum-excerpt">Third show this month where the client has reordered segments the morning of the event. What's your workflow for communicating last-minute changes to the full crew?</div>
+          <div class="forum-meta"><span>Mara L.</span><span>5h ago</span></div>
+        </div>
+        <div class="forum-replies">14<br><span style="font-size:10px;color:var(--text-3)">replies</span></div>
+      </div>
+      <div class="forum-post">
+        <div class="forum-post-left">
+          <div class="forum-cat" style="color:#8888CC"><div class="cat-dot" style="background:#8888CC"></div>Lighting</div>
+          <div class="forum-title">MA3 vs EOS for a touring LD — making the switch after 8 years on grandMA2</div>
+          <div class="forum-excerpt">My house account just moved to an EOS-based rig and I'm finding the workflow completely different. Anyone else made this switch recently?</div>
+          <div class="forum-meta"><span>Dana L.</span><span>1d ago</span></div>
+        </div>
+        <div class="forum-replies">38<br><span style="font-size:10px;color:var(--text-3)">replies</span></div>
+      </div>
+      <div class="forum-post">
+        <div class="forum-post-left">
+          <div class="forum-cat" style="color:var(--gold)"><div class="cat-dot" style="background:var(--gold)"></div>Contracts</div>
+          <div class="forum-title">Force majeure language that's actually held up — share your clauses</div>
+          <div class="forum-excerpt">After several near-misses I've completely rewritten my standard contract. Sharing what's worked and what hasn't in the post-2020 world.</div>
+          <div class="forum-meta"><span>Tom R.</span><span>2d ago</span></div>
+        </div>
+        <div class="forum-replies">47<br><span style="font-size:10px;color:var(--text-3)">replies</span></div>
+      </div>
+    </div>
+    <div class="forum-sidebar">
+      <div class="forum-side-card">
+        <div class="forum-side-header">Jobs board</div>
+        <div class="job-row">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div class="job-title">Production Manager — Vegas residency</div>
+            <div class="job-type">FT</div>
+          </div>
+          <div class="job-meta"><span>Las Vegas, NV</span><span>Posted 1d ago</span></div>
+        </div>
+        <div class="job-row">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div class="job-title">Touring FOH Engineer</div>
+            <div class="job-type">Tour</div>
+          </div>
+          <div class="job-meta"><span>National</span><span>Posted 2d ago</span></div>
+        </div>
+        <div class="job-row">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div class="job-title">Freelance LD — corporate events</div>
+            <div class="job-type">FL</div>
+          </div>
+          <div class="job-meta"><span>NYC / Remote</span><span>Posted 3d ago</span></div>
+        </div>
+        <div class="job-row">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div class="job-title">Stage Manager — Broadway-adjacent</div>
+            <div class="job-type">FT</div>
+          </div>
+          <div class="job-meta"><span>Chicago, IL</span><span>Posted 4d ago</span></div>
+        </div>
+      </div>
+      <div class="forum-side-card">
+        <div class="forum-side-header">Trending topics</div>
+        <div class="forum-side-row"><div class="forum-side-title">Dante vs AVB for large-scale installs</div><div class="forum-side-count">62</div></div>
+        <div class="forum-side-row"><div class="forum-side-title">LED wall pixel pitch — what to spec when</div><div class="forum-side-count">44</div></div>
+        <div class="forum-side-row"><div class="forum-side-title">Touring rate increases — what are you charging?</div><div class="forum-side-count">38</div></div>
+        <div class="forum-side-row"><div class="forum-side-title">Best hybrid event platforms 2025</div><div class="forum-side-count">31</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ EDUCATION ════ -->
+<section class="section-wrap" id="education" style="background:var(--black)">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Learn</div>
+      <div class="section-title">EDUCATION</div>
+      <div class="section-sub">Documents, videos, and courses for every level of the industry — from first call to career-defining skills.</div>
+    </div>
+    <button class="section-link">All content →</button>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-thumb" style="background:#0E1A24">📹</div>
+      <div class="edu-body">
+        <div class="edu-type">Video · 42 min</div>
+        <div class="edu-title">RF coordination fundamentals for live events</div>
+        <div class="edu-desc">Frequency planning, intermodulation, and practical coordination workflows for touring and corporate shows.</div>
+        <div class="edu-meta"><span>🎓 Intermediate</span><span>👁 3,200 views</span></div>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-thumb" style="background:#0E2010">📄</div>
+      <div class="edu-body">
+        <div class="edu-type">Document · PDF</div>
+        <div class="edu-title">Stage manager's field guide — show day protocol</div>
+        <div class="edu-desc">A comprehensive reference for SM workflow from load-in through strike, including crew communication templates.</div>
+        <div class="edu-meta"><span>🎓 All levels</span><span>⬇ 1,840 downloads</span></div>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-thumb" style="background:#1A1020">🎓</div>
+      <div class="edu-body">
+        <div class="edu-type">Course · 6 modules</div>
+        <div class="edu-title">Producing corporate events from contract to curtain</div>
+        <div class="edu-desc">End-to-end production planning, vendor management, budget building, and day-of execution for corporate events.</div>
+        <div class="edu-meta"><span>🎓 Producer track</span><span>👥 820 enrolled</span></div>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-thumb" style="background:#1A1000">📊</div>
+      <div class="edu-body">
+        <div class="edu-type">Document · Reference</div>
+        <div class="edu-title">Audio system gain structure — the definitive guide</div>
+        <div class="edu-desc">Understanding headroom, noise floor, and proper gain staging from source to PA across all system types.</div>
+        <div class="edu-meta"><span>🎓 Technical</span><span>👁 5,100 views</span></div>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-thumb" style="background:#0A1A18">📹</div>
+      <div class="edu-body">
+        <div class="edu-type">Video · 28 min</div>
+        <div class="edu-title">Reading and building a lighting plot from scratch</div>
+        <div class="edu-desc">From venue survey to vectorworks to paperwork — building a clean plot the whole crew can work from.</div>
+        <div class="edu-meta"><span>🎓 Intermediate</span><span>👁 2,600 views</span></div>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-thumb" style="background:#0E0E1A">📄</div>
+      <div class="edu-body">
+        <div class="edu-type">Document · Template</div>
+        <div class="edu-title">Production budget template — corporate &amp; live events</div>
+        <div class="edu-desc">Editable budget framework with department breakdowns, contingency tracking, and per-head cost formulas.</div>
+        <div class="edu-meta"><span>🎓 All levels</span><span>⬇ 3,400 downloads</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ REFERENCE ════ -->
+<section class="section-wrap light" id="reference">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow dark">Database</div>
+      <div class="section-title dark">REFERENCE</div>
+      <div class="section-sub dark">Industry reference data — venues, 3D scans, hotels, public show information, and more. The largest open database for live event professionals.</div>
+    </div>
+    <button class="section-link dark">Browse all →</button>
+  </div>
+  <div class="ref-grid">
+    <div class="ref-card">
+      <div class="ref-icon" style="background:#EAF1F8">🏟</div>
+      <div>
+        <div class="ref-title">Venue database</div>
+        <div class="ref-desc">Floor plans, capacities, rigging points, power specs, and contact info for venues worldwide.</div>
+        <div class="ref-count">340 venues catalogued</div>
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-icon" style="background:#EAF4F0">📐</div>
+      <div>
+        <div class="ref-title">3D venue scans</div>
+        <div class="ref-desc">High-resolution 3D scans and Matterport walkthroughs for pre-production planning.</div>
+        <div class="ref-count">82 venues scanned</div>
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-icon" style="background:#F8F4EA">🏨</div>
+      <div>
+        <div class="ref-title">Hotel directory</div>
+        <div class="ref-desc">Crew-recommended hotels near major venues — rates, amenities, and proximity notes.</div>
+        <div class="ref-count">600+ hotels listed</div>
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-icon" style="background:#F8EAF0">🎭</div>
+      <div>
+        <div class="ref-title">Public show archive</div>
+        <div class="ref-desc">Technical specs, set designs, and production notes from notable public productions.</div>
+        <div class="ref-count">180 shows archived</div>
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-icon" style="background:#F0EAF8">🗺</div>
+      <div>
+        <div class="ref-title">Venue maps</div>
+        <div class="ref-desc">Loading dock access, power locations, freight elevator specs, and parking layouts.</div>
+        <div class="ref-count">210 mapped venues</div>
+      </div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-icon" style="background:#EAF4EE">📋</div>
+      <div>
+        <div class="ref-title">Union &amp; regulations</div>
+        <div class="ref-desc">IATSE, Teamsters, local union contacts, and regulatory requirements by city and venue.</div>
+        <div class="ref-count">48 markets covered</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ TECHNOLOGY ════ -->
+<section class="section-wrap alt" id="technology">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Gear & specs</div>
+      <div class="section-title">TECHNOLOGY</div>
+      <div class="section-sub">Manuals, spec sheets, comparison guides, and technical documentation for the gear that powers live events.</div>
+    </div>
+    <button class="section-link">All gear →</button>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-accent" style="background:#4A9ECC"></div>
+      <div class="tech-body">
+        <div class="tech-category">Audio</div>
+        <div class="tech-title">Shure Axient Digital AD4Q — full manual</div>
+        <div class="tech-desc">Receiver setup, RF coordination, Showlink integration, and firmware notes for the AD4Q quad-channel receiver.</div>
+        <div class="tech-meta">📄 PDF · 148 pages · Updated Jan 2025</div>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-accent" style="background:#FFD600"></div>
+      <div class="tech-body">
+        <div class="tech-category">Lighting</div>
+        <div class="tech-title">grandMA3 full-size — operation guide</div>
+        <div class="tech-desc">Patch, programmer, cue engine, and networking documentation for the MA3 full-size console.</div>
+        <div class="tech-meta">📄 PDF · 620 pages · Updated Mar 2025</div>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-accent" style="background:#CE93D8"></div>
+      <div class="tech-body">
+        <div class="tech-category">Video</div>
+        <div class="tech-title">ROE Visual CB5 LED panel — spec sheet</div>
+        <div class="tech-desc">Pixel pitch, power consumption, rigging specs, and data connection diagrams for the CB5 panel.</div>
+        <div class="tech-meta">📄 PDF · 24 pages · Spec v2.1</div>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-accent" style="background:#81C784"></div>
+      <div class="tech-body">
+        <div class="tech-category">Networking</div>
+        <div class="tech-title">Dante network design for live events — guide</div>
+        <div class="tech-desc">Practical Dante network architecture for touring and installed sound systems including switch configuration.</div>
+        <div class="tech-meta">📄 PDF · 56 pages · Community contributed</div>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-accent" style="background:#FF8A65"></div>
+      <div class="tech-body">
+        <div class="tech-category">Rigging</div>
+        <div class="tech-title">CM Lodestar D8+ — load rating &amp; safety guide</div>
+        <div class="tech-desc">Rated capacities, inspection intervals, and ETCP-compliant rigging safety protocols for the D8+ hoist.</div>
+        <div class="tech-meta">📄 PDF · 32 pages · ETCP certified content</div>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-accent" style="background:#4DD0E1"></div>
+      <div class="tech-body">
+        <div class="tech-category">Control</div>
+        <div class="tech-title">Qlab 5 — full feature comparison by license</div>
+        <div class="tech-desc">Audio, video, MIDI, OSC, and screen capabilities by license tier, with practical use-case notes.</div>
+        <div class="tech-meta">📊 Guide · Community maintained</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ TOOLS ════ -->
+<section class="section-wrap" id="tools" style="background:var(--black)">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Utilities</div>
+      <div class="section-title">TOOLS</div>
+      <div class="section-sub">Interactive technical utilities for working professionals — use them on site, in prep, or in the truck.</div>
+    </div>
+    <button class="section-link">All tools →</button>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-icon" style="background:#1A0E0E">📺</div>
+      <div class="tool-name">Test pattern generator</div>
+      <div class="tool-desc">Full-screen test patterns for display calibration — color bars, grayscale, H/V lines, pixel check.</div>
+      <div><span class="tool-tag">Launch tool</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:#0E1A14">📐</div>
+      <div class="tool-name">Throw distance calculator</div>
+      <div class="tool-desc">Lens and throw ratio calculator for projectors — input throw distance, get screen size and vice versa.</div>
+      <div><span class="tool-tag">Launch tool</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:#0E0E1A">🔊</div>
+      <div class="tool-name">SPL &amp; coverage estimator</div>
+      <div class="tool-desc">Estimate PA coverage and SPL levels by room size, speaker placement, and target dB.</div>
+      <div><span class="tool-tag">Launch tool</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:#1A1400">⚡</div>
+      <div class="tool-name">Power &amp; distro calculator</div>
+      <div class="tool-desc">Load calculations, circuit planning, and distro requirements based on gear lists and venue power specs.</div>
+      <div><span class="tool-tag">Launch tool</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:#001A1A">📡</div>
+      <div class="tool-name">RF frequency planner</div>
+      <div class="tool-desc">Intermodulation-free frequency coordination for wireless mic systems. Input your gear, get clean freqs.</div>
+      <div><span class="tool-tag">Launch tool</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:#0E1A0E">🏟</div>
+      <div class="tool-name">Capacity &amp; layout estimator</div>
+      <div class="tool-desc">Room capacity for seated, cocktail, theater, and classroom configurations with aisle spacing.</div>
+      <div><span class="tool-tag">Launch tool</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:#1A0A0E">🍽</div>
+      <div class="tool-name">F&amp;B quantity planner</div>
+      <div class="tool-desc">Food and beverage estimates based on guest count, event type, duration, and service style.</div>
+      <div><span class="tool-tag">Launch tool</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon" style="background:#0A0A1A">🌐</div>
+      <div class="tool-name">Fiber &amp; cable run planner</div>
+      <div class="tool-desc">Signal path planning and cable run length calculator with signal degradation warnings.</div>
+      <div><span class="tool-tag">Launch tool</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ LIFE ════ -->
+<section class="section-wrap alt" id="life">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">Wellbeing</div>
+      <div class="section-title">LIFE</div>
+      <div class="section-sub">The industry is demanding. This is a space dedicated to the people in it — mental health, physical wellness, diet, and the sustainable career.</div>
+    </div>
+    <button class="section-link">Explore →</button>
+  </div>
+  <div class="life-grid">
+    <div class="life-card life-mental">
+      <div class="life-card-icon">🧠</div>
+      <div class="life-card-title">Mental health</div>
+      <div class="life-card-desc">Resources, conversations, and support for the psychological demands of life in live events — burnout, isolation, anxiety, and building resilience on the road.</div>
+      <div class="life-card-link">Read more →</div>
+    </div>
+    <div class="life-card life-physical">
+      <div class="life-card-icon">💪</div>
+      <div class="life-card-title">Physical wellness</div>
+      <div class="life-card-desc">Staying physically healthy when your schedule is unpredictable — training programs, injury prevention, and staying active on tour or in a venue.</div>
+      <div class="life-card-link">Read more →</div>
+    </div>
+    <div class="life-card life-diet">
+      <div class="life-card-icon">🥗</div>
+      <div class="life-card-title">Nutrition &amp; diet</div>
+      <div class="life-card-desc">Eating well on catering, in hotels, and through 14-hour days. Practical nutrition for people who don't control their own kitchen or schedule.</div>
+      <div class="life-card-link">Read more →</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ STORE ════ -->
+<section class="store-section" id="store">
+  <div class="store-inner">
+    <div>
+      <div class="section-eyebrow">Marketplace</div>
+      <div class="section-title">STORE</div>
+      <div class="section-sub">Consumables, tools, and merch for the industry. Things you actually need, from people who actually work in live events.</div>
+      <button class="btn-gold" style="margin-top:8px">Browse the store →</button>
+      <p style="font-size:12px;color:var(--text-3);margin-top:12px">Store launching soon — join to be notified</p>
+    </div>
+    <div class="store-items">
+      <div class="store-item">
+        <div class="store-item-icon">🖤</div>
+        <div>
+          <div class="store-item-name">Pro-grade gaff tape — 2" black</div>
+          <div class="store-item-meta">4-roll pack · US &amp; CA shipping</div>
+        </div>
+        <div class="store-item-badge">Coming soon</div>
+      </div>
+      <div class="store-item">
+        <div class="store-item-icon">🟫</div>
+        <div>
+          <div class="store-item-name">Duvatine — black, by the yard</div>
+          <div class="store-item-meta">60" wide · Cut to order</div>
+        </div>
+        <div class="store-item-badge">Coming soon</div>
+      </div>
+      <div class="store-item">
+        <div class="store-item-icon">👕</div>
+        <div>
+          <div class="store-item-name">Production Central — crew tee</div>
+          <div class="store-item-meta">Black / S–3XL · Heavyweight cotton</div>
+        </div>
+        <div class="store-item-badge">Coming soon</div>
+      </div>
+      <div class="store-item">
+        <div class="store-item-icon">🔦</div>
+        <div>
+          <div class="store-item-name">Streamlight Stinger — crew edition</div>
+          <div class="store-item-meta">PC-curated flashlight bundle</div>
+        </div>
+        <div class="store-item-badge">Coming soon</div>
+      </div>
+      <div class="store-item">
+        <div class="store-item-icon">📓</div>
+        <div>
+          <div class="store-item-name">Show notebook — waterproof pages</div>
+          <div class="store-item-meta">A5 · 200 pages · Belt-clip cover</div>
+        </div>
+        <div class="store-item-badge">Coming soon</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ JOIN CTA ════ -->
+<section class="join-band" id="join">
+  <div class="join-eyebrow">Free to join</div>
+  <div class="join-title">YOUR PROFILE.<br><span>YOUR PRODUCTIONS.</span></div>
+  <div class="join-sub">Create a free account to manage your productions, build run of shows,<br>collaborate with your crew, and unlock the full platform.</div>
+  <div class="join-features">
+    <div class="join-feature">Production workspace</div>
+    <div class="join-feature">Live run of show</div>
+    <div class="join-feature">Team collaboration</div>
+    <div class="join-feature">Call sheets &amp; calendars</div>
+    <div class="join-feature">Community posting</div>
+    <div class="join-feature">No credit card required</div>
+  </div>
+  <div class="join-ctas">
+    <button class="btn-gold" style="font-size:14px;padding:13px 32px">Create free account →</button>
+    <button class="btn-ghost" style="font-size:14px;padding:13px 24px">Sign in</button>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer class="footer">
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">PRODUCTION<span>.</span>CENTRAL</div>
+      <div class="footer-tagline">The industry platform for live event professionals — producers, stage managers, technical crew, and the full team behind the show.</div>
+      <div class="footer-social">
+        <button class="footer-social-btn">𝕏</button>
+        <button class="footer-social-btn">in</button>
+        <button class="footer-social-btn">▶</button>
+        <button class="footer-social-btn">📸</button>
+      </div>
+    </div>
+    <div class="footer-nav-cols">
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <span class="footer-col-link">Forum</span>
+        <span class="footer-col-link">Education</span>
+        <span class="footer-col-link">Reference</span>
+        <span class="footer-col-link">Technology</span>
+        <span class="footer-col-link">Tools</span>
+        <span class="footer-col-link">Life</span>
+        <span class="footer-col-link">Store</span>
+      </div>
+      <div>
+        <div class="footer-col-title">Community</div>
+        <span class="footer-col-link">Forum</span>
+        <span class="footer-col-link">Jobs board</span>
+        <span class="footer-col-link">Gear talk</span>
+        <span class="footer-col-link">Vendor recs</span>
+        <span class="footer-col-link">Stage management</span>
+      </div>
+      <div>
+        <div class="footer-col-title">Account</div>
+        <span class="footer-col-link">Create account</span>
+        <span class="footer-col-link">Sign in</span>
+        <span class="footer-col-link">My productions</span>
+        <span class="footer-col-link">Profile settings</span>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <span class="footer-col-link">About</span>
+        <span class="footer-col-link">Contact</span>
+        <span class="footer-col-link">Privacy policy</span>
+        <span class="footer-col-link">Terms of service</span>
+        <span class="footer-col-link">Advertise</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 Production Central. All rights reserved.</div>
+    <div class="footer-bottom-links">
+      <span>Privacy</span><span>Terms</span><span>Cookie policy</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+function scroll(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stagecraft — Production Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #F5F4F0;
+  --surface:    #FFFFFF;
+  --surface-2:  #F0EFE9;
+  --border:     rgba(0,0,0,0.08);
+  --border-md:  rgba(0,0,0,0.15);
+  --text-1:     #1C1C1A;
+  --text-2:     #5C5C58;
+  --text-3:     #9C9C96;
+  --accent:     #1C1C1A;
+  --live:       #E8350A;
+  --live-bg:    rgba(232,53,10,0.08);
+  --hold:       #D4A017;
+  --hold-bg:    rgba(212,160,23,0.1);
+  --green:      #2E7D32;
+  --green-bg:   #EAF3DE;
+  --blue:       #185FA5;
+  --blue-bg:    #E6F1FB;
+  --purple:     #534AB7;
+  --purple-bg:  #EEEDFE;
+  --amber:      #854F0B;
+  --amber-bg:   #FAEEDA;
+  --sans:  'DM Sans', system-ui, sans-serif;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --mono:  'JetBrains Mono', 'Courier New', monospace;
+  --nav-h: 56px;
+  --sidebar-w: 230px;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text-1);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ══════════════════════════
+   TOP NAV
+══════════════════════════ */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--nav-h);
+  background: var(--surface);
+  border-bottom: 0.5px solid var(--border-md);
+  display: flex; align-items: center; padding: 0 20px; gap: 14px;
+}
+.nav-logo { font-family: var(--serif); font-size: 20px; letter-spacing: -0.5px; flex-shrink: 0; }
+.nav-logo em { font-style: italic; color: var(--text-3); }
+.nav-prod-name {
+  font-size: 13px; font-weight: 500; color: var(--text-2);
+  padding: 5px 12px; background: var(--bg);
+  border: 0.5px solid var(--border-md); border-radius: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-prod-name span { color: var(--text-3); font-weight: 400; }
+.nav-live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--live-bg); border: 0.5px solid rgba(232,53,10,0.2);
+  border-radius: 6px; padding: 5px 11px;
+  font-size: 12px; font-weight: 500; color: var(--live);
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--live);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.nav-view-btn {
+  font-family: var(--sans); font-size: 12px; padding: 6px 13px;
+  border-radius: 6px; border: 0.5px solid var(--border-md);
+  background: transparent; color: var(--text-2); cursor: pointer;
+  transition: all 0.15s;
+}
+.nav-view-btn:hover { background: var(--bg); color: var(--text-1); }
+.nav-view-btn.active { background: var(--accent); color: #f0f0f0; border-color: var(--accent); }
+.nav-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--purple-bg); color: var(--purple);
+  font-size: 12px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  border: 0.5px solid var(--border-md); cursor: pointer;
+}
+
+/* ══════════════════════════
+   LAYOUT
+══════════════════════════ */
+.app-body {
+  display: flex;
+  padding-top: var(--nav-h);
+  min-height: 100vh;
+}
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: var(--surface);
+  border-right: 0.5px solid var(--border-md);
+  position: fixed; top: var(--nav-h); bottom: 0;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  padding: 14px 0;
+}
+.sidebar-section { margin-bottom: 20px; }
+.sidebar-label {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-3); padding: 0 16px; margin-bottom: 4px;
+}
+.sidebar-link {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 16px; font-size: 13px; color: var(--text-2);
+  cursor: pointer; border: none; background: none;
+  width: 100%; text-align: left; font-family: var(--sans);
+  transition: background 0.1s, color 0.1s;
+  border-right: 2px solid transparent;
+}
+.sidebar-link:hover { background: var(--bg); color: var(--text-1); }
+.sidebar-link.active { background: var(--bg); color: var(--text-1); font-weight: 500; border-right-color: var(--text-1); }
+.sidebar-link .icon { width: 16px; text-align: center; font-size: 14px; }
+.sidebar-badge {
+  margin-left: auto; font-size: 10px; padding: 1px 6px;
+  border-radius: 20px; background: var(--bg);
+  border: 0.5px solid var(--border-md); color: var(--text-3);
+}
+.sidebar-phase {
+  margin: 6px 12px; padding: 10px 12px;
+  border-radius: 8px; border: 0.5px solid var(--border);
+  background: var(--bg); font-size: 12px;
+}
+.sidebar-phase-label { font-size: 10px; color: var(--text-3); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 1px; }
+.sidebar-phase-name { font-weight: 500; font-size: 13px; }
+.sidebar-bottom {
+  margin-top: auto; padding: 12px 14px;
+  border-top: 0.5px solid var(--border);
+  display: flex; align-items: center; gap: 9px;
+}
+.sidebar-user-av {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--purple-bg); color: var(--purple);
+  font-size: 10px; font-weight: 500; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.sidebar-user-name { font-size: 12px; font-weight: 500; }
+.sidebar-user-role { font-size: 10px; color: var(--text-3); }
+
+.main { margin-left: var(--sidebar-w); flex: 1; }
+
+/* ══════════════════════════
+   TAB SYSTEM (main content)
+══════════════════════════ */
+.main-tabs {
+  display: flex; gap: 0;
+  border-bottom: 0.5px solid var(--border-md);
+  background: var(--surface);
+  padding: 0 28px;
+  position: sticky; top: var(--nav-h); z-index: 100;
+}
+.main-tab {
+  font-size: 13px; padding: 14px 16px;
+  border: none; border-bottom: 2px solid transparent;
+  background: none; cursor: pointer; font-family: var(--sans);
+  color: var(--text-3); transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.main-tab:hover { color: var(--text-2); }
+.main-tab.active { color: var(--text-1); font-weight: 500; border-bottom-color: var(--text-1); }
+.tab-content { display: none; padding: 28px; }
+.tab-content.active { display: block; }
+
+/* ══════════════════════════
+   OVERVIEW TAB
+══════════════════════════ */
+.prod-header {
+  background: #1C1C1A; border-radius: 12px;
+  padding: 28px 32px; margin-bottom: 22px;
+  display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start;
+}
+.prod-header-eyebrow {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); margin-bottom: 8px;
+}
+.prod-header-title {
+  font-family: var(--serif); font-size: 30px; font-weight: 400;
+  color: #E8E6DE; letter-spacing: -0.5px; margin-bottom: 14px;
+}
+.prod-header-title em { font-style: italic; color: rgba(255,255,255,0.4); }
+.prod-meta-row { display: flex; gap: 28px; flex-wrap: wrap; }
+.prod-meta-item { font-size: 12px; color: rgba(255,255,255,0.45); }
+.prod-meta-item strong { color: rgba(255,255,255,0.8); }
+.prod-stats { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.prod-stat { text-align: right; }
+.prod-stat-n { font-size: 22px; font-weight: 500; color: #E8E6DE; }
+.prod-stat-l { font-size: 10px; color: rgba(255,255,255,0.35); }
+
+/* PHASE TIMELINE */
+.phase-timeline {
+  background: var(--surface); border: 0.5px solid var(--border-md);
+  border-radius: 12px; overflow: hidden; margin-bottom: 22px;
+}
+.phase-timeline-header {
+  padding: 14px 20px; border-bottom: 0.5px solid var(--border);
+  font-size: 14px; font-weight: 500; display: flex; align-items: center; justify-content: space-between;
+}
+.phase-row {
+  display: grid; grid-template-columns: 130px 1fr 100px 80px;
+  gap: 16px; padding: 13px 20px;
+  border-bottom: 0.5px solid var(--border);
+  align-items: center; font-size: 13px;
+}
+.phase-row:last-child { border-bottom: none; }
+.phase-row-header {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-3); background: var(--bg);
+  font-weight: 500;
+}
+.phase-name { font-weight: 500; }
+.phase-date { color: var(--text-2); font-size: 12px; }
+.phase-bar-wrap { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.phase-bar { height: 100%; border-radius: 3px; }
+.phase-pill {
+  font-size: 10px; padding: 3px 9px; border-radius: 20px;
+  font-weight: 500; text-align: center;
+}
+.pill-done     { background: var(--green-bg); color: var(--green); }
+.pill-active   { background: var(--live-bg);  color: var(--live); border: 0.5px solid rgba(232,53,10,0.2); }
+.pill-upcoming { background: var(--bg); color: var(--text-3); border: 0.5px solid var(--border-md); }
+
+/* OVERVIEW GRID */
+.overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.ov-card {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.ov-card-header {
+  padding: 13px 18px; border-bottom: 0.5px solid var(--border);
+  font-size: 13px; font-weight: 500;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ov-card-action { font-size: 11px; color: var(--text-3); cursor: pointer; background: none; border: none; font-family: var(--sans); }
+.ov-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 18px; border-bottom: 0.5px solid var(--border);
+  font-size: 13px;
+}
+.ov-row:last-child { border-bottom: none; }
+.role-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ov-name { flex: 1; font-weight: 500; }
+.ov-meta { font-size: 11px; color: var(--text-3); }
+.ov-dept {
+  font-size: 10px; padding: 2px 8px; border-radius: 20px;
+  background: var(--bg); color: var(--text-3); border: 0.5px solid var(--border-md);
+}
+.vis-badge {
+  font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500;
+}
+.vis-all  { background: var(--green-bg);  color: var(--green); }
+.vis-dept { background: var(--blue-bg);   color: var(--blue); }
+.vis-pm   { background: var(--amber-bg);  color: var(--amber); }
+
+/* ══════════════════════════
+   CALENDAR TAB
+══════════════════════════ */
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+}
+.cal-month { font-family: var(--serif); font-size: 22px; font-weight: 400; }
+.cal-nav { display: flex; gap: 6px; }
+.cal-nav-btn {
+  width: 30px; height: 30px; border-radius: 6px;
+  border: 0.5px solid var(--border-md); background: var(--surface);
+  cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
+}
+.cal-grid {
+  background: var(--surface); border: 0.5px solid var(--border-md);
+  border-radius: 12px; overflow: hidden;
+}
+.cal-dow-row {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  border-bottom: 0.5px solid var(--border);
+}
+.cal-dow {
+  padding: 10px; text-align: center;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-3); font-weight: 500;
+}
+.cal-week { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cal-day {
+  min-height: 90px; padding: 8px;
+  border-right: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  vertical-align: top; cursor: pointer;
+  transition: background 0.1s;
+}
+.cal-day:nth-child(7n) { border-right: none; }
+.cal-day:hover { background: var(--bg); }
+.cal-day.other-month { opacity: 0.35; }
+.cal-day.today { background: rgba(28,28,26,0.03); }
+.cal-day-num {
+  font-size: 12px; font-weight: 500; margin-bottom: 5px;
+  color: var(--text-2);
+}
+.cal-day.today .cal-day-num {
+  background: var(--text-1); color: #fff;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; margin-bottom: 5px;
+}
+.cal-event {
+  font-size: 10px; padding: 2px 5px; border-radius: 3px;
+  margin-bottom: 2px; font-weight: 500; line-height: 1.4;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cal-ev-load  { background: #FFF3CD; color: #7A5200; }
+.cal-ev-tech  { background: #D1ECF1; color: #0C5460; }
+.cal-ev-reh   { background: var(--purple-bg); color: var(--purple); }
+.cal-ev-show  { background: #1C1C1A; color: #E8E6DE; }
+.cal-ev-strike{ background: #F8D7DA; color: #721C24; }
+.cal-ev-call  { background: var(--green-bg); color: var(--green); }
+.cal-ev-install{ background: var(--amber-bg); color: var(--amber); }
+
+.cal-legend {
+  display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px;
+}
+.cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-2); }
+.cal-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* ══════════════════════════
+   CALL SHEET TAB
+══════════════════════════ */
+.callsheet-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 22px; gap: 16px;
+}
+.callsheet-title-block {}
+.callsheet-day { font-family: var(--serif); font-size: 24px; font-weight: 400; margin-bottom: 4px; }
+.callsheet-prod { font-size: 13px; color: var(--text-2); }
+.callsheet-actions { display: flex; gap: 8px; }
+.btn-sm {
+  font-family: var(--sans); font-size: 12px; padding: 7px 14px;
+  border-radius: 6px; border: 0.5px solid var(--border-md);
+  background: var(--surface); cursor: pointer; color: var(--text-2);
+}
+.btn-sm:hover { background: var(--bg); }
+.btn-sm-dark {
+  font-family: var(--sans); font-size: 12px; padding: 7px 14px;
+  border-radius: 6px; border: none;
+  background: var(--accent); cursor: pointer; color: #f0f0f0; font-weight: 500;
+}
+
+.callsheet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+.cs-card {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.cs-card-header {
+  padding: 11px 16px; border-bottom: 0.5px solid var(--border);
+  font-size: 12px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text-3); background: var(--bg);
+}
+.cs-time-row {
+  display: flex; gap: 12px; padding: 10px 16px;
+  border-bottom: 0.5px solid var(--border); font-size: 13px;
+  align-items: flex-start;
+}
+.cs-time-row:last-child { border-bottom: none; }
+.cs-time { font-family: var(--mono); font-size: 12px; color: var(--text-2); flex-shrink: 0; width: 48px; padding-top: 1px; }
+.cs-call-info { flex: 1; }
+.cs-call-name { font-weight: 500; margin-bottom: 2px; }
+.cs-call-dept { font-size: 11px; color: var(--text-3); }
+.cs-dept-tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 20px; flex-shrink: 0;
+  font-weight: 500;
+}
+
+/* ══════════════════════════
+   RUN OF SHOW TAB (SM VIEW)
+══════════════════════════ */
+.ros-layout { display: grid; grid-template-columns: 1fr 300px; gap: 18px; }
+
+/* SM CALLING PANEL */
+.sm-panel {
+  background: #111110; border-radius: 12px; overflow: hidden;
+}
+.sm-panel-header {
+  padding: 16px 20px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sm-panel-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); }
+.sm-controls { display: flex; gap: 8px; align-items: center; }
+.sm-btn {
+  font-family: var(--sans); font-size: 12px; padding: 7px 14px;
+  border-radius: 6px; cursor: pointer; font-weight: 500;
+  transition: all 0.15s;
+}
+.sm-btn-hold {
+  background: rgba(212,160,23,0.15); color: var(--hold);
+  border: 0.5px solid rgba(212,160,23,0.3);
+}
+.sm-btn-hold:hover { background: rgba(212,160,23,0.25); }
+.sm-btn-go {
+  background: var(--live); color: #fff; border: none;
+  padding: 8px 22px; font-size: 13px;
+}
+.sm-btn-go:hover { background: #c42d08; }
+.sm-btn-go:active { transform: scale(0.97); }
+
+/* CUE LIST */
+.cue-list { padding: 0; }
+.cue-row {
+  display: grid; grid-template-columns: 52px 1fr auto;
+  gap: 0; border-bottom: 0.5px solid rgba(255,255,255,0.05);
+  cursor: pointer; transition: background 0.1s;
+  position: relative;
+}
+.cue-row:hover { background: rgba(255,255,255,0.03); }
+.cue-row.past { opacity: 0.35; }
+.cue-row.current {
+  background: rgba(232,53,10,0.12);
+  border-left: 3px solid var(--live);
+}
+.cue-row.next-up { background: rgba(255,255,255,0.04); }
+.cue-num {
+  font-family: var(--mono); font-size: 11px;
+  color: rgba(255,255,255,0.25); padding: 14px 0 14px 20px;
+  display: flex; align-items: flex-start; padding-top: 16px;
+}
+.cue-row.current .cue-num { color: var(--live); }
+.cue-body { padding: 14px 12px; }
+.cue-title { font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 500; margin-bottom: 4px; }
+.cue-row.current .cue-title { color: #fff; }
+.cue-row.past .cue-title { color: rgba(255,255,255,0.4); }
+.cue-detail { font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.5; }
+.cue-row.current .cue-detail { color: rgba(255,255,255,0.55); }
+.cue-meta { padding: 14px 20px 14px 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.cue-type-badge {
+  font-size: 10px; padding: 2px 7px; border-radius: 3px;
+  font-family: var(--mono); font-weight: 500;
+}
+.cue-badge-lx   { background: rgba(255,214,0,0.15);  color: #FFD600; }
+.cue-badge-snd  { background: rgba(0,188,212,0.15);  color: #00BCD4; }
+.cue-badge-vid  { background: rgba(156,39,176,0.15); color: #CE93D8; }
+.cue-badge-fly  { background: rgba(76,175,80,0.15);  color: #81C784; }
+.cue-badge-seg  { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+.cue-badge-spk  { background: rgba(255,87,34,0.15);  color: #FF8A65; }
+.cue-duration { font-size: 10px; color: rgba(255,255,255,0.2); font-family: var(--mono); }
+
+/* CURRENT CUE CALLOUT */
+.current-cue-callout {
+  background: rgba(232,53,10,0.12);
+  border: 0.5px solid rgba(232,53,10,0.25);
+  border-radius: 8px; padding: 10px 14px;
+  margin: 0 20px 0;
+  display: flex; align-items: center; gap: 10px;
+}
+.callout-label { font-size: 10px; color: var(--live); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; flex-shrink: 0; }
+.callout-cue { font-size: 13px; color: #fff; font-weight: 500; flex: 1; }
+.callout-num { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.3); }
+.sm-separator {
+  height: 0.5px; background: rgba(255,255,255,0.08);
+  margin: 12px 20px;
+}
+
+/* RIGHT PANEL: LIVE CREW VIEW */
+.crew-panel { display: flex; flex-direction: column; gap: 14px; }
+
+.crew-live-card {
+  background: #111110; border-radius: 12px; overflow: hidden;
+}
+.crew-live-header {
+  background: var(--live); padding: 12px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.crew-live-label { font-size: 11px; font-weight: 500; color: #fff; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+.crew-live-time { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.75); }
+.crew-cue-big { padding: 20px 18px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.crew-cue-past { font-size: 11px; color: rgba(255,255,255,0.25); margin-bottom: 10px; font-family: var(--mono); }
+.crew-cue-current { font-family: var(--serif); font-size: 20px; color: #fff; font-weight: 400; line-height: 1.2; margin-bottom: 6px; }
+.crew-cue-detail { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+.crew-cue-next { padding: 12px 18px; }
+.crew-cue-next-label { font-size: 10px; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+.crew-cue-next-name { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+/* CREW INFO CARDS */
+.info-card {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.info-card-header {
+  padding: 11px 16px; border-bottom: 0.5px solid var(--border);
+  font-size: 12px; font-weight: 500; color: var(--text-2);
+  text-transform: uppercase; letter-spacing: 1px; background: var(--bg);
+}
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 16px; border-bottom: 0.5px solid var(--border); font-size: 13px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { color: var(--text-3); font-size: 11px; }
+.info-val { font-weight: 500; }
+.info-val.mono { font-family: var(--mono); font-size: 12px; }
+
+/* HOLD STATE */
+.hold-banner {
+  background: var(--hold-bg); border: 0.5px solid rgba(212,160,23,0.3);
+  border-radius: 8px; padding: 10px 16px; margin: 0 20px 12px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 500; color: var(--hold);
+  display: none;
+}
+.hold-banner.visible { display: flex; }
+
+/* CONNECTED USERS */
+.connected-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px; border-bottom: 0.5px solid var(--border);
+  font-size: 12px;
+}
+.connected-row:last-child { border-bottom: none; }
+.conn-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.conn-name { flex: 1; }
+.conn-role { font-size: 10px; color: var(--text-3); }
+.conn-device { font-size: 10px; color: var(--text-3); }
+
+/* ══════════════════════════
+   TEAM TAB
+══════════════════════════ */
+.team-header { margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+.team-section-title { font-family: var(--serif); font-size: 22px; font-weight: 400; }
+.btn-add {
+  font-family: var(--sans); font-size: 12px; padding: 8px 16px;
+  border-radius: 7px; background: var(--accent); color: #f0f0f0;
+  border: none; cursor: pointer; font-weight: 500;
+}
+.team-grid { display: flex; flex-direction: column; gap: 0; }
+.team-card {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: 0; border-bottom: none;
+}
+.team-card:first-child { border-radius: 12px 12px 0 0; }
+.team-card:last-child { border-radius: 0 0 12px 12px; border-bottom: 0.5px solid var(--border); }
+.team-card-header {
+  padding: 12px 18px; background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--text-3);
+}
+.team-member-row {
+  display: grid; grid-template-columns: 36px 1fr 140px 120px 100px 80px;
+  gap: 14px; padding: 13px 18px;
+  border-bottom: 0.5px solid var(--border); align-items: center;
+  font-size: 13px;
+}
+.team-member-row:last-child { border-bottom: none; }
+.team-av {
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 11px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+}
+.team-name { font-weight: 500; }
+.team-title { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+.access-pill {
+  font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 500;
+  text-align: center;
+}
+.access-admin  { background: #1C1C1A; color: #E8E6DE; }
+.access-full   { background: var(--blue-bg); color: var(--blue); }
+.access-dept   { background: var(--purple-bg); color: var(--purple); }
+.access-client { background: var(--amber-bg); color: var(--amber); }
+.access-crew   { background: var(--green-bg); color: var(--green); }
+
+/* ══════════════════════════
+   SCREEN SWITCHER (demo)
+══════════════════════════ */
+.demo-bar {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: #1C1C1A; border-radius: 30px; padding: 8px 10px;
+  display: flex; gap: 6px; align-items: center; z-index: 500;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+}
+.demo-bar-label { font-size: 10px; color: rgba(255,255,255,0.3); padding: 0 6px; text-transform: uppercase; letter-spacing: 1px; }
+.demo-btn {
+  font-family: var(--sans); font-size: 11px; padding: 6px 13px;
+  border-radius: 20px; border: none; cursor: pointer; font-weight: 500;
+  color: rgba(255,255,255,0.5); background: transparent; transition: all 0.15s;
+}
+.demo-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.demo-btn.active { background: rgba(255,255,255,0.12); color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════
+     NAV
+══════════════════════════ -->
+<nav class="top-nav">
+  <div class="nav-logo">Stage<em>craft</em></div>
+  <div class="nav-prod-name">
+    <span>Production /</span> Summerset Gala 2025
+  </div>
+  <div class="nav-live-badge" id="live-badge">
+    <div class="live-dot"></div>
+    Show live · Cue <span id="nav-cue-num">Q14</span>
+  </div>
+  <div class="nav-right">
+    <button class="nav-view-btn active" id="view-btn-sm" onclick="setView('sm')">SM view</button>
+    <button class="nav-view-btn" id="view-btn-crew" onclick="setView('crew')">Crew view</button>
+    <button class="nav-view-btn" id="view-btn-client" onclick="setView('client')">Client view</button>
+    <div class="nav-avatar">JK</div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════
+     SIDEBAR
+══════════════════════════ -->
+<div class="app-body">
+<aside class="sidebar">
+  <div class="sidebar-phase">
+    <div class="sidebar-phase-label">Current phase</div>
+    <div class="sidebar-phase-name">🎭 Show night 1</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Production</div>
+    <button class="sidebar-link" onclick="switchTab('overview')">
+      <span class="icon">◻</span> Overview
+    </button>
+    <button class="sidebar-link" onclick="switchTab('calendar')">
+      <span class="icon">📅</span> Calendar
+    </button>
+    <button class="sidebar-link active" onclick="switchTab('ros')">
+      <span class="icon">▶</span> Run of show
+    </button>
+    <button class="sidebar-link" onclick="switchTab('callsheet')">
+      <span class="icon">📋</span> Call sheet
+    </button>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Management</div>
+    <button class="sidebar-link" onclick="switchTab('team')">
+      <span class="icon">👥</span> Team & access
+      <span class="sidebar-badge">12</span>
+    </button>
+    <button class="sidebar-link">
+      <span class="icon">📁</span> Files
+      <span class="sidebar-badge">8</span>
+    </button>
+    <button class="sidebar-link">
+      <span class="icon">💰</span> Budget
+    </button>
+    <button class="sidebar-link">
+      <span class="icon">🏪</span> Vendors
+    </button>
+    <button class="sidebar-link">
+      <span class="icon">📝</span> Notes
+    </button>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">More</div>
+    <button class="sidebar-link">
+      <span class="icon">◀</span> All productions
+    </button>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user-av">SM</div>
+    <div>
+      <div class="sidebar-user-name">Sarah M.</div>
+      <div class="sidebar-user-role">Stage manager</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════════════
+     MAIN
+══════════════════════════ -->
+<main class="main">
+  <div class="main-tabs">
+    <button class="main-tab" id="tab-btn-overview" onclick="switchTab('overview')">Overview</button>
+    <button class="main-tab" id="tab-btn-calendar" onclick="switchTab('calendar')">Calendar</button>
+    <button class="main-tab active" id="tab-btn-ros" onclick="switchTab('ros')">Run of show</button>
+    <button class="main-tab" id="tab-btn-callsheet" onclick="switchTab('callsheet')">Call sheet</button>
+    <button class="main-tab" id="tab-btn-team" onclick="switchTab('team')">Team & access</button>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <div id="tab-overview" class="tab-content">
+    <div class="prod-header">
+      <div>
+        <div class="prod-header-eyebrow">Production workspace</div>
+        <div class="prod-header-title">Summerset <em>Corporate Gala</em> 2025</div>
+        <div class="prod-meta-row">
+          <div class="prod-meta-item">📍 <strong>Grand Ballroom, Las Vegas NV</strong></div>
+          <div class="prod-meta-item">🗓 <strong>Jun 12–15, 2025</strong></div>
+          <div class="prod-meta-item">👥 <strong>340 guests</strong></div>
+          <div class="prod-meta-item">💰 <strong>$86,000 budget</strong></div>
+        </div>
+      </div>
+      <div class="prod-stats">
+        <div class="prod-stat"><div class="prod-stat-n">4</div><div class="prod-stat-l">Show days</div></div>
+        <div class="prod-stat"><div class="prod-stat-n">12</div><div class="prod-stat-l">Crew on call</div></div>
+        <div class="prod-stat"><div class="prod-stat-n">68%</div><div class="prod-stat-l">Tasks done</div></div>
+      </div>
+    </div>
+
+    <div class="phase-timeline">
+      <div class="phase-timeline-header">
+        Production phases
+        <button class="ov-card-action" style="font-size:11px;color:var(--text-3);cursor:pointer;background:none;border:none;font-family:var(--sans)">Edit phases</button>
+      </div>
+      <div class="phase-row phase-row-header">
+        <div>Phase</div><div>Progress</div><div>Dates</div><div>Status</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-name">Pre-production</div>
+        <div><div class="phase-bar-wrap"><div class="phase-bar" style="width:100%;background:var(--green)"></div></div></div>
+        <div class="phase-date">May 1–Jun 11</div>
+        <div><span class="phase-pill pill-done">Complete</span></div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-name">Load-in</div>
+        <div><div class="phase-bar-wrap"><div class="phase-bar" style="width:100%;background:var(--green)"></div></div></div>
+        <div class="phase-date">Jun 12, 8am</div>
+        <div><span class="phase-pill pill-done">Complete</span></div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-name">Tech rehearsal</div>
+        <div><div class="phase-bar-wrap"><div class="phase-bar" style="width:100%;background:var(--green)"></div></div></div>
+        <div class="phase-date">Jun 13, 2pm</div>
+        <div><span class="phase-pill pill-done">Complete</span></div>
+      </div>
+      <div class="phase-row" style="background:rgba(232,53,10,0.04)">
+        <div class="phase-name" style="color:var(--live);font-weight:600">Show — Night 1</div>
+        <div><div class="phase-bar-wrap"><div class="phase-bar" style="width:62%;background:var(--live)"></div></div></div>
+        <div class="phase-date">Jun 14, 6:30pm</div>
+        <div><span class="phase-pill pill-active">Live now</span></div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-name">Strike</div>
+        <div><div class="phase-bar-wrap"><div class="phase-bar" style="width:0%;background:var(--text-3)"></div></div></div>
+        <div class="phase-date">Jun 15, 8am</div>
+        <div><span class="phase-pill pill-upcoming">Upcoming</span></div>
+      </div>
+    </div>
+
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="ov-card-header">Crew on call tonight <button class="ov-card-action">View all →</button></div>
+        <div class="ov-row">
+          <div class="role-dot" style="background:#E24B4A"></div>
+          <div class="ov-name">Sarah M.</div>
+          <div class="ov-dept">Stage manager</div>
+          <div class="ov-meta"></div>
+          <div class="vis-badge vis-all">Admin</div>
+        </div>
+        <div class="ov-row">
+          <div class="role-dot" style="background:#378ADD"></div>
+          <div class="ov-name">Tom R.</div>
+          <div class="ov-dept">TD / AV</div>
+          <div class="ov-meta"></div>
+          <div class="vis-badge vis-dept">Dept head</div>
+        </div>
+        <div class="ov-row">
+          <div class="role-dot" style="background:#1D9E75"></div>
+          <div class="ov-name">Dana L.</div>
+          <div class="ov-dept">LD / Lighting</div>
+          <div class="ov-meta"></div>
+          <div class="vis-badge vis-dept">Dept head</div>
+        </div>
+        <div class="ov-row">
+          <div class="role-dot" style="background:#7F77DD"></div>
+          <div class="ov-name">Marcus B.</div>
+          <div class="ov-dept">FOH audio</div>
+          <div class="ov-meta"></div>
+          <div class="vis-badge vis-dept">Dept head</div>
+        </div>
+        <div class="ov-row">
+          <div class="role-dot" style="background:#F59E0B"></div>
+          <div class="ov-name">Priya N.</div>
+          <div class="ov-dept">Stagehand</div>
+          <div class="ov-meta"></div>
+          <div class="vis-badge vis-all">Crew</div>
+        </div>
+      </div>
+
+      <div class="ov-card">
+        <div class="ov-card-header">Visibility levels</div>
+        <div class="ov-row" style="flex-direction:column;align-items:flex-start;gap:6px;padding:14px 18px">
+          <div style="display:flex;align-items:center;gap:10px;width:100%">
+            <div class="vis-badge vis-pm" style="width:64px;text-align:center">Admin</div>
+            <div style="font-size:12px;color:var(--text-2)">Full production access — all docs, finances, crew info</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%;padding-top:8px">
+            <div class="vis-badge vis-dept" style="width:64px;text-align:center">Dept head</div>
+            <div style="font-size:12px;color:var(--text-2)">Full run of show, dept schedule, vendor contacts</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%;padding-top:8px">
+            <div class="vis-badge vis-all" style="width:64px;text-align:center;background:var(--green-bg);color:var(--green)">Crew</div>
+            <div style="font-size:12px;color:var(--text-2)">Their call times, live run of show (read only)</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;width:100%;padding-top:8px">
+            <div class="vis-badge" style="background:var(--amber-bg);color:var(--amber);width:64px;text-align:center">Client</div>
+            <div style="font-size:12px;color:var(--text-2)">Curated schedule, file uploads, simplified show view</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CALENDAR ── -->
+  <div id="tab-calendar" class="tab-content">
+    <div class="cal-header">
+      <div class="cal-month">June 2025</div>
+      <div class="cal-nav">
+        <button class="cal-nav-btn">‹</button>
+        <button class="cal-nav-btn">›</button>
+      </div>
+    </div>
+    <div class="cal-grid">
+      <div class="cal-dow-row">
+        <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div>
+        <div class="cal-dow">Tue</div><div class="cal-dow">Wed</div>
+        <div class="cal-dow">Thu</div><div class="cal-dow">Fri</div>
+        <div class="cal-dow">Sat</div>
+      </div>
+      <!-- Week 1 -->
+      <div class="cal-week">
+        <div class="cal-day other-month"><div class="cal-day-num">1</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">2</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">3</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">4</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">5</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">6</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">7</div></div>
+      </div>
+      <!-- Week 2 -->
+      <div class="cal-week">
+        <div class="cal-day"><div class="cal-day-num">8</div></div>
+        <div class="cal-day"><div class="cal-day-num">9</div></div>
+        <div class="cal-day"><div class="cal-day-num">10</div></div>
+        <div class="cal-day"><div class="cal-day-num">11</div></div>
+        <div class="cal-day">
+          <div class="cal-day-num">12</div>
+          <div class="cal-event cal-ev-load">8:00a Load-in</div>
+          <div class="cal-event cal-ev-call">All crew — 8am</div>
+        </div>
+        <div class="cal-day">
+          <div class="cal-day-num">13</div>
+          <div class="cal-event cal-ev-tech">2:00p Tech rehearsal</div>
+          <div class="cal-event cal-ev-reh">SM call — 1pm</div>
+        </div>
+        <div class="cal-day" style="background:rgba(232,53,10,0.04)">
+          <div class="cal-day-num" style="color:var(--live);font-weight:600">14</div>
+          <div class="cal-event cal-ev-call">Crew — 3:00p</div>
+          <div class="cal-event cal-ev-show">🔴 Show — 6:30p</div>
+        </div>
+      </div>
+      <!-- Week 3 -->
+      <div class="cal-week">
+        <div class="cal-day">
+          <div class="cal-day-num">15</div>
+          <div class="cal-event cal-ev-strike">8:00a Strike</div>
+          <div class="cal-event cal-ev-call">Crew — 8am</div>
+        </div>
+        <div class="cal-day"><div class="cal-day-num">16</div></div>
+        <div class="cal-day"><div class="cal-day-num">17</div></div>
+        <div class="cal-day"><div class="cal-day-num">18</div></div>
+        <div class="cal-day"><div class="cal-day-num">19</div></div>
+        <div class="cal-day"><div class="cal-day-num">20</div></div>
+        <div class="cal-day"><div class="cal-day-num">21</div></div>
+      </div>
+      <!-- Week 4 -->
+      <div class="cal-week">
+        <div class="cal-day"><div class="cal-day-num">22</div></div>
+        <div class="cal-day"><div class="cal-day-num">23</div></div>
+        <div class="cal-day"><div class="cal-day-num">24</div></div>
+        <div class="cal-day"><div class="cal-day-num">25</div></div>
+        <div class="cal-day"><div class="cal-day-num">26</div></div>
+        <div class="cal-day"><div class="cal-day-num">27</div></div>
+        <div class="cal-day"><div class="cal-day-num">28</div></div>
+      </div>
+      <!-- Week 5 -->
+      <div class="cal-week">
+        <div class="cal-day"><div class="cal-day-num">29</div></div>
+        <div class="cal-day"><div class="cal-day-num">30</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">1</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">2</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">3</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">4</div></div>
+        <div class="cal-day other-month"><div class="cal-day-num">5</div></div>
+      </div>
+    </div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot cal-ev-load"></div>Load-in</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot cal-ev-tech"></div>Tech / rehearsal</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot cal-ev-reh"></div>Crew call</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot cal-ev-show" style="background:#1C1C1A"></div>Show</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot cal-ev-strike"></div>Strike</div>
+    </div>
+  </div>
+
+  <!-- ── RUN OF SHOW ── -->
+  <div id="tab-ros" class="tab-content active">
+
+    <!-- SM VIEW -->
+    <div id="view-sm" class="screen active">
+      <div class="ros-layout">
+        <div class="sm-panel">
+          <div class="sm-panel-header">
+            <div class="sm-panel-title">Calling — Summerset Gala · Jun 14 · Show 1</div>
+            <div class="sm-controls">
+              <button class="sm-btn sm-btn-hold" onclick="toggleHold()">Hold</button>
+              <button class="sm-btn sm-btn-go" onclick="advanceCue()">GO ›</button>
+            </div>
+          </div>
+
+          <div class="hold-banner" id="hold-banner">
+            ⏸ HOLD — Show paused. Press GO to continue.
+          </div>
+
+          <div style="padding:12px 20px 0;">
+            <div class="current-cue-callout">
+              <div class="callout-label">▶ Standing by</div>
+              <div class="callout-cue" id="callout-text">Dinner service — house music cross to ambient</div>
+              <div class="callout-num" id="callout-num">Q14</div>
+            </div>
+          </div>
+          <div class="sm-separator"></div>
+
+          <div class="cue-list" id="cue-list">
+            <!-- Cues injected by JS -->
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="crew-panel">
+          <div class="crew-live-card">
+            <div class="crew-live-header">
+              <div class="crew-live-label"><div class="live-dot"></div>Live — crew view</div>
+              <div class="crew-live-time" id="live-clock">9:12 PM</div>
+            </div>
+            <div class="crew-cue-big">
+              <div class="crew-cue-past" id="crew-past">↑ Q13 — Welcome remarks complete</div>
+              <div class="crew-cue-current" id="crew-current">Dinner service begins</div>
+              <div class="crew-cue-detail" id="crew-detail">House music cross to ambient. F&B service starts. SM will call next cue at awards walk-up.</div>
+            </div>
+            <div class="crew-cue-next">
+              <div class="crew-cue-next-label">Next up</div>
+              <div class="crew-cue-next-name" id="crew-next">Q15 — Awards walk-up music (LX fade to stage wash)</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-header">Show info</div>
+            <div class="info-row"><div class="info-label">Show</div><div class="info-val">Summerset Gala · Night 1</div></div>
+            <div class="info-row"><div class="info-label">Venue</div><div class="info-val">Grand Ballroom, LV</div></div>
+            <div class="info-row"><div class="info-label">Doors opened</div><div class="info-val mono">6:31 PM</div></div>
+            <div class="info-row"><div class="info-label">Current cue</div><div class="info-val mono" id="info-cue-num">Q14</div></div>
+            <div class="info-row"><div class="info-label">Cues remaining</div><div class="info-val mono" id="info-remaining">9</div></div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-header">Connected now</div>
+            <div class="connected-row">
+              <div class="conn-dot"></div>
+              <div class="conn-name">Sarah M.</div>
+              <div class="conn-role">SM (calling)</div>
+              <div class="conn-device">MacBook</div>
+            </div>
+            <div class="connected-row">
+              <div class="conn-dot"></div>
+              <div class="conn-name">Tom R.</div>
+              <div class="conn-role">TD</div>
+              <div class="conn-device">iPad</div>
+            </div>
+            <div class="connected-row">
+              <div class="conn-dot"></div>
+              <div class="conn-name">Dana L.</div>
+              <div class="conn-role">LD</div>
+              <div class="conn-device">Phone</div>
+            </div>
+            <div class="connected-row">
+              <div class="conn-dot"></div>
+              <div class="conn-name">Marcus B.</div>
+              <div class="conn-role">FOH audio</div>
+              <div class="conn-device">Laptop</div>
+            </div>
+            <div class="connected-row">
+              <div class="conn-dot"></div>
+              <div class="conn-name">Priya N.</div>
+              <div class="conn-role">Stage crew</div>
+              <div class="conn-device">Phone</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREW VIEW -->
+    <div id="view-crew" class="screen">
+      <div style="max-width:520px;margin:0 auto;">
+        <div class="crew-live-card" style="border-radius:12px;overflow:hidden">
+          <div class="crew-live-header" style="padding:16px 22px">
+            <div class="crew-live-label" style="font-size:12px"><div class="live-dot"></div>Live run of show — Summerset Gala</div>
+            <div class="crew-live-time" id="crew-clock-2">9:12 PM</div>
+          </div>
+          <div style="padding:28px 28px 20px">
+            <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-bottom:12px;font-family:var(--mono)" id="crew2-past">↑ Q13 — Welcome remarks complete</div>
+            <div style="font-family:var(--serif);font-size:28px;color:#fff;font-weight:400;line-height:1.15;margin-bottom:10px" id="crew2-current">Dinner service begins</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.65;margin-bottom:24px" id="crew2-detail">House music cross to ambient. F&B service starts. SM will call next cue at awards walk-up.</div>
+            <div style="height:0.5px;background:rgba(255,255,255,0.08);margin-bottom:20px"></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Next</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.55)" id="crew2-next">Q15 — Awards walk-up music</div>
+          </div>
+        </div>
+        <div class="info-card" style="margin-top:14px">
+          <div class="info-card-header">Tonight's show</div>
+          <div class="info-row"><div class="info-label">Production</div><div class="info-val">Summerset Gala 2025</div></div>
+          <div class="info-row"><div class="info-label">Venue</div><div class="info-val">Grand Ballroom, Las Vegas</div></div>
+          <div class="info-row"><div class="info-label">Your call</div><div class="info-val mono">3:00 PM</div></div>
+          <div class="info-row"><div class="info-label">Show time</div><div class="info-val mono">6:30 PM</div></div>
+          <div class="info-row"><div class="info-label">SM on call</div><div class="info-val">Sarah M.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENT VIEW -->
+    <div id="view-client" class="screen">
+      <div style="max-width:540px;margin:0 auto">
+        <div style="background:var(--surface);border:0.5px solid var(--border-md);border-radius:12px;overflow:hidden;margin-bottom:14px">
+          <div style="background:#1C1C1A;padding:20px 24px">
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Tonight's event</div>
+            <div style="font-family:var(--serif);font-size:22px;color:#E8E6DE;font-weight:400">Summerset Corporate Gala</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px">June 14, 2025 · Grand Ballroom, Las Vegas</div>
+          </div>
+          <div style="padding:0">
+            <div style="padding:10px 20px;background:var(--bg);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Evening schedule</div>
+            <div class="info-row"><div class="info-label">Doors open</div><div class="info-val mono">6:30 PM</div></div>
+            <div class="info-row" style="background:rgba(232,53,10,0.04)">
+              <div class="info-label" style="color:var(--live);font-weight:500">▶ In progress</div>
+              <div class="info-val" style="color:var(--live)">Dinner service</div>
+            </div>
+            <div class="info-row"><div class="info-label">Awards presentation</div><div class="info-val mono">~9:10 PM</div></div>
+            <div class="info-row"><div class="info-label">Open reception</div><div class="info-val mono">~9:45 PM</div></div>
+            <div class="info-row"><div class="info-label">Event closes</div><div class="info-val mono">11:30 PM</div></div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-header">Your contacts tonight</div>
+          <div class="info-row"><div class="info-label">Lead producer</div><div class="info-val">Jordan K. · (702) 555-0101</div></div>
+          <div class="info-row"><div class="info-label">Stage manager</div><div class="info-val">Sarah M. · (702) 555-0192</div></div>
+          <div class="info-row"><div class="info-label">Venue coordinator</div><div class="info-val">Lisa T. · (702) 555-0344</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-ros -->
+
+  <!-- ── CALL SHEET ── -->
+  <div id="tab-callsheet" class="tab-content">
+    <div class="callsheet-header">
+      <div class="callsheet-title-block">
+        <div class="callsheet-day">Call sheet — Jun 14, 2025 (Show day)</div>
+        <div class="callsheet-prod">Summerset Corporate Gala · Grand Ballroom, Las Vegas NV</div>
+      </div>
+      <div class="callsheet-actions">
+        <button class="btn-sm">Export PDF</button>
+        <button class="btn-sm-dark">Send to crew</button>
+      </div>
+    </div>
+
+    <div class="callsheet-grid">
+      <div class="cs-card">
+        <div class="cs-card-header">Crew calls</div>
+        <div class="cs-time-row">
+          <div class="cs-time">3:00p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">General crew call</div>
+            <div class="cs-call-dept">All departments</div>
+          </div>
+          <div class="cs-dept-tag" style="background:#EAF3DE;color:#2E7D32">All crew</div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">3:00p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">AV / production setup</div>
+            <div class="cs-call-dept">TD, AV lead, video op</div>
+          </div>
+          <div class="cs-dept-tag" style="background:#D1ECF1;color:#0C5460">AV</div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">3:30p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Lighting focus / program</div>
+            <div class="cs-call-dept">LD, board op</div>
+          </div>
+          <div class="cs-dept-tag" style="background:#FFF3CD;color:#7A5200">LX</div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">4:30p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Soundcheck</div>
+            <div class="cs-call-dept">FOH, monitors, RF tech</div>
+          </div>
+          <div class="cs-dept-tag" style="background:#D1ECF1;color:#0C5460">Audio</div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">5:00p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">SM / crew walkthrough</div>
+            <div class="cs-call-dept">All dept heads</div>
+          </div>
+          <div class="cs-dept-tag" style="background:var(--purple-bg);color:var(--purple)">SM</div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">5:30p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">F&B setup complete</div>
+            <div class="cs-call-dept">Catering, venue staff</div>
+          </div>
+          <div class="cs-dept-tag" style="background:#FAEEDA;color:#854F0B">F&B</div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">6:00p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Crew ready / places</div>
+            <div class="cs-call-dept">All departments</div>
+          </div>
+          <div class="cs-dept-tag" style="background:#1C1C1A;color:#E8E6DE">Show</div>
+        </div>
+      </div>
+
+      <div class="cs-card">
+        <div class="cs-card-header">Show schedule</div>
+        <div class="cs-time-row">
+          <div class="cs-time">6:30p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Doors open</div>
+            <div class="cs-call-dept">Cocktail reception begins</div>
+          </div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">7:30p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Guests to seats</div>
+            <div class="cs-call-dept">SM cues house lights + music fade</div>
+          </div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">7:40p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Welcome remarks — CEO</div>
+            <div class="cs-call-dept">Approx 10 min. SM on stage left.</div>
+          </div>
+        </div>
+        <div class="cs-time-row" style="background:rgba(232,53,10,0.04)">
+          <div class="cs-time" style="color:var(--live)">NOW</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name" style="color:var(--live)">Dinner service</div>
+            <div class="cs-call-dept">Ambient music. SM holds until awards walk-up.</div>
+          </div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">~9:10p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Awards presentation</div>
+            <div class="cs-call-dept">5 awards. 35 min. Walk-up music each award.</div>
+          </div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">~9:45p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Open reception / band</div>
+            <div class="cs-call-dept">Live music. Bar open. 90 min.</div>
+          </div>
+        </div>
+        <div class="cs-time-row">
+          <div class="cs-time">11:15p</div>
+          <div class="cs-call-info">
+            <div class="cs-call-name">Last call / closing</div>
+            <div class="cs-call-dept">SM cues final remarks + walk-out music</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-card" style="max-width:100%">
+      <div class="cs-card-header">Key contacts tonight</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr)">
+        <div class="cs-time-row" style="flex-direction:column;align-items:flex-start;gap:3px;border-right:0.5px solid var(--border)">
+          <div style="font-size:10px;color:var(--text-3)">Lead producer</div>
+          <div style="font-weight:500">Jordan K.</div>
+          <div style="font-size:11px;color:var(--text-3)">(702) 555-0101</div>
+        </div>
+        <div class="cs-time-row" style="flex-direction:column;align-items:flex-start;gap:3px;border-right:0.5px solid var(--border)">
+          <div style="font-size:10px;color:var(--text-3)">Stage manager</div>
+          <div style="font-weight:500">Sarah M.</div>
+          <div style="font-size:11px;color:var(--text-3)">(702) 555-0192</div>
+        </div>
+        <div class="cs-time-row" style="flex-direction:column;align-items:flex-start;gap:3px;border-right:0.5px solid var(--border)">
+          <div style="font-size:10px;color:var(--text-3)">TD / AV</div>
+          <div style="font-weight:500">Tom R.</div>
+          <div style="font-size:11px;color:var(--text-3)">(702) 555-0233</div>
+        </div>
+        <div class="cs-time-row" style="flex-direction:column;align-items:flex-start;gap:3px">
+          <div style="font-size:10px;color:var(--text-3)">Venue coordinator</div>
+          <div style="font-weight:500">Lisa T.</div>
+          <div style="font-size:11px;color:var(--text-3)">(702) 555-0344</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TEAM ── -->
+  <div id="tab-team" class="tab-content">
+    <div class="team-header">
+      <div class="team-section-title">Team & access</div>
+      <button class="btn-add">+ Add member</button>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-card-header">Production / admin</div>
+        <div class="team-member-row">
+          <div class="team-av" style="background:#EEEDFE;color:#534AB7">JK</div>
+          <div><div class="team-name">Jordan K.</div><div class="team-title">Lead producer</div></div>
+          <div style="font-size:12px;color:var(--text-3)">jordan@co.com</div>
+          <div><span class="access-pill access-admin">Admin</span></div>
+          <div style="font-size:11px;color:var(--text-3)">All content</div>
+          <div style="font-size:11px;color:var(--green)">● Online</div>
+        </div>
+        <div class="team-member-row">
+          <div class="team-av" style="background:#E6F1FB;color:#185FA5">SM</div>
+          <div><div class="team-name">Sarah M.</div><div class="team-title">Stage manager</div></div>
+          <div style="font-size:12px;color:var(--text-3)">sarah@co.com</div>
+          <div><span class="access-pill access-admin">Admin</span></div>
+          <div style="font-size:11px;color:var(--text-3)">All content</div>
+          <div style="font-size:11px;color:var(--green)">● Online</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card-header">Department heads</div>
+        <div class="team-member-row">
+          <div class="team-av" style="background:#D1ECF1;color:#0C5460">TR</div>
+          <div><div class="team-name">Tom R.</div><div class="team-title">Technical director</div></div>
+          <div style="font-size:12px;color:var(--text-3)">tom@av.com</div>
+          <div><span class="access-pill access-full">Dept head</span></div>
+          <div style="font-size:11px;color:var(--text-3)">ROS + AV dept</div>
+          <div style="font-size:11px;color:var(--green)">● Online</div>
+        </div>
+        <div class="team-member-row">
+          <div class="team-av" style="background:#FFF3CD;color:#7A5200">DL</div>
+          <div><div class="team-name">Dana L.</div><div class="team-title">Lighting designer</div></div>
+          <div style="font-size:12px;color:var(--text-3)">dana@lx.com</div>
+          <div><span class="access-pill access-full">Dept head</span></div>
+          <div style="font-size:11px;color:var(--text-3)">ROS + LX dept</div>
+          <div style="font-size:11px;color:var(--green)">● Online</div>
+        </div>
+        <div class="team-member-row">
+          <div class="team-av" style="background:#EAF3DE;color:#2E7D32">MB</div>
+          <div><div class="team-name">Marcus B.</div><div class="team-title">FOH audio</div></div>
+          <div style="font-size:12px;color:var(--text-3)">mb@audio.com</div>
+          <div><span class="access-pill access-full">Dept head</span></div>
+          <div style="font-size:11px;color:var(--text-3)">ROS + Audio dept</div>
+          <div style="font-size:11px;color:var(--green)">● Online</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card-header">Crew</div>
+        <div class="team-member-row">
+          <div class="team-av" style="background:#FAEEDA;color:#854F0B">PN</div>
+          <div><div class="team-name">Priya N.</div><div class="team-title">Stagehand</div></div>
+          <div style="font-size:12px;color:var(--text-3)">priya@crew.com</div>
+          <div><span class="access-pill access-crew">Crew</span></div>
+          <div style="font-size:11px;color:var(--text-3)">Call times + ROS</div>
+          <div style="font-size:11px;color:var(--green)">● Online</div>
+        </div>
+        <div class="team-member-row">
+          <div class="team-av" style="background:#F8D7DA;color:#721C24">RG</div>
+          <div><div class="team-name">Ray G.</div><div class="team-title">Stagehand</div></div>
+          <div style="font-size:12px;color:var(--text-3)">ray@crew.com</div>
+          <div><span class="access-pill access-crew">Crew</span></div>
+          <div style="font-size:11px;color:var(--text-3)">Call times + ROS</div>
+          <div style="font-size:11px;color:var(--text-3)">● Offline</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card-header">Client access</div>
+        <div class="team-member-row">
+          <div class="team-av" style="background:#F0EFE9;color:#5C5C58">SC</div>
+          <div><div class="team-name">Sarah Chen</div><div class="team-title">Event chair — Summerset Co.</div></div>
+          <div style="font-size:12px;color:var(--text-3)">sarah@summerset.com</div>
+          <div><span class="access-pill access-client">Client</span></div>
+          <div style="font-size:11px;color:var(--text-3)">Schedule + files</div>
+          <div style="font-size:11px;color:var(--text-3)">● Offline</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- DEMO SWITCHER -->
+<div class="demo-bar">
+  <div class="demo-bar-label">Jump to</div>
+  <button class="demo-btn active" onclick="switchTab('ros');setView('sm')">SM calling</button>
+  <button class="demo-btn" onclick="switchTab('ros');setView('crew')">Crew view</button>
+  <button class="demo-btn" onclick="switchTab('ros');setView('client')">Client view</button>
+  <button class="demo-btn" onclick="switchTab('overview')">Overview</button>
+  <button class="demo-btn" onclick="switchTab('calendar')">Calendar</button>
+  <button class="demo-btn" onclick="switchTab('callsheet')">Call sheet</button>
+  <button class="demo-btn" onclick="switchTab('team')">Team</button>
+</div>
+
+<script>
+// ── CUE DATA ──
+const cues = [
+  { num:'Q1',  title:'House open — pre-show music',       detail:'Ambient playlist at 75%. House lights full.',                                    type:'seg',  badge:'SEG',  past:true },
+  { num:'Q2',  title:'Cocktail reception — music cue',    detail:'Upbeat jazz playlist, FOH 70%.',                                                 type:'snd',  badge:'SND',  past:true },
+  { num:'Q3',  title:'LX: Cocktail hour wash',            detail:'Warm amber wash, no specials.',                                                  type:'lx',   badge:'LX',   past:true },
+  { num:'Q4',  title:'Video: Lobby display loop',         detail:'Company highlight reel on lobby screens.',                                       type:'vid',  badge:'VID',  past:true },
+  { num:'Q5',  title:'Announce: Guests to ballroom',      detail:'MC announcement. SM cues on confirmation from venue.',                           type:'spk',  badge:'SPK',  past:true },
+  { num:'Q6',  title:'House music fade to 20%',           detail:'Slow cross — 30 seconds.',                                                       type:'snd',  badge:'SND',  past:true },
+  { num:'Q7',  title:'LX: Dinner wash — full scene',      detail:'Table candle supplement, chandelier at 60%.',                                    type:'lx',   badge:'LX',   past:true },
+  { num:'Q8',  title:'Video: Welcome reel',               detail:'2-min company video, full screen. Audio at 85%.',                                type:'vid',  badge:'VID',  past:true },
+  { num:'Q9',  title:'CEO walk-up music',                 detail:'Confident corporate sting. SM cues on CEO standing.',                            type:'snd',  badge:'SND',  past:true },
+  { num:'Q10', title:'LX: Podium special — CEO',          detail:'Single tight spot, center podium. Kill table washes.',                           type:'lx',   badge:'LX',   past:true },
+  { num:'Q11', title:'Mic open — CEO remarks',            detail:'FOH open podium mic. Monitor send to IEM. Kill music.',                         type:'snd',  badge:'SND',  past:true },
+  { num:'Q12', title:'LX: House back to dinner',          detail:'Return to dinner wash. Slow 8-count fade.',                                      type:'lx',   badge:'LX',   past:true },
+  { num:'Q13', title:'Applause — remarks complete',       detail:'Music sting at end of remarks. SM calls on CEO step-back.',                     type:'snd',  badge:'SND',  past:true },
+  { num:'Q14', title:'Dinner service — music cross',      detail:'House music cross to ambient. F&B service starts. SM holds until awards walk-up.',type:'seg', badge:'SEG',  past:false, current:true },
+  { num:'Q15', title:'Awards walk-up music — Award 1',   detail:'Upbeat sting on SM GO. LX fade to stage wash.',                                  type:'snd',  badge:'SND',  past:false },
+  { num:'Q16', title:'LX: Awards stage wash',            detail:'Stage wash up, table wash down. Follow spot on presenter.',                       type:'lx',   badge:'LX',   past:false },
+  { num:'Q17', title:'Video: Award graphic — CEO Award', detail:'Full screen award graphic + name lower third.',                                   type:'vid',  badge:'VID',  past:false },
+  { num:'Q18', title:'Repeat Q15–17 x4 (awards 2–5)',   detail:'Same sequence per award. SM calls each individually.',                            type:'seg',  badge:'SEG',  past:false },
+  { num:'Q19', title:'Band walk-up',                     detail:'Live band walks on stage. SM cues on clear.',                                     type:'seg',  badge:'SEG',  past:false },
+  { num:'Q20', title:'LX: Live music scene',             detail:'Full stage wash, dance floor up, spots active.',                                  type:'lx',   badge:'LX',   past:false },
+  { num:'Q21', title:'Last call announcement',           detail:'MC to podium. SM cues on MC approach.',                                          type:'spk',  badge:'SPK',  past:false },
+  { num:'Q22', title:'Closing remarks + walk-out music', detail:'Upbeat exit music. House lights up slow over 2 min.',                             type:'snd',  badge:'SND',  past:false },
+  { num:'Q23', title:'House lights full — event close',  detail:'Full house lights. FOH music out. Strike standby.',                               type:'lx',   badge:'LX',   past:false },
+];
+
+let currentIdx = 13; // Q14 is index 13
+let onHold = false;
+
+function badgeClass(type) {
+  return { seg:'cue-badge-seg', snd:'cue-badge-snd', lx:'cue-badge-lx', vid:'cue-badge-vid', fly:'cue-badge-fly', spk:'cue-badge-spk' }[type] || 'cue-badge-seg';
+}
+
+function renderCues() {
+  const list = document.getElementById('cue-list');
+  list.innerHTML = '';
+  cues.forEach((c, i) => {
+    const row = document.createElement('div');
+    row.className = 'cue-row' + (c.past ? ' past' : '') + (c.current ? ' current' : '') + (i === currentIdx + 1 ? ' next-up' : '');
+    row.innerHTML = `
+      <div class="cue-num">${c.num}</div>
+      <div class="cue-body">
+        <div class="cue-title">${c.title}</div>
+        <div class="cue-detail">${c.detail}</div>
+      </div>
+      <div class="cue-meta">
+        <span class="cue-type-badge ${badgeClass(c.type)}">${c.badge}</span>
+      </div>`;
+    row.onclick = () => jumpTo(i);
+    list.appendChild(row);
+  });
+  // Scroll current into view
+  const rows = list.querySelectorAll('.cue-row');
+  if (rows[currentIdx]) {
+    setTimeout(() => rows[currentIdx].scrollIntoView({ block: 'center', behavior: 'smooth' }), 100);
+  }
+}
+
+function updateLiveViews() {
+  const cur = cues[currentIdx];
+  const prev = cues[currentIdx - 1];
+  const next = cues[currentIdx + 1];
+  // callout
+  document.getElementById('callout-text').textContent = cur.title;
+  document.getElementById('callout-num').textContent = cur.num;
+  document.getElementById('nav-cue-num').textContent = cur.num;
+  // right panel
+  document.getElementById('crew-past').textContent = prev ? `↑ ${prev.num} — ${prev.title}` : '— Show start';
+  document.getElementById('crew-current').textContent = cur.title;
+  document.getElementById('crew-detail').textContent = cur.detail;
+  document.getElementById('crew-next').textContent = next ? `${next.num} — ${next.title}` : '— End of show';
+  // crew view 2
+  document.getElementById('crew2-past').textContent = prev ? `↑ ${prev.num} — ${prev.title}` : '— Show start';
+  document.getElementById('crew2-current').textContent = cur.title;
+  document.getElementById('crew2-detail').textContent = cur.detail;
+  document.getElementById('crew2-next').textContent = next ? `${next.num} — ${next.title}` : '— End of show';
+  // info
+  document.getElementById('info-cue-num').textContent = cur.num;
+  document.getElementById('info-remaining').textContent = cues.length - currentIdx - 1;
+}
+
+function advanceCue() {
+  if (onHold) { toggleHold(); return; }
+  if (currentIdx < cues.length - 1) {
+    cues[currentIdx].current = false;
+    cues[currentIdx].past = true;
+    currentIdx++;
+    cues[currentIdx].current = true;
+    renderCues();
+    updateLiveViews();
+  }
+}
+
+function jumpTo(i) {
+  cues[currentIdx].current = false;
+  if (i > currentIdx) {
+    for (let j = currentIdx; j < i; j++) cues[j].past = true;
+  } else {
+    for (let j = i; j <= currentIdx; j++) { cues[j].past = false; cues[j].current = false; }
+  }
+  currentIdx = i;
+  cues[i].current = true;
+  cues[i].past = false;
+  renderCues();
+  updateLiveViews();
+}
+
+function toggleHold() {
+  onHold = !onHold;
+  document.getElementById('hold-banner').classList.toggle('visible', onHold);
+  const btn = document.querySelector('.sm-btn-hold');
+  btn.style.background = onHold ? 'rgba(212,160,23,0.3)' : 'rgba(212,160,23,0.15)';
+}
+
+// ── TAB / VIEW SYSTEM ──
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const btn = document.getElementById('tab-btn-' + id);
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+  window.scrollTo(0, 0);
+}
+
+function setView(v) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  ['sm','crew','client'].forEach(n => {
+    const b = document.getElementById('view-btn-' + n);
+    if (b) b.classList.toggle('active', n === v);
+  });
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+  switchTab('ros');
+}
+
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  const t = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', hour12:true });
+  const el1 = document.getElementById('live-clock');
+  const el2 = document.getElementById('crew-clock-2');
+  if (el1) el1.textContent = t;
+  if (el2) el2.textContent = t;
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ── INIT ──
+renderCues();
+updateLiveViews();
+</script>
+</body>
+</html>

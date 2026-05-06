@@ -1,0 +1,100 @@
+/* ============================================
+   PRODUCTION CENTRAL — Global Design System
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Core colors */
+  --black:      #0E0E0C;
+  --dark:       #1A1A17;
+  --dark-2:     #242420;
+  --dark-3:     #2E2E2A;
+  --surface:    #FFFFFF;
+  --bg:         #F4F3EE;
+
+  /* Brand */
+  --gold:       #C9A84C;
+  --gold-dim:   rgba(201,168,76,0.12);
+  --gold-bd:    rgba(201,168,76,0.25);
+
+  /* Semantic */
+  --red:        #D94F2A;
+  --teal:       #2A8C7A;
+  --blue:       #2A5C8C;
+  --green:      #3A7A44;
+  --purple:     #6A48B4;
+
+  /* Text — dark backgrounds */
+  --text-1:     #E8E6DC;
+  --text-2:     rgba(232,230,220,0.55);
+  --text-3:     rgba(232,230,220,0.28);
+
+  /* Text — light backgrounds */
+  --lt-1:       #1A1A17;
+  --lt-2:       #5A5A54;
+  --lt-3:       #9A9A92;
+
+  /* Borders */
+  --border:     rgba(255,255,255,0.07);
+  --border-lt:  rgba(0,0,0,0.09);
+  --border-md:  rgba(0,0,0,0.15);
+
+  /* Typography */
+  --sans:   'DM Sans', system-ui, sans-serif;
+  --serif:  'DM Serif Display', Georgia, serif;
+  --disp:   'Bebas Neue', Impact, sans-serif;
+  --mono:   'JetBrains Mono', 'Courier New', monospace;
+
+  /* Layout */
+  --nav-h:      60px;
+  --max-w:      1160px;
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--black); color: var(--text-1); font-size: 14px; line-height: 1.6; overflow-x: hidden; }
+
+/* Buttons */
+.btn-gold    { font-family:var(--sans); font-size:13px; font-weight:500; padding:10px 22px; border-radius:var(--radius-sm); background:var(--gold); color:var(--black); border:none; cursor:pointer; transition:opacity 0.15s; }
+.btn-gold:hover { opacity:0.88; }
+.btn-outline { font-family:var(--sans); font-size:13px; padding:10px 20px; border-radius:var(--radius-sm); border:0.5px solid rgba(255,255,255,0.15); background:transparent; color:var(--text-2); cursor:pointer; transition:all 0.15s; }
+.btn-outline:hover { color:var(--text-1); border-color:rgba(255,255,255,0.3); }
+.btn-dark    { font-family:var(--sans); font-size:13px; padding:10px 20px; border-radius:var(--radius-sm); background:var(--dark-2); color:var(--text-1); border:0.5px solid var(--border); cursor:pointer; transition:background 0.15s; }
+.btn-dark:hover { background:var(--dark-3); }
+
+/* Pills */
+.pill        { display:inline-block; font-size:10px; font-weight:500; padding:3px 9px; border-radius:20px; letter-spacing:0.3px; }
+.pill-gold   { background:var(--gold-dim);         color:var(--gold);   border:0.5px solid var(--gold-bd); }
+.pill-red    { background:rgba(217,79,42,0.12);    color:var(--red);    border:0.5px solid rgba(217,79,42,0.25); }
+.pill-blue   { background:rgba(42,92,140,0.15);    color:#5B9FE0;       border:0.5px solid rgba(42,92,140,0.3); }
+.pill-green  { background:rgba(58,122,68,0.15);    color:#66BB6A;       border:0.5px solid rgba(58,122,68,0.3); }
+.pill-purple { background:rgba(106,72,180,0.15);   color:#B39DDB;       border:0.5px solid rgba(106,72,180,0.3); }
+.pill-gray   { background:rgba(255,255,255,0.06);  color:var(--text-3); border:0.5px solid var(--border); }
+
+/* Cards */
+.card       { background:var(--dark-2); border:0.5px solid var(--border); border-radius:var(--radius-md); padding:22px; transition:background 0.12s; }
+.card:hover { background:var(--dark-3); }
+.card-light { background:var(--surface); border:0.5px solid var(--border-lt); border-radius:var(--radius-md); padding:22px; }
+
+/* Grid helpers */
+.grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+
+/* Page structure */
+.page-hero          { padding:64px 60px 52px; border-bottom:0.5px solid var(--border); }
+.page-hero.light    { background:var(--bg); border-color:var(--border-lt); }
+.page-eyebrow       { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+.page-eyebrow::before { content:''; width:20px; height:1px; background:currentColor; }
+.page-eyebrow.dark  { color:var(--lt-3); }
+.page-title         { font-family:var(--disp); font-size:64px; letter-spacing:2px; line-height:0.92; margin-bottom:14px; color:var(--text-1); }
+.page-title.dark    { color:var(--lt-1); }
+.page-sub           { font-size:15px; color:var(--text-2); max-width:560px; line-height:1.7; }
+.page-sub.dark      { color:var(--lt-2); }
+.page-body          { padding:40px 60px; }
+.page-body.light    { background:var(--bg); }
