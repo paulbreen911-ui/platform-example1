@@ -1,5 +1,6 @@
 <?php
-if (!isset($_SESSION)) {
+// Ensure session handling for Railway
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
