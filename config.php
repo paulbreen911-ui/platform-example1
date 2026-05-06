@@ -1,10 +1,10 @@
 <?php
 // Database Connection Configuration - Railway.com Setup
-$db_host = getenv('PGHOST') ?: 'postgres.railway.internal';
-$db_port = getenv('PGPORT') ?: '5432';
 $db_name = getenv('PGDATABASE') ?: 'railway';
-$db_user = getenv('PGUSER') ?: 'postgres';
+$db_host = getenv('PGHOST') ?: 'postgres.railway.internal';
 $db_password = getenv('PGPASSWORD') ?: 'weClyUXLTNPRvKFQFobjNuWLymxCsRhu';
+$db_port = getenv('PGPORT') ?: '5432';
+$db_user = getenv('PGUSER') ?: 'postgres';
 $db_charset = 'utf8';
 
 try {
@@ -23,5 +23,3 @@ try {
 
 // Start session
 session_start();
-
-
