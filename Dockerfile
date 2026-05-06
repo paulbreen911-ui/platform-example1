@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
-# Copy all project files into the web root
-COPY . /var/www/html/
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+ && docker-php-ext-install pdo pdo_pgsql pgsql
 
-# Optional: enable Apache rewrite (useful later)
-RUN a2enmod rewrite
+COPY . /var/www/html/
