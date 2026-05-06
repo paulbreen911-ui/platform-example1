@@ -1,10 +1,10 @@
 <?php
 // Test database connection only - no table creation
-$db_host = getenv('PGHOST') ?: 'localhost';
+$db_host = getenv('PGHOST') ?: 'postgres.railway.internal';
 $db_port = getenv('PGPORT') ?: '5432';
-$db_name = getenv('PGDATABASE') ?: 'my_website_db';
+$db_name = getenv('PGDATABASE') ?: 'railway';
 $db_user = getenv('PGUSER') ?: 'postgres';
-$db_password = getenv('PGPASSWORD') ?: 'your_password';
+$db_password = getenv('PGPASSWORD') ?: 'weClyUXLTNPRvKFQFobjNuWLymxCsRhu';
 
 echo "<h2>PostgreSQL Connection Test</h2>";
 echo "<p><strong>Host:</strong> " . htmlspecialchars($db_host) . "</p>";
