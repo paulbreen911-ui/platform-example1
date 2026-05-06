@@ -48,16 +48,4 @@ if (session_status() === PHP_SESSION_NONE) {
   </div>
 </nav>
 
-<!-- This is the original code -->
-<header>
-    <h1>Welcome to Production Central</h1>
-    <nav>
-        <ul>
-
-        </ul>
-    </nav>
-</header>
-
-            <!-- -->
-
 <main>
