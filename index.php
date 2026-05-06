@@ -1,4 +1,10 @@
 <?php
+
+if ($_SERVER['HTTP_HOST'] === 'productioncentral.org') {
+    header('Location: https://www.productioncentral.org' . $_SERVER['REQUEST_URI'], true, 301);
+    exit;
+}
+
 require_once 'config.php';
 $page_title = 'Home';
 include 'header.php';
