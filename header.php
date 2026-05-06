@@ -9,7 +9,9 @@ if (session_status() === PHP_SESSION_NONE) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($page_title) ? $page_title : 'Production Central'; ?></title>
+
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
     
@@ -38,12 +40,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </a>
 
     <!-- Attempt to join in old code -->
-    <?php if (isset($_SESSION['user_id'])): ?>
-                <li><a href="myprofile.php">My Profile</a></li>
-                <li><a href="logout.php">Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a></li>
-            <?php else: ?>
-                <li><a href="login.php">Login</a></li>
-            <?php endif; ?>
+
     <!-- -->
 
     <a class="btn-signin" href="app/dashboard.html">Sign in</a>
@@ -51,5 +48,16 @@ if (session_status() === PHP_SESSION_NONE) {
   </div>
 </nav>
 
+<!-- This is the original code -->
+<header>
+    <h1>Welcome to Production Central</h1>
+    <nav>
+        <ul>
+
+        </ul>
+    </nav>
+</header>
+
+            <!-- -->
 
 <main>
