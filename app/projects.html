@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Production Central</title>
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav class="nav" id="pc-nav"></nav>
+
+<div class="shell">
+  <aside class="sidebar" id="pc-sidebar"></aside>
+
+  <main class="main">
+
+    <div class="ph-row">
+      <div>
+        <div class="ph-ey">Long-horizon builds</div>
+        <div class="ph-title">My <em>projects</em></div>
+      </div>
+      <a class="btn btn-gold" href="new-production.html">+ New project</a>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="flex gap-6 mb-20" id="filter-bar">
+      <button class="btn btn-ghost btn-sm active-filter" onclick="filterProjs('all',this)">All</button>
+      <button class="btn btn-ghost btn-sm" onclick="filterProjs('active',this)">In progress</button>
+      <button class="btn btn-ghost btn-sm" onclick="filterProjs('planning',this)">Planning</button>
+      <button class="btn btn-ghost btn-sm" onclick="filterProjs('complete',this)">Complete</button>
+    </div>
+
+    <div id="proj-list" style="display:flex;flex-direction:column;gap:14px"></div>
+
+  </main>
+</div>
+
+<script>window.PC_PAGE = 'projects'; window.PC_INIT = 'projects';</script>
+<script src="../shared/nav.js"></script>
+<script>
+
+const PROJECTS = [
+  {
+    id: 'sphere',
+    name: 'Sphere Residency Build — Phase 2',
+    status: 'active',
+    color: '#4DB6AC',
+    location: 'Las Vegas, NV',
+    dates: 'Mar 2025 – Sep 2026',
+    team: 8,
+    budget: '$2.4M',
+    progress: 48,
+    pill: 'pill-teal',
+    pillText: 'In progress',
+    phases: [
+      { name:'AV infrastructure',  pct:68, color:'#4DB6AC', left:'0%',   width:'55%' },
+      { name:'Rigging system',      pct:42, color:'#2A8C7A', left:'10%',  width:'45%' },
+      { name:'Control room',        pct:12, color:'#555550', left:'30%',  width:'50%' },
+      { name:'Commissioning',       pct:0,  color:'#555550', left:'70%',  width:'28%' },
+    ],
+    months: ['Apr','May','Jun','Jul','Aug','Sep'],
+    todayPct: '20%',
+    milestones: [
+      { name:'Design approved',         date:'Mar 15',  done:true },
+      { name:'Network contract signed',  date:'Apr 10',  done:true },
+      { name:'Rigging install complete', date:'Jun 1',   done:false, urgent:true },
+      { name:'AV sign-off',             date:'Jun 22',  done:false },
+      { name:'Full commissioning',       date:'Sep 22',  done:false },
+    ],
+    tasks: 14,
+    description: 'AV infrastructure, rigging system, control room build, and full system commissioning for a permanent residency installation.',
+    tags: ['Install','AV','Rigging','Permanent'],
+  },
+  {
+    id: 'venue',
+    name: 'Downtown Venue Buildout — AV Infrastructure',
+    status: 'planning',
+    color: '#5B9FE0',
+    location: 'Chicago, IL',
+    dates: 'Jan 2026 – Jun 2026',
+    team: 12,
+    budget: '$840K',
+    progress: 18,
+    pill: 'pill-plan',
+    pillText: 'Planning',
+    phases: [
+      { name:'Design & engineering', pct:55, color:'#5B9FE0', left:'0%',  width:'35%' },
+      { name:'Procurement',          pct:0,  color:'#555550', left:'25%', width:'30%' },
+      { name:'Installation',         pct:0,  color:'#555550', left:'45%', width:'40%' },
+      { name:'Commissioning',        pct:0,  color:'#555550', left:'80%', width:'18%' },
+    ],
+    months: ['Apr','May','Jun','Jul','Aug','Sep'],
+    todayPct: '20%',
+    milestones: [
+      { name:'Design brief approved', date:'Mar 30',  done:true },
+      { name:'Engineering sign-off',  date:'May 15',  done:false },
+      { name:'Procurement complete',  date:'Jul 1',   done:false },
+      { name:'Installation complete', date:'Oct 15',  done:false },
+    ],
+    tasks: 22,
+    description: 'Full AV infrastructure build for a new 800-capacity downtown venue — networking, audio, video, lighting control, and system integration.',
+    tags: ['Install','AV','Venue','New build'],
+  },
+];
+
+let activeFilter = 'all';
+
+function filterProjs(filter, btn) {
+  activeFilter = filter;
+  document.querySelectorAll('#filter-bar button').forEach(b => b.classList.remove('active-filter'));
+  btn.classList.add('active-filter');
+  renderProjs();
+}
+
+function renderProjs() {
+  const el = document.getElementById('proj-list');
+  if (!el) return;
+
+  const filtered = PROJECTS.filter(p => {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'active') return p.status === 'active';
+    if (activeFilter === 'planning') return p.status === 'planning';
+    if (activeFilter === 'complete') return p.status === 'complete';
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    el.innerHTML = `<div style="padding:48px;text-align:center;color:var(--text-3);background:var(--dark-2);border:0.5px solid var(--border);border-radius:12px">
+      <div style="font-size:32px;margin-bottom:12px">🏗</div>
+      <div style="font-size:13px;margin-bottom:6px">No projects found</div>
+      <div style="font-size:12px">Try a different filter or <a href="new-production.html" style="color:var(--gold)">create a new project</a>.</div>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = filtered.map(p => `
+    <a href="project.html?id=${p.id}" style="text-decoration:none">
+      <div class="card clickable" style="overflow:visible">
+        <div style="display:grid;grid-template-columns:5px 1fr">
+          <div style="background:${p.color};border-radius:11px 0 0 11px"></div>
+          <div style="padding:22px 26px">
+
+            <!-- Header -->
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px">
+              <div>
+                <div style="font-size:16px;font-weight:500;color:var(--text-1);margin-bottom:6px">${p.name}</div>
+                <div style="font-size:12px;color:var(--text-3);display:flex;gap:16px;flex-wrap:wrap">
+                  <span>📍 ${p.location}</span>
+                  <span>🗓 ${p.dates}</span>
+                  <span>👥 ${p.team} members</span>
+                  <span>💰 ${p.budget}</span>
+                </div>
+              </div>
+              <span class="pill ${p.pill}" style="flex-shrink:0">${p.pillText}</span>
+            </div>
+
+            <!-- Description -->
+            <div style="font-size:12px;color:var(--text-3);margin-bottom:16px;line-height:1.6">${p.description}</div>
+
+            <!-- Gantt -->
+            <div style="margin-bottom:14px">
+              <div style="display:flex;margin-bottom:6px;padding-left:150px">
+                ${p.months.map(m => `<div style="flex:1;font-size:10px;color:var(--text-3);text-align:center;text-transform:uppercase;letter-spacing:1px">${m}</div>`).join('')}
+              </div>
+              ${p.phases.map(ph => `
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">
+                  <div style="width:140px;flex-shrink:0;font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ph.name}</div>
+                  <div style="flex:1;height:20px;background:var(--dark-3);border-radius:4px;position:relative;overflow:hidden">
+                    <div style="position:absolute;height:100%;border-radius:4px;left:${ph.left};width:${ph.width};background:${ph.color};display:flex;align-items:center;padding:0 8px;font-size:10px;color:rgba(255,255,255,.7)">
+                      ${ph.pct > 0 ? ph.pct + '%' : ''}
+                    </div>
+                    <div style="position:absolute;top:0;bottom:0;width:1px;background:var(--gold);opacity:.5;left:${p.todayPct}"></div>
+                  </div>
+                </div>`).join('')}
+            </div>
+
+            <!-- Footer stats -->
+            <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+              <div style="flex:1;min-width:120px">
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-3);margin-bottom:4px">
+                  <span>Overall progress</span><span>${p.progress}%</span>
+                </div>
+                <div class="prog-bar"><div class="prog-fill" style="width:${p.progress}%;background:${p.color}"></div></div>
+              </div>
+              <div style="display:flex;gap:20px;flex-shrink:0">
+                <div style="text-align:center">
+                  <div style="font-size:16px;font-weight:500;color:var(--text-1)">${p.tasks}</div>
+                  <div style="font-size:10px;color:var(--text-3)">Open tasks</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:16px;font-weight:500;color:var(--text-1)">${p.milestones.filter(m=>!m.done).length}</div>
+                  <div style="font-size:10px;color:var(--text-3)">Milestones left</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:16px;font-weight:500;color:var(--text-1)">${p.team}</div>
+                  <div style="font-size:10px;color:var(--text-3)">Team members</div>
+                </div>
+              </div>
+              <!-- Tags -->
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                ${p.tags.map(t => `<span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,.05);color:var(--text-3);border:0.5px solid var(--border)">${t}</span>`).join('')}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </a>
+  `).join('');
+}
+
+const style = document.createElement('style');
+style.textContent = `.active-filter{background:var(--dark-2)!important;color:var(--text-1)!important;border-color:var(--border-md)!important}`;
+document.head.appendChild(style);
+
+
+
+</script>
+</body>
+</html>

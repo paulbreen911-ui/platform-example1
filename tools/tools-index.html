@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools — Production Central</title>
+<link rel="stylesheet" href="../shared/style.css">
+<script>window.PC_PAGE = 'tools'; window.PC_INIT = 'tools';</script>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+
+<div class="page-shell">
+
+  <div class="page-header">
+    <div class="page-title">Tools</div>
+    <div class="page-sub">Interactive calculators and utilities for live event professionals</div>
+  </div>
+
+  <div class="tools-grid">
+
+    <a href="test-pattern-generator.html" class="tool-card">
+      <div class="tool-card-icon">📺</div>
+      <div class="tool-card-content">
+        <div class="tool-card-title">Test Pattern Generator</div>
+        <div class="tool-card-desc">Alignment, calibration and colour test patterns for projection, LED and display systems. Grid, SMPTE bars, focus charts, zone plates, colour chips, professional PNG export and fullscreen popout output.</div>
+        <div class="tool-card-tags">
+          <span class="tool-tag">Projection</span>
+          <span class="tool-tag">LED</span>
+          <span class="tool-tag">Calibration</span>
+          <span class="tool-tag">Display</span>
+        </div>
+      </div>
+      <div class="tool-card-arrow">→</div>
+    </a>
+
+    <a href="#" class="tool-card tool-card--soon">
+      <div class="tool-card-icon">📻</div>
+      <div class="tool-card-content">
+        <div class="tool-card-title">RF Frequency Planner</div>
+        <div class="tool-card-desc">Intermodulation-free wireless coordination for multi-channel RF environments.</div>
+        <div class="tool-card-tags">
+          <span class="tool-tag">Wireless</span>
+          <span class="tool-tag">IEM</span>
+          <span class="tool-tag">RF</span>
+        </div>
+      </div>
+      <div class="tool-card-soon-badge">Coming soon</div>
+    </a>
+
+    <a href="#" class="tool-card tool-card--soon">
+      <div class="tool-card-icon">📐</div>
+      <div class="tool-card-content">
+        <div class="tool-card-title">Throw Distance Calculator</div>
+        <div class="tool-card-desc">Projector lens range, throw ratio and screen sizing for any room configuration.</div>
+        <div class="tool-card-tags">
+          <span class="tool-tag">Projection</span>
+          <span class="tool-tag">Lens</span>
+        </div>
+      </div>
+      <div class="tool-card-soon-badge">Coming soon</div>
+    </a>
+
+    <a href="#" class="tool-card tool-card--soon">
+      <div class="tool-card-icon">⚡</div>
+      <div class="tool-card-content">
+        <div class="tool-card-title">Power & Distro Calculator</div>
+        <div class="tool-card-desc">Load calculations, circuit planning and generator sizing for live event power distribution.</div>
+        <div class="tool-card-tags">
+          <span class="tool-tag">Power</span>
+          <span class="tool-tag">PDU</span>
+          <span class="tool-tag">Generator</span>
+        </div>
+      </div>
+      <div class="tool-card-soon-badge">Coming soon</div>
+    </a>
+
+    <a href="#" class="tool-card tool-card--soon">
+      <div class="tool-card-icon">🔊</div>
+      <div class="tool-card-content">
+        <div class="tool-card-title">SPL & Coverage Estimator</div>
+        <div class="tool-card-desc">PA coverage and dB calculations by room size and speaker placement.</div>
+        <div class="tool-card-tags">
+          <span class="tool-tag">Audio</span>
+          <span class="tool-tag">PA</span>
+          <span class="tool-tag">dB</span>
+        </div>
+      </div>
+      <div class="tool-card-soon-badge">Coming soon</div>
+    </a>
+
+    <a href="#" class="tool-card tool-card--soon">
+      <div class="tool-card-icon">🏟</div>
+      <div class="tool-card-content">
+        <div class="tool-card-title">Capacity Estimator</div>
+        <div class="tool-card-desc">Seated, cocktail, theater and festival layout capacity by venue dimensions.</div>
+        <div class="tool-card-tags">
+          <span class="tool-tag">Venue</span>
+          <span class="tool-tag">Layout</span>
+        </div>
+      </div>
+      <div class="tool-card-soon-badge">Coming soon</div>
+    </a>
+
+  </div>
+
+  <div class="tools-cta">
+    <span>Have a tool that would help the industry?</span>
+    <a href="#" class="tools-cta-link">Submit a tool idea →</a>
+  </div>
+
+</div>
+
+<style>
+.page-shell { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+.page-header { margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--border, #21262d); }
+.page-title { font-size: 22px; font-weight: 700; color: var(--text, #e6edf3); margin-bottom: 4px; }
+.page-sub { font-size: 14px; color: var(--text2, #8b949e); }
+
+.tools-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 32px; }
+
+.tool-card {
+  display: flex; align-items: center; gap: 18px; padding: 18px 20px;
+  background: var(--panel, #161b22); border: 1px solid var(--border, #21262d);
+  border-radius: 8px; text-decoration: none; color: inherit;
+  transition: border-color 0.15s, background 0.15s; position: relative;
+}
+.tool-card:hover:not(.tool-card--soon) { border-color: var(--accent, #e67e22); background: var(--panel2, #1c2128); }
+.tool-card--soon { opacity: 0.48; cursor: default; pointer-events: none; }
+
+.tool-card-icon { font-size: 26px; flex-shrink: 0; width: 42px; text-align: center; }
+.tool-card-content { flex: 1; min-width: 0; }
+.tool-card-title { font-size: 15px; font-weight: 600; color: var(--text, #e6edf3); margin-bottom: 5px; }
+.tool-card-desc { font-size: 13px; color: var(--text2, #8b949e); line-height: 1.55; margin-bottom: 10px; }
+.tool-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tool-tag {
+  font-size: 11px; font-weight: 500; color: var(--text2, #8b949e);
+  background: var(--panel2, #1c2128); border: 1px solid var(--border, #21262d);
+  border-radius: 4px; padding: 2px 8px; white-space: nowrap;
+}
+.tool-card-arrow { font-size: 16px; color: var(--accent, #e67e22); flex-shrink: 0; }
+.tool-card-soon-badge {
+  position: absolute; top: 14px; right: 16px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--text3, #484f58); background: var(--panel2, #1c2128);
+  border: 1px solid var(--border, #21262d); border-radius: 4px; padding: 2px 8px;
+}
+.tools-cta {
+  display: flex; align-items: center; gap: 16px; padding: 14px 18px;
+  background: var(--panel, #161b22); border: 1px solid var(--border, #21262d);
+  border-radius: 8px; font-size: 13px; color: var(--text2, #8b949e);
+}
+.tools-cta-link { color: var(--accent, #e67e22); text-decoration: none; font-weight: 500; }
+.tools-cta-link:hover { text-decoration: underline; }
+</style>
+
+</body>
+</html>

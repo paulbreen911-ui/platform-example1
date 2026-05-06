@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Production — Production Central</title>
+<link rel="stylesheet" href="../shared/style.css">
+<style>
+.tab-content { display:none }
+.tab-content.active { display:block }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="pc-nav"></nav>
+
+<div class="shell">
+  <aside class="sidebar" id="pc-sidebar"></aside>
+
+  <main class="main">
+
+    <div style="margin-bottom:16px">
+      <a class="btn btn-ghost btn-sm" href="productions.html">← Productions</a>
+    </div>
+
+    <!-- Hero -->
+    <div class="prod-hero">
+      <div class="prod-hero-ey">Production workspace</div>
+      <div class="prod-hero-name" id="hero-name">SUMMERSET CORPORATE GALA</div>
+      <div class="prod-hero-meta">
+        <div class="prod-hero-item">📍 <strong id="hero-venue">Grand Ballroom, Las Vegas NV</strong></div>
+        <div class="prod-hero-item">🗓 <strong id="hero-dates">Jun 12–15, 2025</strong></div>
+        <div class="prod-hero-item">👥 <strong id="hero-guests">340 guests</strong></div>
+        <div class="prod-hero-item">💰 <strong id="hero-budget">$86,000</strong></div>
+        <span class="pill pill-live" id="hero-pill">Live tonight</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="prod-tabs" id="prod-tab-bar">
+      <button class="pt active" onclick="switchTab('overview',this)">Overview</button>
+      <button class="pt" onclick="switchTab('ros',this)">Run of show</button>
+      <button class="pt" onclick="switchTab('callsheet',this)">Call sheets</button>
+      <button class="pt" onclick="switchTab('messages',this)">Messages</button>
+      <button class="pt" onclick="switchTab('documents',this)">Documents</button>
+      <button class="pt" onclick="switchTab('calendar',this)">Calendar</button>
+      <button class="pt" onclick="switchTab('tasks',this)">Tasks</button>
+      <button class="pt" onclick="switchTab('team',this)">Team</button>
+      <button class="pt" onclick="switchTab('budget',this)">Budget</button>
+      <button class="pt" onclick="switchTab('vendors',this)">Vendors</button>
+      <button class="pt" onclick="switchTab('files',this)">Files</button>
+    </div>
+
+    <!-- ── OVERVIEW ── -->
+    <div id="tab-overview" class="tab-content active">
+      <div class="live-banner">
+        <div class="live-l">
+          <div class="live-dot"></div>
+          <div>
+            <div class="live-title">Show is live now</div>
+            <div class="live-sub">Sarah M. calling · Q14 of 23 · 5 crew connected</div>
+          </div>
+        </div>
+        <a class="btn btn-danger" href="ros-live.html">Open live caller →</a>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 260px;gap:16px">
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- Phases -->
+          <div class="card">
+            <div class="chd"><div class="cht">Production phases</div></div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:14px 16px">
+              <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--green-dim);border:0.5px solid rgba(58,122,68,.3)"><div style="font-size:9px;color:#66BB6A;font-weight:500;margin-bottom:3px">✓ Done</div><div style="font-size:11px;color:#66BB6A">Pre-prod</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--green-dim);border:0.5px solid rgba(58,122,68,.3)"><div style="font-size:9px;color:#66BB6A;font-weight:500;margin-bottom:3px">✓ Done</div><div style="font-size:11px;color:#66BB6A">Load-in</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--green-dim);border:0.5px solid rgba(58,122,68,.3)"><div style="font-size:9px;color:#66BB6A;font-weight:500;margin-bottom:3px">✓ Done</div><div style="font-size:11px;color:#66BB6A">Tech</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--live-dim);border:0.5px solid rgba(232,53,10,.25)"><div style="font-size:9px;color:var(--live);font-weight:500;margin-bottom:3px">🔴 Live</div><div style="font-size:11px;color:var(--live)">Show</div></div>
+              <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--dark-3);border:0.5px solid var(--border)"><div style="font-size:9px;color:var(--text-3);font-weight:500;margin-bottom:3px">Upcoming</div><div style="font-size:11px;color:var(--text-3)">Strike</div></div>
+            </div>
+          </div>
+
+          <!-- Tasks -->
+          <div class="card">
+            <div class="chd"><div class="cht">Open tasks</div><button class="cha" onclick="switchTab('tasks')">View all →</button></div>
+            <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Send runsheet to venue coordinator</div><div class="tr-ref">Due May 3</div></div><div class="td">May 3</div></div>
+            <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Review insurance certificates</div><div class="tr-ref">Due May 1</div></div><div class="td over">May 1</div></div>
+            <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Finalize menu selections</div><div class="tr-ref">Completed Apr 22</div></div></div>
+          </div>
+
+          <!-- Activity -->
+          <div class="card">
+            <div class="chd"><div class="cht">Recent activity</div></div>
+            <div class="act-row"><div class="act-av" style="background:var(--live-dim);color:#FF7043">SM</div><div><div class="act-text"><strong>Sarah M.</strong> started the run of show</div><div class="act-time">1h ago</div></div></div>
+            <div class="act-row"><div class="act-av" style="background:var(--blue-dim);color:#5B9FE0">TR</div><div><div class="act-text"><strong>Tom R.</strong> uploaded AV contract PDF</div><div class="act-time">2h ago</div></div></div>
+            <div class="act-row"><div class="act-av" style="background:var(--gold-dim);color:var(--gold)">DL</div><div><div class="act-text"><strong>Dana L.</strong> updated lighting notes in ROS</div><div class="act-time">3h ago</div></div></div>
+          </div>
+        </div>
+
+        <!-- Right col -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="ns-hd"><div class="ns-ey">Show info</div><div class="ns-name">Tonight</div><div class="ns-date">Jun 14, 2025 · Night 1</div></div>
+            <div class="ns-body">
+              <div class="ns-row"><span class="ns-lbl">Crew call</span><span class="ns-val">3:00 PM</span></div>
+              <div class="ns-row"><span class="ns-lbl">Doors</span><span class="ns-val">6:30 PM</span></div>
+              <div class="ns-row"><span class="ns-lbl">Show end</span><span class="ns-val">~11:30 PM</span></div>
+              <div class="ns-row"><span class="ns-lbl">Strike</span><span class="ns-val">Jun 15 · 8 AM</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="chd"><div class="cht">Quick links</div></div>
+            <div class="row clickable" onclick="switchTab('ros')"><span>▶</span><span style="font-size:12px">Run of show</span></div>
+            <div class="row clickable" onclick="switchTab('callsheet')"><span>📋</span><span style="font-size:12px">Call sheets</span></div>
+            <div class="row clickable" onclick="switchTab('messages')"><span>💬</span><span style="font-size:12px">Team messages</span></div>
+            <div class="row clickable" onclick="switchTab('documents')"><span>📄</span><span style="font-size:12px">Documents</span></div>
+            <a class="row clickable" href="drive.html?folder=gala"><span>📁</span><span style="font-size:12px">Production drive</span></a>
+          </div>
+          <div class="card">
+            <div class="chd"><div class="cht">Team tonight</div></div>
+            <div class="task-row"><div style="width:28px;height:28px;border-radius:50%;background:var(--live-dim);color:#FF7043;font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">SM</div><div class="tb"><div class="tn">Sarah M.</div><div class="tr-ref">SM · Calling</div></div><span class="pill pill-live" style="font-size:9px">Live</span></div>
+            <div class="task-row"><div style="width:28px;height:28px;border-radius:50%;background:var(--blue-dim);color:#5B9FE0;font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">TR</div><div class="tb"><div class="tn">Tom R.</div><div class="tr-ref">TD · Connected</div></div><span class="pill pill-green" style="font-size:9px">Online</span></div>
+            <div class="task-row"><div style="width:28px;height:28px;border-radius:50%;background:var(--gold-dim);color:var(--gold);font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">DL</div><div class="tb"><div class="tn">Dana L.</div><div class="tr-ref">LD · Connected</div></div><span class="pill pill-green" style="font-size:9px">Online</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RUN OF SHOW ── -->
+    <div id="tab-ros" class="tab-content">
+      <div style="margin-bottom:4px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3)">Select show day</div>
+      <div class="ros-day-selector" id="ros-day-selector">
+        <button class="ros-day-btn" onclick="selectROSDay(this,'Tech rehearsal · Jun 13, 2025','pre')"><div class="ros-day-dot"></div>Jun 13 — Tech rehearsal</button>
+        <button class="ros-day-btn live-day active" onclick="selectROSDay(this,'Show night 1 · Jun 14, 2025','live')"><div class="ros-day-dot"></div>Jun 14 — Show night 1 · Live</button>
+        <button class="ros-day-btn" onclick="selectROSDay(this,'Strike · Jun 15, 2025','pre')"><div class="ros-day-dot"></div>Jun 15 — Strike</button>
+        <button class="btn btn-ghost btn-sm" onclick="addROSDay()">+ Add day</button>
+      </div>
+
+      <div class="ros-toolbar">
+        <div class="ros-status live" id="ros-status"><div class="ros-dot"></div>Live · Cue 14 of 23</div>
+        <div style="font-size:12px;color:var(--text-3);margin-left:4px" id="ros-day-label">Show night 1 · Jun 14, 2025</div>
+        <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="togglePrint()">🖨 Print preview</button>
+          <button class="btn btn-ghost btn-sm" onclick="addSection()">+ Section</button>
+          <button class="btn btn-ghost btn-sm" onclick="addCue()">+ Cue</button>
+          <a class="btn btn-gold btn-sm" href="ros-live.html">▶ Live caller</a>
+        </div>
+      </div>
+
+      <div id="ros-builder">
+        <div style="overflow-x:auto;border-radius:10px;border:0.5px solid var(--border)">
+          <table class="ros-tbl"><thead><tr>
+            <th style="width:28px"></th>
+            <th style="width:55px">Time</th>
+            <th>Item / cue</th>
+            <th style="width:80px">Dept</th>
+            <th style="width:65px">Duration</th>
+            <th>Notes</th>
+            <th style="width:32px"></th>
+          </tr></thead><tbody id="ros-body"></tbody></table>
+        </div>
+        <div class="ros-add" onclick="addCue()"><span style="font-size:16px;opacity:.4">+</span>Add cue row</div>
+      </div>
+
+      <div id="ros-print" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div style="font-size:13px;color:var(--text-2)">Print preview</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="togglePrint()">← Back to editor</button>
+            <button class="btn btn-gold btn-sm" onclick="window.print()">Print / Save PDF</button>
+          </div>
+        </div>
+        <div class="print-wrap" id="print-content"></div>
+      </div>
+    </div>
+
+    <!-- ── CALL SHEETS ── -->
+    <div id="tab-callsheet" class="tab-content">
+      <div style="margin-bottom:4px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-3)">Select day</div>
+      <div class="ros-day-selector" id="call-day-selector">
+        <button class="ros-day-btn" onclick="selectCallDay(this,'Load-in · Jun 12, 2025')"><div class="ros-day-dot"></div>Jun 12 — Load-in</button>
+        <button class="ros-day-btn" onclick="selectCallDay(this,'Tech day · Jun 13, 2025')"><div class="ros-day-dot"></div>Jun 13 — Tech</button>
+        <button class="ros-day-btn live-day active" onclick="selectCallDay(this,'Show day · Jun 14, 2025')"><div class="ros-day-dot"></div>Jun 14 — Show day · Tonight</button>
+        <button class="ros-day-btn" onclick="selectCallDay(this,'Strike · Jun 15, 2025')"><div class="ros-day-dot"></div>Jun 15 — Strike</button>
+        <button class="btn btn-ghost btn-sm">+ New call sheet</button>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <div style="font-size:13px;font-weight:500" id="callsheet-title">Call sheet — Jun 14, 2025 (Show day)</div>
+          <div style="font-size:12px;color:var(--text-3)">Summerset Corporate Gala · Grand Ballroom, Las Vegas</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="window.print()">Export PDF</button>
+          <button class="btn btn-gold btn-sm">Send to crew</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div class="card">
+          <div class="chd"><div class="cht">Crew calls</div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">3:00p</div><div class="tb"><div class="tn">General crew call — all departments</div></div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">3:30p</div><div class="tb"><div class="tn">Lighting focus & programming</div><div class="tr-ref">LD, board op</div></div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">4:30p</div><div class="tb"><div class="tn">Soundcheck</div><div class="tr-ref">FOH, monitors, RF</div></div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">5:00p</div><div class="tb"><div class="tn">SM crew walkthrough — all dept heads</div></div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">6:00p</div><div class="tb"><div class="tn">Crew ready / places</div></div></div>
+        </div>
+        <div class="card">
+          <div class="chd"><div class="cht">Show schedule</div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">6:30p</div><div class="tb"><div class="tn">Doors open / cocktail reception</div></div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">7:40p</div><div class="tb"><div class="tn">Welcome remarks — CEO (~10 min)</div></div></div>
+          <div class="task-row" style="background:rgba(232,53,10,.05)"><div style="font-family:var(--mono);font-size:11px;color:var(--live);width:44px;flex-shrink:0">NOW</div><div class="tb"><div class="tn" style="color:var(--live)">Dinner service</div></div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">~9:10p</div><div class="tb"><div class="tn">Awards presentation (~35 min)</div></div></div>
+          <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">11:15p</div><div class="tb"><div class="tn">Last call / closing</div></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="chd"><div class="cht">Key contacts tonight</div></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr)">
+          <div style="padding:12px 16px;border-right:0.5px solid var(--border)"><div style="font-size:10px;color:var(--text-3);margin-bottom:3px">Lead producer</div><div style="font-weight:500">Jordan K.</div><div style="font-size:11px;color:var(--text-3)">(702) 555-0101</div></div>
+          <div style="padding:12px 16px;border-right:0.5px solid var(--border)"><div style="font-size:10px;color:var(--text-3);margin-bottom:3px">Stage manager</div><div style="font-weight:500">Sarah M.</div><div style="font-size:11px;color:var(--text-3)">(702) 555-0192</div></div>
+          <div style="padding:12px 16px;border-right:0.5px solid var(--border)"><div style="font-size:10px;color:var(--text-3);margin-bottom:3px">TD / AV</div><div style="font-weight:500">Tom R.</div><div style="font-size:11px;color:var(--text-3)">(702) 555-0233</div></div>
+          <div style="padding:12px 16px"><div style="font-size:10px;color:var(--text-3);margin-bottom:3px">Venue coordinator</div><div style="font-weight:500">Lisa T.</div><div style="font-size:11px;color:var(--text-3)">(702) 555-0344</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MESSAGES ── -->
+    <div id="tab-messages" class="tab-content">
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-size:13px;font-weight:500">Summerset Gala — Team chat</div><div style="font-size:12px;color:var(--text-3)">5 members · All production team</div></div>
+        <a class="btn btn-ghost btn-sm" href="messages.html">All messages →</a>
+      </div>
+      <div style="background:var(--dark-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;height:520px;display:flex;flex-direction:column">
+        <div class="msg-messages" id="prod-msg-list">
+          <div class="msg-date-divider">Today · June 14, 2025</div>
+          <div class="msg-bubble-wrap">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--live-dim);color:#FF7043;font-size:9px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:2px">SM</div>
+            <div class="msg-bubble-col">
+              <div class="msg-sender-name">Sarah M.</div>
+              <div class="msg-bubble other">Morning team — load-in running smooth. AV set up, waiting on lighting focus.</div>
+              <div class="msg-bubble-time">8:14 AM</div>
+            </div>
+          </div>
+          <div class="msg-bubble-wrap mine">
+            <div class="msg-bubble-col">
+              <div class="msg-bubble mine">Great. Client arrives at 4pm for a walkthrough.</div>
+              <div class="msg-bubble-time">8:45 AM</div>
+            </div>
+          </div>
+          <div class="msg-system">Sarah M. started the run of show · 5:58 PM</div>
+          <div class="msg-bubble-wrap">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--live-dim);color:#FF7043;font-size:9px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:2px">SM</div>
+            <div class="msg-bubble-col">
+              <div class="msg-sender-name">Sarah M.</div>
+              <div class="msg-bubble other">ROS loaded and ready. Cue 1 on standby.</div>
+              <div class="msg-bubble-time">5:59 PM</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:6px 14px 4px;border-top:0.5px solid var(--border)">
+          <div class="msg-ref-picker">
+            <div class="msg-ref-chip" onclick="switchTab('ros')">▶ Run of show</div>
+            <div class="msg-ref-chip" onclick="switchTab('callsheet')">📋 Call sheet</div>
+            <div class="msg-ref-chip" onclick="switchTab('tasks')">✅ Tasks</div>
+            <div class="msg-ref-chip" onclick="switchTab('documents')">📄 Documents</div>
+          </div>
+        </div>
+        <div class="msg-input-area" style="padding:10px 14px">
+          <div class="msg-input-row">
+            <div class="msg-input-wrap">
+              <textarea class="msg-input" id="prod-msg-input" placeholder="Message the team…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendProdMsg()}" oninput="autoResize(this)"></textarea>
+            </div>
+            <button class="msg-send-btn" onclick="sendProdMsg()">↑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DOCUMENTS ── -->
+    <div id="tab-documents" class="tab-content">
+      <div id="doc-library-view">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <div><div style="font-size:13px;font-weight:500;margin-bottom:3px">Documents</div><div style="font-size:12px;color:var(--text-3)">All production docs live here. Always current. Printable anytime.</div></div>
+          <button class="btn btn-gold btn-sm">+ New document</button>
+        </div>
+
+        <!-- Saved docs -->
+        <div style="margin-bottom:22px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-3);margin-bottom:10px">Saved documents</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="card clickable row" onclick="switchTab('ros')" style="border-radius:9px;padding:14px 18px"><span style="font-size:18px">▶</span><div style="flex:1"><div style="font-size:13px;font-weight:500">Run of show</div><div style="font-size:11px;color:var(--text-3)">3 show days · Sarah M. calling · Jun 14 live</div></div><div style="display:flex;gap:8px"><a class="btn btn-danger btn-sm" href="ros-live.html" onclick="event.stopPropagation()">Live caller</a><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();switchTab('ros')">Open →</button></div></div>
+            <div class="card clickable row" onclick="openDoc('callsheet')" style="border-radius:9px;padding:14px 18px"><span style="font-size:18px">📋</span><div style="flex:1"><div style="font-size:13px;font-weight:500">Call sheet — Jun 14, 2025</div><div style="font-size:11px;color:var(--text-3)">Last edited today · Jordan K.</div></div><div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();window.print()">Print</button><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openDoc('callsheet')">Open →</button></div></div>
+            <div class="card clickable row" onclick="openDoc('room-list')" style="border-radius:9px;padding:14px 18px"><span style="font-size:18px">🏨</span><div style="flex:1"><div style="font-size:13px;font-weight:500">Room list — Summerset Gala</div><div style="font-size:11px;color:var(--text-3)">Last edited Jun 10 · Jordan K. · 8 crew</div></div><div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();window.print()">Print</button><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openDoc('room-list')">Open →</button></div></div>
+            <div class="card clickable row" onclick="openDoc('prod-schedule')" style="border-radius:9px;padding:14px 18px"><span style="font-size:18px">📅</span><div style="flex:1"><div style="font-size:13px;font-weight:500">Production schedule</div><div style="font-size:11px;color:var(--text-3)">Last edited Jun 8 · Jordan K.</div></div><div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();window.print()">Print</button><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openDoc('prod-schedule')">Open →</button></div></div>
+          </div>
+        </div>
+
+        <!-- Templates -->
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-3);margin-bottom:10px">Templates — click to create</div>
+          <div class="doc-grid">
+            <div class="doc-template" onclick="switchTab('ros')"><div class="doc-icon">▶</div><div class="doc-name">Run of show</div><div class="doc-desc">Build or open the run of show for any production day. Live caller, cue tracking and crew view.</div><span class="doc-tag" style="background:rgba(232,53,10,.12);color:var(--live);border-color:rgba(232,53,10,.25)">Core doc</span></div>
+            <div class="doc-template" onclick="openDoc('callsheet')"><div class="doc-icon">📋</div><div class="doc-name">Call sheet</div><div class="doc-desc">Crew calls, show schedule, key contacts. Pre-filled from your production data.</div><span class="doc-tag">Pre-filled</span></div>
+            <div class="doc-template" onclick="openDoc('prod-schedule')"><div class="doc-icon">📅</div><div class="doc-name">Production schedule</div><div class="doc-desc">Day-by-day from load-in through strike with department assignments.</div><span class="doc-tag">Pre-filled</span></div>
+            <div class="doc-template" onclick="openDoc('crew-contact')"><div class="doc-icon">👥</div><div class="doc-name">Crew contact sheet</div><div class="doc-desc">Everyone on the team with roles and numbers. Auto-generated from roster.</div><span class="doc-tag">Auto-gen</span></div>
+            <div class="doc-template" onclick="openDoc('room-list')"><div class="doc-icon">🏨</div><div class="doc-name">Room list</div><div class="doc-desc">Hotel rooming list — crew names, room numbers, check-in/out, hotel contacts.</div><span class="doc-tag">Template</span></div>
+            <div class="doc-template" onclick="openDoc('vendor-list')"><div class="doc-icon">🏪</div><div class="doc-name">Vendor contact sheet</div><div class="doc-desc">All confirmed vendors with contacts and contract status.</div><span class="doc-tag">Auto-gen</span></div>
+            <div class="doc-template" onclick="openDoc('site-survey')"><div class="doc-icon">🏟</div><div class="doc-name">Site survey</div><div class="doc-desc">Venue details, power specs, loading access, rigging notes, Wi-Fi.</div><span class="doc-tag">Template</span></div>
+            <div class="doc-template" onclick="openDoc('day-of')"><div class="doc-icon">☀️</div><div class="doc-name">Day-of briefing</div><div class="doc-desc">Show overview, timeline, emergency contacts, venue rules for full crew.</div><span class="doc-tag">Template</span></div>
+            <div class="doc-template" onclick="openDoc('advance')"><div class="doc-icon">📝</div><div class="doc-name">Advance sheet</div><div class="doc-desc">Pre-show requirements sent to venue — power, access, catering, parking.</div><span class="doc-tag">Template</span></div>
+            <div class="doc-template"><div class="doc-icon">➕</div><div class="doc-name">Blank document</div><div class="doc-desc">Start from scratch with a blank editable document.</div><span class="doc-tag" style="background:rgba(255,255,255,.05);color:var(--text-3);border-color:var(--border)">Custom</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editor -->
+      <div id="doc-editor-view" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <button class="btn btn-ghost btn-sm" onclick="closeDoc()">← Documents</button>
+          <div style="flex:1;font-size:13px;font-weight:500" id="doc-editor-title">Document</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Print</button>
+            <button class="btn btn-ghost btn-sm">Export PDF</button>
+            <button class="btn btn-gold btn-sm">Save</button>
+          </div>
+        </div>
+        <div class="doc-editor" id="doc-editor-content"></div>
+      </div>
+    </div>
+
+    <!-- ── CALENDAR ── -->
+    <div id="tab-calendar" class="tab-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <div style="font-size:13px;font-weight:500">Production calendar — Summerset Gala</div>
+        <button class="btn btn-gold btn-sm">+ Add event</button>
+      </div>
+      <div class="cal-grid-wrap">
+        <div class="cal-dow-row"><div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div></div>
+        <div class="cal-week">
+          <div class="cal-day other-month"><div class="cal-day-num">1</div></div><div class="cal-day other-month"><div class="cal-day-num">2</div></div><div class="cal-day other-month"><div class="cal-day-num">3</div></div><div class="cal-day other-month"><div class="cal-day-num">4</div></div><div class="cal-day other-month"><div class="cal-day-num">5</div></div><div class="cal-day other-month"><div class="cal-day-num">6</div></div><div class="cal-day other-month"><div class="cal-day-num">7</div></div>
+        </div>
+        <div class="cal-week">
+          <div class="cal-day"><div class="cal-day-num">8</div></div><div class="cal-day"><div class="cal-day-num">9</div></div><div class="cal-day"><div class="cal-day-num">10</div></div><div class="cal-day"><div class="cal-day-num">11</div></div>
+          <div class="cal-day"><div class="cal-day-num">12</div><div class="cal-event cev-load">8am Load-in</div><div class="cal-event cev-call">All crew</div></div>
+          <div class="cal-day"><div class="cal-day-num">13</div><div class="cal-event cev-tech">2pm Tech</div><div class="cal-event cev-call">SM call 1pm</div></div>
+          <div class="cal-day" style="background:rgba(232,53,10,.06)"><div class="cal-day-num" style="color:var(--live)">14 🔴</div><div class="cal-event cev-call">Crew 3pm</div><div class="cal-event cev-show">Show 6:30pm</div></div>
+        </div>
+        <div class="cal-week">
+          <div class="cal-day"><div class="cal-day-num">15</div><div class="cal-event cev-strike">8am Strike</div></div>
+          <div class="cal-day"><div class="cal-day-num">16</div></div><div class="cal-day"><div class="cal-day-num">17</div></div><div class="cal-day"><div class="cal-day-num">18</div></div><div class="cal-day"><div class="cal-day-num">19</div></div><div class="cal-day"><div class="cal-day-num">20</div></div><div class="cal-day"><div class="cal-day-num">21</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TASKS ── -->
+    <div id="tab-tasks" class="tab-content">
+      <div class="card">
+        <div class="chd"><div class="cht">Production tasks</div><button class="btn btn-gold btn-sm">+ Add task</button></div>
+        <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Send runsheet to venue coordinator</div><div class="tr-ref">Due May 3 · Jordan K.</div></div><div class="td">May 3</div></div>
+        <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Review insurance certificates from all vendors</div><div class="tr-ref">Due May 1 · Jordan K.</div></div><div class="td over">May 1</div></div>
+        <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Confirm final guest count with client</div><div class="tr-ref">Completed Apr 20</div></div></div>
+        <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Finalize menu selections with MGM catering</div><div class="tr-ref">Completed Apr 22</div></div></div>
+        <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Collect signed vendor contracts</div><div class="tr-ref">Completed Apr 18</div></div></div>
+      </div>
+    </div>
+
+    <!-- ── TEAM ── -->
+    <div id="tab-team" class="tab-content">
+      <div class="card">
+        <div class="chd"><div class="cht">Production team</div><button class="btn btn-gold btn-sm">+ Add member</button></div>
+        <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--purp-dim);color:#B39DDB;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">JK</div><div class="tb"><div class="tn">Jordan Kim</div><div class="tr-ref">Lead producer · All access</div></div><span class="pill pill-gold">Admin</span></div>
+        <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--live-dim);color:#FF7043;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">SM</div><div class="tb"><div class="tn">Sarah M.</div><div class="tr-ref">Stage manager · All access</div></div><span class="pill pill-gold">Admin</span></div>
+        <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--blue-dim);color:#5B9FE0;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">TR</div><div class="tb"><div class="tn">Tom R.</div><div class="tr-ref">Technical director · AV dept</div></div><span class="pill pill-plan">Dept head</span></div>
+        <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--gold-dim);color:var(--gold);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">DL</div><div class="tb"><div class="tn">Dana L.</div><div class="tr-ref">Lighting designer · LX dept</div></div><span class="pill pill-plan">Dept head</span></div>
+        <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--green-dim);color:#66BB6A;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">PN</div><div class="tb"><div class="tn">Priya N.</div><div class="tr-ref">Stagehand · Call times + ROS view</div></div><span class="pill pill-draft">Crew</span></div>
+        <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--dark-3);color:var(--text-3);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">SC</div><div class="tb"><div class="tn">Sarah Chen</div><div class="tr-ref">Client · Schedule + files only</div></div><span class="pill pill-amber">Client</span></div>
+      </div>
+    </div>
+
+    <!-- ── BUDGET ── -->
+    <div id="tab-budget" class="tab-content">
+      <div class="card">
+        <div class="chd"><div class="cht">Budget tracker</div><button class="btn btn-ghost btn-sm">Export</button></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px 16px;border-bottom:0.5px solid var(--border)">
+          <div style="background:var(--dark-3);border-radius:8px;padding:13px"><div style="font-size:10px;color:var(--text-3);margin-bottom:4px">Total budget</div><div style="font-size:22px;font-weight:500">$86,000</div></div>
+          <div style="background:var(--dark-3);border-radius:8px;padding:13px"><div style="font-size:10px;color:var(--text-3);margin-bottom:4px">Committed</div><div style="font-size:22px;font-weight:500">$85,600</div></div>
+          <div style="background:var(--dark-3);border-radius:8px;padding:13px"><div style="font-size:10px;color:var(--text-3);margin-bottom:4px">Remaining</div><div style="font-size:22px;font-weight:500;color:#66BB6A">+$400</div></div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:var(--dark-3)"><th style="text-align:left;padding:9px 18px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Line item</th><th style="text-align:right;padding:9px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Budgeted</th><th style="text-align:right;padding:9px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Actual</th><th style="text-align:right;padding:9px 18px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Variance</th></tr></thead>
+          <tbody>
+            <tr style="border-bottom:0.5px solid var(--border)"><td style="padding:10px 18px">Venue rental</td><td style="padding:10px;text-align:right">$22,000</td><td style="padding:10px;text-align:right">$22,000</td><td style="padding:10px 18px;text-align:right;color:#66BB6A">$0</td></tr>
+            <tr style="border-bottom:0.5px solid var(--border)"><td style="padding:10px 18px">Food & beverage</td><td style="padding:10px;text-align:right">$28,000</td><td style="padding:10px;text-align:right">$29,400</td><td style="padding:10px 18px;text-align:right;color:var(--live)">-$1,400</td></tr>
+            <tr style="border-bottom:0.5px solid var(--border)"><td style="padding:10px 18px">AV & production</td><td style="padding:10px;text-align:right">$14,000</td><td style="padding:10px;text-align:right">$13,200</td><td style="padding:10px 18px;text-align:right;color:#66BB6A">+$800</td></tr>
+            <tr style="border-bottom:0.5px solid var(--border)"><td style="padding:10px 18px">Décor & florals</td><td style="padding:10px;text-align:right">$8,500</td><td style="padding:10px;text-align:right">$8,500</td><td style="padding:10px 18px;text-align:right;color:#66BB6A">$0</td></tr>
+            <tr><td style="padding:10px 18px">Contingency</td><td style="padding:10px;text-align:right">$3,000</td><td style="padding:10px;text-align:right">$1,700</td><td style="padding:10px 18px;text-align:right;color:#66BB6A">+$1,300</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── VENDORS ── -->
+    <div id="tab-vendors" class="tab-content">
+      <div class="card">
+        <div class="chd"><div class="cht">Vendors</div><button class="btn btn-gold btn-sm">+ Add vendor</button></div>
+        <div class="task-row"><div style="font-size:18px;flex-shrink:0">🔊</div><div class="tb"><div class="tn">Apex Sound & Light</div><div class="tr-ref">AV / Production · apexsound.com · ★★★★★</div></div><span class="pill pill-green">Confirmed</span></div>
+        <div class="task-row"><div style="font-size:18px;flex-shrink:0">🌸</div><div class="tb"><div class="tn">Desert Bloom Florals</div><div class="tr-ref">Décor · desertbloom.co · ★★★★☆</div></div><span class="pill pill-green">Confirmed</span></div>
+        <div class="task-row"><div style="font-size:18px;flex-shrink:0">🍽</div><div class="tb"><div class="tn">MGM Grand Catering</div><div class="tr-ref">Food & Beverage · mgmresorts.com · ★★★★★</div></div><span class="pill pill-green">Confirmed</span></div>
+        <div class="task-row"><div style="font-size:18px;flex-shrink:0">🎵</div><div class="tb"><div class="tn">The Rhythm Section</div><div class="tr-ref">Entertainment · rhythmsection.band · ★★★★☆</div></div><span class="pill pill-green">Confirmed</span></div>
+        <div class="task-row"><div style="font-size:18px;flex-shrink:0">👥</div><div class="tb"><div class="tn">ProStaff Events</div><div class="tr-ref">Staffing · prostaffevents.com</div></div><span class="pill pill-draft">Quote pending</span></div>
+      </div>
+    </div>
+
+    <!-- ── FILES ── -->
+    <div id="tab-files" class="tab-content">
+      <div class="card">
+        <div class="chd"><div class="cht">Files</div><div style="display:flex;gap:8px"><a class="btn btn-ghost btn-sm" href="drive.html?folder=gala">Open in Drive →</a><button class="btn btn-gold btn-sm">+ Upload</button></div></div>
+        <div class="task-row"><div style="font-size:18px;flex-shrink:0">📄</div><div class="tb"><div class="tn">AV_Contract_Signed.pdf</div><div class="tr-ref">Tom R. · 2h ago</div></div><span class="pill pill-green">New</span></div>
+        <div class="task-row"><div style="font-size:18px;flex-shrink:0">📊</div><div class="tb"><div class="tn">Budget_Final.xlsx</div><div class="tr-ref">Jordan K. · Apr 22</div></div></div>
+        <div class="task-row"><div style="font-size:18px;flex-shrink:0">📄</div><div class="tb"><div class="tn">Venue_Contract.pdf</div><div class="tr-ref">Jordan K. · Mar 15</div></div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>window.PC_PAGE = 'productions'; window.PC_INIT = 'production';</script>
+<script src="../shared/nav.js"></script>
+<script>
+
+// ── TAB SWITCHING ──
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id)?.classList.add('active');
+  document.querySelectorAll('#prod-tab-bar .pt').forEach(t => t.classList.remove('active'));
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    document.querySelectorAll('#prod-tab-bar .pt').forEach(t => {
+      const map = { overview:'Overview', ros:'Run of show', callsheet:'Call sheets', messages:'Messages', documents:'Documents', calendar:'Calendar', tasks:'Tasks', team:'Team', budget:'Budget', vendors:'Vendors', files:'Files' };
+      if (t.textContent === map[id]) t.classList.add('active');
+    });
+  }
+  if (id === 'ros') renderROS();
+}
+
+// ── ROS DAY SELECTOR ──
+function selectROSDay(btn, label, status) {
+  document.querySelectorAll('#ros-day-selector .ros-day-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const statusEl = document.getElementById('ros-status');
+  const labelEl  = document.getElementById('ros-day-label');
+  if (labelEl) labelEl.textContent = label;
+  if (statusEl) {
+    statusEl.className = 'ros-status ' + status;
+    statusEl.innerHTML = status === 'live'
+      ? '<div class="ros-dot"></div>Live · Cue 14 of 23'
+      : '<div class="ros-dot"></div>' + (status === 'pre' ? 'Pre-show' : 'Wrapped');
+  }
+}
+
+function addROSDay() {
+  const name = prompt('New show day name (e.g. Jun 16 — Show night 2):');
+  if (!name) return;
+  const selector = document.getElementById('ros-day-selector');
+  const addBtn = selector?.querySelector('.btn');
+  const btn = document.createElement('button');
+  btn.className = 'ros-day-btn';
+  btn.innerHTML = `<div class="ros-day-dot"></div>${name}`;
+  btn.onclick = () => {
+    document.querySelectorAll('#ros-day-selector .ros-day-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  };
+  selector?.insertBefore(btn, addBtn);
+}
+
+// ── CALL SHEET DAY SELECTOR ──
+function selectCallDay(btn, label) {
+  document.querySelectorAll('#call-day-selector .ros-day-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const el = document.getElementById('callsheet-title');
+  if (el) el.textContent = 'Call sheet — ' + label;
+}
+
+// ── PRINT TOGGLE ──
+let printVisible = false;
+function togglePrint() {
+  printVisible = !printVisible;
+  document.getElementById('ros-builder').style.display = printVisible ? 'none' : 'block';
+  document.getElementById('ros-print').style.display   = printVisible ? 'block' : 'none';
+  if (printVisible) renderPrint();
+}
+
+// ── PRODUCTION CHAT ──
+function sendProdMsg() {
+  const input = document.getElementById('prod-msg-input');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  const list = document.getElementById('prod-msg-list');
+  if (!list) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'msg-bubble-wrap mine';
+  wrap.innerHTML = `<div class="msg-bubble-col"><div class="msg-bubble mine">${text}</div><div class="msg-bubble-time">Just now</div></div>`;
+  list.appendChild(wrap);
+  list.scrollTop = list.scrollHeight;
+  input.value = '';
+  input.style.height = 'auto';
+}
+
+// ── DOCUMENT SYSTEM ──
+const DOCS = {
+  callsheet: {
+    title: 'Call sheet — Jun 14, 2025',
+    sections: [
+      { title: 'Show information', fields: [
+        { l:'Production', v:'Summerset Corporate Gala' },
+        { l:'Date',       v:'June 14, 2025' },
+        { l:'Venue',      v:'Grand Ballroom, Las Vegas NV' },
+        { l:'SM',         v:'Sarah M.' },
+        { l:'Producer',   v:'Jordan Kim' },
+      ]},
+      { title: 'Crew calls', textarea: '3:00 PM — General crew call (all departments)\n3:30 PM — Lighting focus & programming (LD, board op)\n4:30 PM — Soundcheck (FOH, monitors, RF)\n5:00 PM — SM crew walkthrough (all dept heads)\n6:00 PM — Crew ready / places' },
+      { title: 'Show schedule', textarea: '6:30 PM — Doors open / cocktail reception\n7:40 PM — Welcome remarks — CEO (~10 min)\n7:52 PM — Dinner service (SM holds for awards)\n~9:10 PM — Awards presentation (~35 min)\n~9:45 PM — Live music / dancing\n11:15 PM — Last call / closing\n11:30 PM — Strike begins' },
+      { title: 'Key contacts', textarea: 'Jordan Kim (Producer) — (702) 555-0101\nSarah M. (SM) — (702) 555-0192\nTom R. (TD/AV) — (702) 555-0233\nLisa T. (Venue) — (702) 555-0344' },
+      { title: 'Venue notes', textarea: 'Load-in via freight elevator only — dock on north side\nNo confetti or glitter per venue policy\nBar closes 30 min before event end\nMGM catering only for F&B' },
+    ]
+  },
+  'room-list': { title: 'Room list — Summerset Corporate Gala', roomList: true },
+  'prod-schedule': {
+    title: 'Production schedule — Summerset Gala',
+    sections: [
+      { title: 'Production details', fields: [
+        { l:'Production', v:'Summerset Corporate Gala' },
+        { l:'Venue',      v:'Grand Ballroom, Las Vegas NV' },
+        { l:'Dates',      v:'June 12–15, 2025' },
+        { l:'Guests',     v:'340' },
+        { l:'Budget',     v:'$86,000' },
+      ]},
+      { title: 'Phase schedule', textarea: 'June 12 — Load-in\n  8:00 AM — All crew call\n  8:00 AM–5:00 PM — Vendor load-in\n  3:00 PM — AV setup begins\n\nJune 13 — Tech rehearsal\n  1:00 PM — SM and dept head call\n  2:00 PM — Tech begins\n  6:00 PM — End of day\n\nJune 14 — Show day\n  3:00 PM — Full crew call\n  4:30 PM — Soundcheck\n  6:30 PM — Doors / show\n  11:30 PM — Strike begins\n\nJune 15 — Strike\n  8:00 AM — All crew\n  12:00 PM — Load-out complete' },
+    ]
+  },
+  'crew-contact': {
+    title: 'Crew contact sheet — Summerset Gala',
+    sections: [
+      { title: 'Production leadership', textarea: 'Jordan Kim — Lead producer\n  jordan@company.com · (702) 555-0101\n\nSarah M. — Stage manager\n  sarah@sm.com · (702) 555-0192' },
+      { title: 'Technical', textarea: 'Tom R. — Technical director / AV\n  (702) 555-0233\n\nDana L. — Lighting designer\n  (702) 555-0244\n\nMarcus B. — FOH audio\n  (702) 555-0255' },
+      { title: 'Crew', textarea: 'Priya N. — Stagehand · (702) 555-0266\nRay G. — Stagehand · (702) 555-0277' },
+    ]
+  },
+  'vendor-list': {
+    title: 'Vendor contact sheet — Summerset Gala',
+    sections: [
+      { title: 'Confirmed vendors', textarea: 'Apex Sound & Light — AV / Production\n  contact@apexsound.com · (702) 555-9001 · ★★★★★\n\nDesert Bloom Florals — Décor\n  hello@desertbloom.co · (702) 555-9002 · ★★★★☆\n\nMGM Grand Catering — F&B\n  events@mgmresorts.com · (702) 555-9003 · ★★★★★\n\nThe Rhythm Section — Entertainment\n  booking@rhythmsection.band · (702) 555-9004 · ★★★★☆' },
+      { title: 'Pending', textarea: 'ProStaff Events — Staffing\n  info@prostaff.com · Quote requested Apr 28' },
+    ]
+  },
+  'site-survey': {
+    title: 'Site survey — Grand Ballroom, Las Vegas',
+    sections: [
+      { title: 'Venue details', fields: [
+        { l:'Venue',     v:'Grand Ballroom' },
+        { l:'Address',   v:'3799 S Las Vegas Blvd, Las Vegas NV' },
+        { l:'Contact',   v:'Lisa T. · (702) 555-0344' },
+        { l:'Ceiling',   v:'32 ft' },
+      ]},
+      { title: 'Power & utilities', textarea: 'Main power: 400A 3-phase — dock level\nWi-Fi: MGM event Wi-Fi — credentials from coordinator\nBackup generator available on request' },
+      { title: 'Loading & access', textarea: 'Loading dock: North side, Harmon Ave entrance\nFreight elevator: 10x12 ft, 5,000 lb capacity\nSetup hours: Access from 7:00 AM day of event' },
+    ]
+  },
+  'day-of': {
+    title: 'Day-of briefing — Jun 14, 2025',
+    sections: [
+      { title: 'Show overview', fields: [
+        { l:'Show',    v:'Summerset Corporate Gala' },
+        { l:'Venue',   v:'Grand Ballroom, Las Vegas' },
+        { l:'Guests',  v:'340' },
+        { l:'SM',      v:'Sarah M.' },
+      ]},
+      { title: 'Emergency contacts', textarea: 'Emergency: 911\nVenue security: (702) 555-0300\nSM radio: Channel 3\nProducer: Jordan K. (702) 555-0101' },
+      { title: 'Rules & notes', textarea: '- No confetti or glitter\n- Bar closes 30 min before event end\n- All vendor load-out by 2:00 AM\n- No smoking inside venue' },
+    ]
+  },
+  advance: {
+    title: 'Advance sheet — Summerset Gala',
+    sections: [
+      { title: 'Event overview', fields: [
+        { l:'Event',   v:'Summerset Corporate Gala' },
+        { l:'Date',    v:'June 14, 2025' },
+        { l:'Venue',   v:'Grand Ballroom, Las Vegas' },
+      ]},
+      { title: 'Requirements', textarea: 'Power: 400A 3-phase required\nCrew access: 8:00 AM load-in\nParking: 6 vendor passes required\nCatering: MGM in-house only\nRigging: ETCP rigger required on site' },
+    ]
+  },
+};
+
+function openDoc(id) {
+  const doc = DOCS[id];
+  if (!doc) return;
+  document.getElementById('doc-library-view').style.display = 'none';
+  document.getElementById('doc-editor-view').style.display = 'block';
+  document.getElementById('doc-editor-title').textContent = doc.title;
+
+  if (doc.roomList) {
+    renderRoomList();
+    return;
+  }
+
+  let html = `<input class="doc-title-input" value="${doc.title}">`;
+  doc.sections.forEach(s => {
+    html += `<div class="doc-section">
+      <div class="doc-section-hd" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'flex':'none'">
+        <div class="doc-section-title">${s.title}</div>
+        <div style="font-size:12px;color:var(--text-3)">▾</div>
+      </div>
+      <div class="doc-section-body">`;
+    if (s.fields) s.fields.forEach(f => {
+      html += `<div class="doc-field"><div class="doc-field-label">${f.l}</div><input class="doc-field-input" value="${f.v}"></div>`;
+    });
+    if (s.textarea) html += `<textarea class="doc-field-textarea">${s.textarea}</textarea>`;
+    html += `</div></div>`;
+  });
+  document.getElementById('doc-editor-content').innerHTML = html;
+}
+
+function renderRoomList() {
+  document.getElementById('doc-editor-content').innerHTML = `
+    <input class="doc-title-input" value="Room list — Summerset Corporate Gala">
+    <div style="padding:16px 24px 8px;border-bottom:0.5px solid var(--border)">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+        <div><div style="font-size:11px;color:var(--text-3);margin-bottom:5px">Hotel</div><input class="doc-field-input" value="MGM Grand Las Vegas" style="width:100%"></div>
+        <div><div style="font-size:11px;color:var(--text-3);margin-bottom:5px">Check-in</div><input class="doc-field-input" type="date" value="2025-06-12" style="width:100%"></div>
+        <div><div style="font-size:11px;color:var(--text-3);margin-bottom:5px">Check-out</div><input class="doc-field-input" type="date" value="2025-06-15" style="width:100%"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div style="font-size:11px;color:var(--text-3);margin-bottom:5px">Hotel address</div><input class="doc-field-input" value="3799 S Las Vegas Blvd, Las Vegas NV" style="width:100%"></div>
+        <div><div style="font-size:11px;color:var(--text-3);margin-bottom:5px">Front desk</div><input class="doc-field-input" value="(702) 891-1111" style="width:100%"></div>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="room-list-table" id="room-table">
+        <thead><tr><th>#</th><th>Name</th><th>Role</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Notes</th><th></th></tr></thead>
+        <tbody id="room-tbody">
+          ${roomRow(1,'Jordan Kim','Lead producer','2214','Jun 12','Jun 15')}
+          ${roomRow(2,'Sarah M.','Stage manager','2216','Jun 12','Jun 15')}
+          ${roomRow(3,'Tom R.','Technical director','2218','Jun 12','Jun 15')}
+          ${roomRow(4,'Dana L.','Lighting designer','','Jun 12','Jun 15')}
+          ${roomRow(5,'Marcus B.','FOH audio','','Jun 13','Jun 15')}
+        </tbody>
+      </table>
+      <div style="padding:12px 14px;border-top:0.5px solid var(--border)">
+        <button class="btn btn-ghost btn-sm" onclick="addRoomRow()">+ Add crew member</button>
+      </div>
+    </div>`;
+}
+
+let roomCount = 5;
+function roomRow(n, name, role, room, cin, cout) {
+  return `<tr>
+    <td style="padding:10px 14px;color:var(--text-3);font-size:11px">${n}</td>
+    <td><input class="room-input" value="${name}"></td>
+    <td><input class="room-input" value="${role}" style="color:var(--text-2)"></td>
+    <td><input class="room-input" value="${room}" placeholder="TBD" style="font-family:var(--mono)"></td>
+    <td><input class="room-input" value="${cin}"></td>
+    <td><input class="room-input" value="${cout}"></td>
+    <td><input class="room-input" placeholder="Notes" style="color:var(--text-3)"></td>
+    <td style="padding:0 8px"><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:12px;opacity:.4">✕</button></td>
+  </tr>`;
+}
+
+function addRoomRow() {
+  roomCount++;
+  const tbody = document.getElementById('room-tbody');
+  if (!tbody) return;
+  const tr = document.createElement('tr');
+  tr.innerHTML = roomRow(roomCount, '', '', '', '', '');
+  tbody.appendChild(tr);
+}
+
+function closeDoc() {
+  document.getElementById('doc-library-view').style.display = 'block';
+  document.getElementById('doc-editor-view').style.display  = 'none';
+}
+
+
+
+</script>
+</body>
+</html>

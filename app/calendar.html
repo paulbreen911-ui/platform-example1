@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar — Production Central</title>
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav class="nav" id="pc-nav"></nav>
+
+<div class="shell">
+  <aside class="sidebar" id="pc-sidebar"></aside>
+
+  <main class="main">
+
+    <div class="ph-row">
+      <div>
+        <div class="ph-ey">Schedule</div>
+        <div class="ph-title">My <em>calendar</em></div>
+      </div>
+      <button class="btn btn-gold" onclick="openAddEvent()">+ Add event</button>
+    </div>
+
+    <div class="cal-toolbar">
+      <div class="cal-nav-group">
+        <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+        <div class="cal-month-title" id="cal-title">June 2025</div>
+        <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+        <button class="btn btn-ghost btn-sm" onclick="calGoToday()">Today</button>
+      </div>
+      <div class="cal-legend">
+        <div class="cal-leg-item"><div class="cal-leg-dot cev-load"></div>Load-in</div>
+        <div class="cal-leg-item"><div class="cal-leg-dot cev-tech"></div>Tech</div>
+        <div class="cal-leg-item"><div class="cal-leg-dot cev-show"></div>Show</div>
+        <div class="cal-leg-item"><div class="cal-leg-dot cev-strike"></div>Strike</div>
+        <div class="cal-leg-item"><div class="cal-leg-dot cev-call"></div>Crew call</div>
+        <div class="cal-leg-item"><div class="cal-leg-dot cev-mile"></div>Milestone</div>
+        <div class="cal-leg-item"><div class="cal-leg-dot cev-meet"></div>Meeting</div>
+      </div>
+    </div>
+
+    <div class="cal-grid-wrap">
+      <div class="cal-dow-row">
+        <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div>
+        <div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div>
+        <div class="cal-dow">Sat</div>
+      </div>
+      <div id="cal-weeks"></div>
+    </div>
+
+    <!-- Upcoming list below calendar -->
+    <div style="margin-top:24px">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-3);margin-bottom:14px">Upcoming events</div>
+      <div class="card" id="upcoming-list"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ADD EVENT MODAL -->
+<div class="modal-overlay" id="modal-add-event" onclick="if(event.target===this)closeModal('add-event')">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title">Add calendar event</div>
+      <button class="modal-close" onclick="closeModal('add-event')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="ev-type-grid">
+        <div class="ev-type-btn selected" id="evt-load" onclick="selectEvType('load')"><div class="ev-type-icon">🚛</div><div class="ev-type-label">Load-in</div></div>
+        <div class="ev-type-btn" id="evt-tech" onclick="selectEvType('tech')"><div class="ev-type-icon">🔧</div><div class="ev-type-label">Tech</div></div>
+        <div class="ev-type-btn" id="evt-reh" onclick="selectEvType('reh')"><div class="ev-type-icon">🎭</div><div class="ev-type-label">Rehearsal</div></div>
+        <div class="ev-type-btn" id="evt-show" onclick="selectEvType('show')"><div class="ev-type-icon">🔴</div><div class="ev-type-label">Show</div></div>
+        <div class="ev-type-btn" id="evt-strike" onclick="selectEvType('strike')"><div class="ev-type-icon">📦</div><div class="ev-type-label">Strike</div></div>
+        <div class="ev-type-btn" id="evt-call" onclick="selectEvType('call')"><div class="ev-type-icon">👥</div><div class="ev-type-label">Crew call</div></div>
+        <div class="ev-type-btn" id="evt-mile" onclick="selectEvType('mile')"><div class="ev-type-icon">🏁</div><div class="ev-type-label">Milestone</div></div>
+        <div class="ev-type-btn" id="evt-meet" onclick="selectEvType('meet')"><div class="ev-type-icon">💬</div><div class="ev-type-label">Meeting</div></div>
+        <div class="ev-type-btn" id="evt-other" onclick="selectEvType('other')"><div class="ev-type-icon">📌</div><div class="ev-type-label">Other</div></div>
+      </div>
+      <div class="form-grp">
+        <div class="form-lbl">Event title</div>
+        <input class="form-inp" type="text" id="ev-title" placeholder="e.g. Load-in — Summerset Gala">
+      </div>
+      <div class="form-2">
+        <div class="form-grp">
+          <div class="form-lbl">Date</div>
+          <input class="form-inp" type="date" id="ev-date">
+        </div>
+        <div class="form-grp">
+          <div class="form-lbl">Time</div>
+          <input class="form-inp" type="time" id="ev-time">
+        </div>
+      </div>
+      <div class="form-grp">
+        <div class="form-lbl">Production / project</div>
+        <select class="form-sel" id="ev-prod">
+          <option>Summerset Corporate Gala</option>
+          <option>Tech Summit 2025</option>
+          <option>Meridian Holiday Dinner</option>
+          <option>Sphere Residency Build</option>
+          <option>Downtown Venue Buildout</option>
+          <option>General</option>
+        </select>
+      </div>
+      <div class="form-grp">
+        <div class="form-lbl">Notes</div>
+        <input class="form-inp" type="text" id="ev-notes" placeholder="Optional notes or details">
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('add-event')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveEvent()">Add to calendar</button>
+    </div>
+  </div>
+</div>
+
+<script>window.PC_PAGE = 'calendar'; window.PC_INIT = 'calendar';</script>
+<script src="../shared/nav.js"></script>
+<script>
+
+function openAddEvent() { openModal('add-event'); }
+
+function renderUpcoming() {
+  const el = document.getElementById('upcoming-list');
+  if (!el) return;
+
+  // Flatten and sort all events
+  const all = [];
+  Object.entries(CAL_EVENTS).forEach(([key, evs]) => {
+    const [y, m, d] = key.split('-').map(Number);
+    evs.forEach(e => all.push({ date: new Date(y, m-1, d), label: e.t, cls: e.cls, key }));
+  });
+  all.sort((a,b) => a.date - b.date);
+
+  const today = new Date();
+  const future = all.filter(e => e.date >= today).slice(0, 8);
+
+  if (future.length === 0) {
+    el.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:13px">No upcoming events</div>`;
+    return;
+  }
+
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  el.innerHTML = future.map(e => `
+    <div class="up-row">
+      <div class="up-date">
+        <div class="up-d">${e.date.getDate()}</div>
+        <div class="up-m">${MONTHS[e.date.getMonth()]}</div>
+      </div>
+      <div class="up-div"></div>
+      <div class="up-info">
+        <div class="up-name">${e.label}</div>
+        <div class="up-detail">${e.date.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+      </div>
+      <div class="cal-event ${e.cls}" style="font-size:10px;padding:2px 8px">${e.cls.replace('cev-','').replace('load','Load-in').replace('tech','Tech').replace('show','Show').replace('strike','Strike').replace('call','Crew call').replace('mile','Milestone').replace('meet','Meeting').replace('reh','Rehearsal')}</div>
+    </div>`).join('');
+}
+
+
+
+</script>
+</body>
+</html>

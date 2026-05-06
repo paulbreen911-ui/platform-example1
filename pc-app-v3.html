@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Production Central</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0E0E0C;--dark:#1A1A17;--dark-2:#222220;--dark-3:#2C2C28;
+  --surface:#fff;--bg:#F4F3EE;
+  --border:rgba(255,255,255,0.07);--border-md:rgba(255,255,255,0.13);--border-lt:rgba(0,0,0,0.09);
+  --text-1:#E8E6DC;--text-2:rgba(232,230,220,0.55);--text-3:rgba(232,230,220,0.28);
+  --lt-1:#1A1A17;--lt-2:#5A5A54;--lt-3:#9A9A92;
+  --gold:#C9A84C;--gold-dim:rgba(201,168,76,0.12);--gold-bd:rgba(201,168,76,0.25);
+  --live:#E8350A;--live-dim:rgba(232,53,10,0.1);
+  --red:#D94F2A;--red-dim:rgba(217,79,42,0.1);
+  --blue:#2A5C8C;--blue-dim:rgba(42,92,140,0.12);
+  --green:#3A7A44;--green-dim:rgba(58,122,68,0.12);
+  --purple:#6A48B4;--purp-dim:rgba(106,72,180,0.12);
+  --teal:#2A8C7A;--teal-dim:rgba(42,140,122,0.12);
+  --amber:#C47C1A;--amber-dim:rgba(196,124,26,0.12);
+  --sans:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --disp:'Bebas Neue',Impact,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --nav-h:56px;--side-w:228px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--black);color:var(--text-1);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;height:var(--nav-h);
+  background:rgba(14,14,12,0.97);backdrop-filter:blur(20px);
+  border-bottom:0.5px solid var(--border);
+  display:flex;align-items:center;padding:0 18px;gap:12px;
+}
+.nav-logo{font-family:var(--disp);font-size:18px;letter-spacing:2px;cursor:pointer;flex-shrink:0}
+.nav-logo span{color:var(--gold)}
+.nav-bc{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:5px}
+.nav-bc .cur{color:var(--text-2);font-weight:500}
+.nav-search{flex:1;max-width:280px;display:flex;align-items:center;gap:7px;background:var(--dark-2);border:0.5px solid var(--border);border-radius:6px;padding:6px 11px;color:var(--text-3);font-size:12px;cursor:text;margin-left:16px}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-ib{width:30px;height:30px;border-radius:50%;border:0.5px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-2);font-size:13px;position:relative;transition:background .15s}
+.nav-ib:hover{background:var(--dark-2)}
+.npip{position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:var(--live);border:1.5px solid var(--black)}
+.nav-av{width:30px;height:30px;border-radius:50%;background:var(--purp-dim);border:0.5px solid rgba(106,72,180,.3);color:#B39DDB;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+/* ── LAYOUT ── */
+.shell{display:flex;padding-top:var(--nav-h);min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--side-w);flex-shrink:0;background:var(--dark);border-right:0.5px solid var(--border);position:fixed;top:var(--nav-h);bottom:0;overflow-y:auto;display:flex;flex-direction:column;padding:14px 0}
+.sb-new{margin:0 12px 14px;padding:9px;background:var(--gold);color:var(--black);border:none;border-radius:7px;font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity .15s}
+.sb-new:hover{opacity:.88}
+.sb-sec{margin-bottom:18px}
+.sb-lbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-3);padding:0 16px;margin-bottom:4px}
+.sb-link{display:flex;align-items:center;gap:9px;padding:7px 16px;font-size:12px;color:var(--text-2);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--sans);transition:background .1s,color .1s;border-right:2px solid transparent}
+.sb-link:hover{background:rgba(255,255,255,.04);color:var(--text-1)}
+.sb-link.active{background:rgba(255,255,255,.05);color:var(--text-1);font-weight:500;border-right-color:var(--gold)}
+.sb-link .icon{width:15px;text-align:center;font-size:13px;flex-shrink:0}
+.sb-badge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--text-3);border:0.5px solid var(--border)}
+.sb-item{display:flex;align-items:center;gap:8px;padding:6px 14px;cursor:pointer;transition:background .1s}
+.sb-item:hover{background:rgba(255,255,255,.03)}
+.sb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sb-iname{font-size:11px;color:var(--text-3);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-bottom{margin-top:auto;padding:11px 14px;border-top:0.5px solid var(--border);display:flex;align-items:center;gap:8px}
+.sb-uav{width:26px;height:26px;border-radius:50%;background:var(--purp-dim);color:#B39DDB;font-size:9px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-uname{font-size:12px;font-weight:500}
+.sb-urole{font-size:10px;color:var(--text-3)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--side-w);flex:1;padding:28px 32px;min-width:0}
+
+/* ── SHARED ── */
+.ph{margin-bottom:22px}
+.ph-ey{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-3);margin-bottom:4px}
+.ph-title{font-family:var(--serif);font-size:26px;font-weight:400}
+.ph-title em{font-style:italic;color:var(--text-2)}
+
+.card{background:var(--dark-2);border:0.5px solid var(--border);border-radius:11px;overflow:hidden}
+.card.clickable{cursor:pointer;transition:border-color .15s,transform .15s}
+.card.clickable:hover{border-color:var(--border-md);transform:translateY(-1px)}
+.chd{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:0.5px solid var(--border)}
+.cht{font-size:13px;font-weight:500}
+.cha{font-size:11px;color:var(--text-3);background:none;border:none;font-family:var(--sans);cursor:pointer;transition:color .15s}
+.cha:hover{color:var(--text-1)}
+
+.pill{display:inline-flex;align-items:center;font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;letter-spacing:.2px;white-space:nowrap}
+.pill-live{background:rgba(232,53,10,.13);color:var(--live);border:0.5px solid rgba(232,53,10,.3)}
+.pill-active{background:var(--red-dim);color:#FF7043;border:0.5px solid rgba(217,79,42,.25)}
+.pill-plan{background:var(--blue-dim);color:#5B9FE0;border:0.5px solid rgba(42,92,140,.3)}
+.pill-draft{background:rgba(255,255,255,.05);color:var(--text-3);border:0.5px solid var(--border)}
+.pill-wrap{background:var(--purp-dim);color:#B39DDB;border:0.5px solid rgba(106,72,180,.3)}
+.pill-gold{background:var(--gold-dim);color:var(--gold);border:0.5px solid var(--gold-bd)}
+.pill-green{background:var(--green-dim);color:#66BB6A;border:0.5px solid rgba(58,122,68,.3)}
+.pill-teal{background:var(--teal-dim);color:#4DB6AC;border:0.5px solid rgba(42,140,122,.3)}
+.pill-amber{background:var(--amber-dim);color:#FFAB40;border:0.5px solid rgba(196,124,26,.3)}
+
+.btn{font-family:var(--sans);font-size:12px;padding:7px 15px;border-radius:6px;cursor:pointer;transition:all .15s;font-weight:500}
+.btn-gold{background:var(--gold);color:var(--black);border:none}
+.btn-gold:hover{opacity:.88}
+.btn-outline{background:transparent;color:var(--text-2);border:0.5px solid var(--border-md)}
+.btn-outline:hover{color:var(--text-1);border-color:rgba(255,255,255,.25)}
+.btn-ghost{background:transparent;color:var(--text-3);border:0.5px solid var(--border)}
+.btn-ghost:hover{color:var(--text-2);background:var(--dark-3)}
+.btn-danger{background:rgba(232,53,10,.1);color:var(--live);border:0.5px solid rgba(232,53,10,.25)}
+.btn-sm{font-size:11px;padding:5px 11px}
+
+.row{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:0.5px solid var(--border)}
+.row:last-child{border-bottom:none}
+.row.clickable{cursor:pointer;transition:background .1s}
+.row.clickable:hover{background:rgba(255,255,255,.02)}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:22px}
+.stat{background:var(--dark-2);border:0.5px solid var(--border);border-radius:10px;padding:15px 17px;cursor:pointer;transition:border-color .15s,transform .15s}
+.stat:hover{border-color:var(--border-md);transform:translateY(-1px)}
+.stat-lbl{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.stat-val{font-size:26px;font-weight:500;line-height:1;margin-bottom:3px}
+.stat-sub{font-size:11px;color:var(--text-3)}
+.stat-sub.up{color:#66BB6A}
+.stat-sub.warn{color:var(--live)}
+
+/* ── LIVE BANNER ── */
+.live-banner{background:rgba(232,53,10,.08);border:0.5px solid rgba(232,53,10,.25);border-radius:10px;padding:13px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.live-l{display:flex;align-items:center;gap:10px}
+.live-dot{width:10px;height:10px;border-radius:50%;background:var(--live);animation:pulse 1.4s ease-in-out infinite}
+.live-title{font-size:14px;font-weight:500;color:var(--live)}
+.live-sub{font-size:12px;color:rgba(232,53,10,.6);margin-top:2px}
+
+/* ── MORNING BRIEFING ── */
+.briefing-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;margin-bottom:22px}
+.brief-card{background:var(--dark-2);border:0.5px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s}
+.brief-card:hover{border-color:var(--border-md);transform:translateY(-1px)}
+.brief-card-ey{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-3);margin-bottom:8px}
+.brief-card-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.brief-card-sub{font-size:12px;color:var(--text-3);line-height:1.5}
+.brief-urgent{border-color:rgba(232,53,10,.25)}
+.brief-urgent .brief-card-ey{color:rgba(232,53,10,.5)}
+
+/* ── DASH GRID ── */
+.dash-grid{display:grid;grid-template-columns:1fr 288px;gap:18px}
+.dash-col{display:flex;flex-direction:column;gap:16px}
+
+/* ── WORK ROWS ── */
+.work-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:0.5px solid var(--border);cursor:pointer;transition:background .1s}
+.work-row:last-child{border-bottom:none}
+.work-row:hover{background:rgba(255,255,255,.02)}
+.work-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.work-info{flex:1;min-width:0}
+.work-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.work-meta{font-size:11px;color:var(--text-3);display:flex;gap:10px;flex-wrap:wrap}
+.work-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.work-date{font-size:11px;color:var(--text-2)}
+
+/* ── TASKS ── */
+.task-row{display:flex;align-items:flex-start;gap:10px;padding:11px 18px;border-bottom:0.5px solid var(--border)}
+.task-row:last-child{border-bottom:none}
+.chk{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border-md);flex-shrink:0;margin-top:1px;cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.chk:hover{border-color:var(--gold)}
+.chk.done{background:var(--green);border-color:var(--green)}
+.chk.done::after{content:'';display:block;width:7px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.tb{flex:1}
+.tn{font-size:12px}
+.tn.done{text-decoration:line-through;color:var(--text-3)}
+.tr-ref{font-size:10px;color:var(--text-3);margin-top:2px}
+.td{font-size:10px;color:var(--text-3);flex-shrink:0}
+.td.over{color:var(--live)}
+
+/* ── ACTIVITY ── */
+.act-row{display:flex;align-items:flex-start;gap:10px;padding:11px 18px;border-bottom:0.5px solid var(--border)}
+.act-row:last-child{border-bottom:none}
+.act-av{width:26px;height:26px;border-radius:50%;font-size:10px;font-weight:500;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.act-text{font-size:12px;color:var(--text-2);line-height:1.5}
+.act-text strong{color:var(--text-1);font-weight:500}
+.act-ref{color:var(--gold);font-size:11px}
+.act-time{font-size:10px;color:var(--text-3);margin-top:2px}
+
+/* ── UPCOMING ── */
+.up-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:0.5px solid var(--border);font-size:12px}
+.up-row:last-child{border-bottom:none}
+.up-date{text-align:center;flex-shrink:0;width:32px}
+.up-d{font-size:17px;font-weight:500;line-height:1}
+.up-m{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)}
+.up-div{width:0.5px;height:26px;background:var(--border);flex-shrink:0}
+.up-info{flex:1}
+.up-name{font-weight:500;margin-bottom:1px}
+.up-detail{font-size:10px;color:var(--text-3)}
+
+/* ── MINI CAL ── */
+.mini-cal{padding:12px 16px}
+.mc-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.mc-month{font-size:12px;font-weight:500}
+.mc-nav{display:flex;gap:3px}
+.mc-btn{width:22px;height:22px;border-radius:4px;border:0.5px solid var(--border);background:none;color:var(--text-3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
+.mc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.mc-dow{font-size:9px;color:var(--text-3);text-align:center;padding:2px 0;text-transform:uppercase}
+.mc-d{font-size:11px;text-align:center;padding:4px 2px;border-radius:4px;cursor:pointer;color:var(--text-3);transition:background .1s}
+.mc-d:hover{background:rgba(255,255,255,.06)}
+.mc-d.other{opacity:.25}
+.mc-d.today{background:var(--text-1);color:var(--black);font-weight:500;border-radius:50%}
+.mc-d.ev{color:var(--text-1);position:relative}
+.mc-d.ev::after{content:'';position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--gold)}
+.mc-d.show-day{background:rgba(232,53,10,.15);color:var(--live)}
+
+/* ── NEXT SHOW ── */
+.ns-hd{background:#111110;padding:14px 17px;border-bottom:0.5px solid rgba(255,255,255,.06)}
+.ns-ey{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.ns-name{font-family:var(--serif);font-size:15px;color:#E8E6DE;font-weight:400;margin-bottom:3px}
+.ns-date{font-size:11px;color:rgba(255,255,255,.3)}
+.ns-body{padding:13px 17px}
+.ns-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.ns-row:last-child{border-bottom:none}
+.ns-lbl{font-size:11px;color:var(--text-3)}
+.ns-val{font-weight:500}
+.prog-wrap{margin-top:12px}
+.prog-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--text-3);margin-bottom:4px}
+.prog-bar{height:3px;background:var(--dark-3);border-radius:2px}
+.prog-fill{height:100%;border-radius:2px;background:var(--gold)}
+
+/* ── QA ── */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px}
+.qa-btn{display:flex;flex-direction:column;gap:5px;padding:11px;border-radius:8px;border:0.5px solid var(--border);background:var(--dark-3);cursor:pointer;text-align:left;font-family:var(--sans);transition:all .15s}
+.qa-btn:hover{border-color:var(--border-md);background:rgba(255,255,255,.05)}
+.qa-icon{font-size:15px}
+.qa-lbl{font-size:11px;font-weight:500;color:var(--text-1)}
+.qa-sub{font-size:10px;color:var(--text-3)}
+
+/* ── PROD TABS ── */
+.prod-tabs{display:flex;border-bottom:0.5px solid var(--border);margin-bottom:22px;overflow-x:auto}
+.pt{font-size:12px;padding:10px 15px;border:none;border-bottom:2px solid transparent;background:none;cursor:pointer;font-family:var(--sans);color:var(--text-3);transition:all .15s;white-space:nowrap}
+.pt:hover{color:var(--text-2)}
+.pt.active{color:var(--text-1);font-weight:500;border-bottom-color:var(--gold)}
+
+/* ── CALENDAR PAGE ── */
+.cal-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.cal-nav-group{display:flex;align-items:center;gap:8px}
+.cal-month-title{font-family:var(--serif);font-size:22px;font-weight:400;min-width:160px}
+.cal-nav-btn{width:30px;height:30px;border-radius:6px;border:0.5px solid var(--border-md);background:none;color:var(--text-2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .1s}
+.cal-nav-btn:hover{background:var(--dark-2)}
+.cal-legend{display:flex;gap:12px;flex-wrap:wrap;margin-left:auto}
+.cal-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-3)}
+.cal-leg-dot{width:8px;height:8px;border-radius:2px}
+.cal-grid-wrap{background:var(--dark-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:0.5px solid var(--border)}
+.cal-dow{padding:10px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-day{min-height:100px;padding:8px;border-right:0.5px solid var(--border);border-bottom:0.5px solid var(--border);cursor:pointer;transition:background .1s;position:relative}
+.cal-day:nth-child(7n){border-right:none}
+.cal-day:hover{background:rgba(255,255,255,.02)}
+.cal-day.other-month{opacity:.3}
+.cal-day.today{background:rgba(201,168,76,.04)}
+.cal-day.selected{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.25)}
+.cal-day-num{font-size:12px;font-weight:500;color:var(--text-2);margin-bottom:5px}
+.cal-day.today .cal-day-num{background:var(--text-1);color:var(--black);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;margin-bottom:5px}
+.cal-event{font-size:10px;padding:2px 5px;border-radius:3px;margin-bottom:2px;font-weight:500;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.cev-load{background:rgba(255,214,0,.12);color:#FFD600}
+.cev-tech{background:rgba(0,188,212,.12);color:#4DD0E1}
+.cev-reh{background:var(--purp-dim);color:#CE93D8}
+.cev-show{background:var(--live-dim);color:var(--live);border:0.5px solid rgba(232,53,10,.25)}
+.cev-strike{background:rgba(217,79,42,.12);color:#FF7043}
+.cev-call{background:var(--green-dim);color:#66BB6A}
+.cev-mile{background:var(--gold-dim);color:var(--gold)}
+.cev-meet{background:var(--blue-dim);color:#5B9FE0}
+
+/* ── ROS ── */
+.ros-toolbar{display:flex;align-items:center;gap:8px;padding:12px 0;border-bottom:0.5px solid var(--border);margin-bottom:16px;flex-wrap:wrap}
+.ros-status{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:500}
+.ros-status.pre{background:var(--blue-dim);color:#5B9FE0;border:0.5px solid rgba(42,92,140,.3)}
+.ros-status.live{background:var(--live-dim);color:var(--live);border:0.5px solid rgba(232,53,10,.3)}
+.ros-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.ros-status.live .ros-dot{animation:pulse 1.4s ease-in-out infinite}
+
+.ros-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.ros-tbl thead th{padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500;border-bottom:0.5px solid var(--border);background:var(--dark-3);white-space:nowrap}
+.ros-row-tr{border-bottom:0.5px solid var(--border);transition:background .1s;cursor:pointer}
+.ros-row-tr:hover{background:rgba(255,255,255,.02)}
+.ros-row-tr.cur-cue{background:rgba(232,53,10,.08);border-left:3px solid var(--live)}
+.ros-row-tr.past{opacity:.35}
+.ros-drag{padding:0 8px;color:var(--text-3);cursor:grab;font-size:16px;opacity:.4;user-select:none}
+.ros-drag:hover{opacity:.8}
+.ros-cell{padding:8px 10px;outline:none;width:100%;background:transparent;border:none;font-family:var(--mono);font-size:11px;color:var(--text-2);transition:all .1s}
+.ros-cell:focus{background:rgba(201,168,76,.06);color:var(--text-1)}
+.ros-cell.title-c{font-family:var(--sans);font-size:13px;color:var(--text-1)}
+.ros-cell.note-c{font-family:var(--sans);font-size:11px;color:var(--text-3)}
+.dept-sel{font-family:var(--sans);font-size:10px;font-weight:500;border:0.5px solid transparent;border-radius:4px;padding:3px 6px;cursor:pointer;appearance:none;background:transparent}
+.d-sm{background:rgba(232,53,10,.1);color:var(--live);border-color:rgba(232,53,10,.25)}
+.d-lx{background:rgba(255,214,0,.1);color:#FFD600;border-color:rgba(255,214,0,.25)}
+.d-snd{background:rgba(0,188,212,.1);color:#4DD0E1;border-color:rgba(0,188,212,.25)}
+.d-vid{background:rgba(186,104,200,.15);color:#CE93D8;border-color:rgba(186,104,200,.3)}
+.d-rig{background:rgba(129,199,132,.12);color:#81C784;border-color:rgba(129,199,132,.25)}
+.d-all{background:rgba(255,255,255,.06);color:var(--text-3);border-color:var(--border)}
+.ros-add{display:flex;align-items:center;gap:8px;padding:10px 18px;border-top:0.5px solid var(--border);cursor:pointer;color:var(--text-3);font-size:12px;transition:background .1s}
+.ros-add:hover{background:rgba(255,255,255,.03);color:var(--text-2)}
+.sec-header-row{background:rgba(201,168,76,.05);border-bottom:0.5px solid var(--border)}
+.sec-header-input{background:transparent;border:none;font-family:var(--disp);font-size:14px;letter-spacing:1px;color:var(--gold);padding:8px 18px;width:100%;outline:none}
+
+/* ── PRINT ── */
+.print-wrap{background:var(--surface);border-radius:10px;padding:32px;font-family:var(--sans);color:var(--lt-1)}
+.print-hd{border-bottom:2px solid var(--lt-1);padding-bottom:14px;margin-bottom:18px}
+.print-show-name{font-family:var(--disp);font-size:30px;letter-spacing:2px;color:var(--lt-1);margin-bottom:4px}
+.print-meta{font-size:12px;color:var(--lt-3);display:flex;gap:18px;flex-wrap:wrap}
+.print-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.print-tbl th{padding:7px 9px;text-align:left;border-bottom:1px solid var(--lt-3);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--lt-3)}
+.print-tbl td{padding:7px 9px;border-bottom:0.5px solid rgba(0,0,0,.08);color:var(--lt-2)}
+.print-tbl .pitem{color:var(--lt-1);font-weight:500}
+.print-dept{display:inline-block;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:500;background:rgba(0,0,0,.06);color:var(--lt-2)}
+.print-sec-hd{background:rgba(0,0,0,.04);font-weight:500;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--lt-3)}
+
+/* ── DOCUMENTS ── */
+.doc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.doc-template{background:var(--dark-2);border:0.5px solid var(--border);border-radius:10px;padding:18px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:8px}
+.doc-template:hover{border-color:var(--border-md);transform:translateY(-2px)}
+.doc-icon{font-size:24px}
+.doc-name{font-size:13px;font-weight:500}
+.doc-desc{font-size:11px;color:var(--text-3);line-height:1.5;flex:1}
+.doc-tag{font-size:10px;padding:2px 8px;border-radius:4px;background:var(--gold-dim);color:var(--gold);border:0.5px solid var(--gold-bd);align-self:flex-start}
+
+/* Document editor */
+.doc-editor{background:var(--dark-2);border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
+.doc-editor-toolbar{padding:12px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.doc-title-input{font-family:var(--disp);font-size:24px;letter-spacing:1px;background:transparent;border:none;color:var(--text-1);width:100%;outline:none;padding:20px 24px 8px}
+.doc-section{border-bottom:0.5px solid var(--border)}
+.doc-section-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;cursor:pointer;transition:background .1s}
+.doc-section-hd:hover{background:rgba(255,255,255,.02)}
+.doc-section-title{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-3)}
+.doc-section-body{padding:16px 24px;display:flex;flex-direction:column;gap:10px}
+.doc-field{display:flex;align-items:flex-start;gap:16px}
+.doc-field-label{font-size:11px;color:var(--text-3);flex-shrink:0;width:140px;padding-top:9px}
+.doc-field-input{flex:1;background:var(--dark-3);border:0.5px solid var(--border-md);border-radius:6px;padding:8px 12px;font-family:var(--sans);font-size:13px;color:var(--text-1);outline:none;transition:border-color .15s;width:100%}
+.doc-field-input:focus{border-color:var(--gold)}
+.doc-field-textarea{flex:1;background:var(--dark-3);border:0.5px solid var(--border-md);border-radius:6px;padding:8px 12px;font-family:var(--sans);font-size:13px;color:var(--text-1);outline:none;resize:vertical;min-height:70px;transition:border-color .15s;width:100%}
+.doc-field-textarea:focus{border-color:var(--gold)}
+
+/* ── NEW PRODUCTION WIZARD ── */
+.wizard-steps{display:flex;align-items:center;gap:0;margin-bottom:32px}
+.wiz-step{display:flex;align-items:center;gap:8px}
+.wiz-step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;border:0.5px solid var(--border-md);color:var(--text-3);flex-shrink:0}
+.wiz-step.active .wiz-step-num{background:var(--gold);color:var(--black);border-color:var(--gold)}
+.wiz-step.done .wiz-step-num{background:var(--green);color:#fff;border-color:var(--green)}
+.wiz-step-label{font-size:12px;color:var(--text-3)}
+.wiz-step.active .wiz-step-label{color:var(--text-1);font-weight:500}
+.wiz-step.done .wiz-step-label{color:#66BB6A}
+.wiz-connector{flex:1;height:0.5px;background:var(--border);margin:0 10px}
+.wiz-panel{display:none}
+.wiz-panel.active{display:block}
+.wiz-card{background:var(--dark-2);border:0.5px solid var(--border);border-radius:12px;padding:28px;margin-bottom:20px}
+.form-grp{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.form-lbl{font-size:11px;color:var(--text-2);font-weight:500}
+.form-inp{font-family:var(--sans);font-size:13px;color:var(--text-1);background:var(--dark-3);border:0.5px solid var(--border-md);border-radius:6px;padding:9px 12px;width:100%;outline:none;transition:border-color .15s}
+.form-inp:focus{border-color:var(--gold)}
+.form-sel{font-family:var(--sans);font-size:13px;color:var(--text-1);background:var(--dark-3);border:0.5px solid var(--border-md);border-radius:6px;padding:9px 12px;width:100%;outline:none;appearance:none;cursor:pointer}
+.form-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.phase-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--dark-3);border-radius:8px;margin-bottom:8px}
+.phase-color{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.phase-name-inp{flex:1;background:transparent;border:none;font-family:var(--sans);font-size:13px;color:var(--text-1);outline:none}
+.phase-dates{display:flex;gap:6px;align-items:center}
+.phase-date-inp{background:var(--dark-2);border:0.5px solid var(--border-md);border-radius:5px;padding:5px 8px;font-family:var(--sans);font-size:11px;color:var(--text-2);outline:none;width:90px}
+.crew-inv-row{display:flex;gap:10px;margin-bottom:8px}
+.crew-inv-row .form-inp{flex:1}
+
+/* ── GANTT ── */
+.gantt-wrap{overflow-x:auto;padding:0 18px 18px}
+.gantt{min-width:600px}
+.gantt-hdr{display:flex;margin-bottom:8px;padding-left:160px}
+.gantt-month{font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;flex:1;text-align:center}
+.gantt-row{display:flex;align-items:center;margin-bottom:6px;gap:10px}
+.gantt-lbl{width:150px;flex-shrink:0;font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gantt-track{flex:1;height:22px;background:var(--dark-3);border-radius:4px;position:relative;overflow:hidden}
+.gantt-bar{position:absolute;height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:10px;color:rgba(255,255,255,.8);font-weight:500;white-space:nowrap;overflow:hidden}
+.gantt-today{position:absolute;top:0;bottom:0;width:1px;background:var(--gold);opacity:.6}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--dark-2);border:0.5px solid var(--border-md);border-radius:13px;width:500px;max-width:92vw;overflow:hidden;max-height:90vh;display:flex;flex-direction:column}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:17px 20px;border-bottom:0.5px solid var(--border);flex-shrink:0}
+.modal-title{font-family:var(--serif);font-size:18px;font-weight:400}
+.modal-close{width:26px;height:26px;border-radius:50%;border:0.5px solid var(--border);background:none;cursor:pointer;color:var(--text-2);display:flex;align-items:center;justify-content:center;font-size:14px}
+.modal-body{padding:20px;overflow-y:auto}
+.modal-ft{display:flex;justify-content:flex-end;gap:8px;padding:13px 20px;border-top:0.5px solid var(--border);flex-shrink:0}
+
+/* Cal event modal */
+.ev-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
+.ev-type-btn{padding:10px;border-radius:8px;border:0.5px solid var(--border);background:var(--dark-3);cursor:pointer;text-align:center;font-family:var(--sans);transition:all .15s;display:flex;flex-direction:column;gap:4px;align-items:center}
+.ev-type-btn:hover,.ev-type-btn.selected{border-color:var(--border-md);background:rgba(255,255,255,.05)}
+.ev-type-btn.selected{border-color:var(--gold)}
+.ev-type-icon{font-size:18px}
+.ev-type-label{font-size:11px;font-weight:500;color:var(--text-2)}
+
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo" onclick="goView('dashboard')">PRODUCTION<span>.</span>CENTRAL</div>
+  <div class="nav-bc" id="bc"><span class="cur">Dashboard</span></div>
+  <div class="nav-search" style="margin-left:16px">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    Search everything…
+  </div>
+  <div class="nav-right">
+    <div class="nav-ib">🔔<div class="npip"></div></div>
+    <div class="nav-av">JK</div>
+  </div>
+</nav>
+
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <button class="sb-new" onclick="goView('new-production')">+ New project / production</button>
+  <div class="sb-sec">
+    <div class="sb-lbl">Workspace</div>
+    <button class="sb-link active" id="sb-dashboard" onclick="goView('dashboard')"><span class="icon">◻</span>Dashboard</button>
+    <button class="sb-link" id="sb-projects" onclick="goView('projects')"><span class="icon">🏗</span>Projects<span class="sb-badge">2</span></button>
+    <button class="sb-link" id="sb-productions" onclick="goView('productions')"><span class="icon">🎭</span>Productions<span class="sb-badge">3</span></button>
+    <button class="sb-link" id="sb-calendar" onclick="goView('calendar')"><span class="icon">📅</span>Calendar</button>
+    <button class="sb-link" id="sb-tasks" onclick="goView('tasks')"><span class="icon">✅</span>Tasks<span class="sb-badge">11</span></button>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-lbl">Active now</div>
+    <div class="sb-item" onclick="goProd('gala')">
+      <div class="sb-dot" style="background:#E24B4A"></div>
+      <div class="sb-iname">Summerset Gala</div>
+      <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:var(--live-dim);color:var(--live);border:0.5px solid rgba(232,53,10,.3)">LIVE</span>
+    </div>
+    <div class="sb-item" onclick="goProd('summit')">
+      <div class="sb-dot" style="background:#378ADD"></div>
+      <div class="sb-iname">Tech Summit 2025</div>
+    </div>
+    <div class="sb-item" onclick="goProj('sphere')">
+      <div class="sb-dot" style="background:#4DB6AC"></div>
+      <div class="sb-iname">Sphere Residency Build</div>
+    </div>
+  </div>
+  <div class="sb-sec">
+    <div class="sb-lbl">Platform</div>
+    <button class="sb-link"><span class="icon">💬</span>Forum</button>
+    <button class="sb-link"><span class="icon">🔧</span>Tools</button>
+    <button class="sb-link"><span class="icon">🎓</span>Education</button>
+  </div>
+  <div class="sb-bottom">
+    <div class="sb-uav">JK</div>
+    <div><div class="sb-uname">Jordan Kim</div><div class="sb-urole">Senior producer</div></div>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="view-dashboard" class="view active">
+  <div class="ph">
+    <div class="ph-ey" id="dash-date">Friday, May 2</div>
+    <div class="ph-title">Good morning, <em>Jordan</em></div>
+  </div>
+
+  <!-- Live alert -->
+  <div class="live-banner">
+    <div class="live-l">
+      <div class="live-dot"></div>
+      <div>
+        <div class="live-title">Show live — Summerset Corporate Gala</div>
+        <div class="live-sub">Sarah M. calling · Cue Q14 of 23 · 5 crew connected · Grand Ballroom, Las Vegas</div>
+      </div>
+    </div>
+    <button class="btn btn-danger" onclick="goProd('gala');switchTab('ros')">Open run of show →</button>
+  </div>
+
+  <!-- Clickable stats -->
+  <div class="stat-row">
+    <div class="stat" onclick="goView('productions')" title="View all productions">
+      <div class="stat-lbl">Active productions</div>
+      <div class="stat-val">3</div>
+      <div class="stat-sub up">+1 this month · click to view</div>
+    </div>
+    <div class="stat" onclick="goView('projects')" title="View all projects">
+      <div class="stat-lbl">Active projects</div>
+      <div class="stat-val">2</div>
+      <div class="stat-sub">Long-horizon builds · click to view</div>
+    </div>
+    <div class="stat" onclick="goView('tasks')" title="View all tasks">
+      <div class="stat-lbl">Tasks due this week</div>
+      <div class="stat-val">11</div>
+      <div class="stat-sub warn">3 overdue · click to view</div>
+    </div>
+    <div class="stat" onclick="goProd('summit')" title="Open Tech Summit workspace">
+      <div class="stat-lbl">Next show</div>
+      <div class="stat-val">96</div>
+      <div class="stat-sub">days · Tech Summit · click to open</div>
+    </div>
+  </div>
+
+  <!-- Morning briefing -->
+  <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-3)">Today's briefing</div>
+  <div class="briefing-grid">
+    <div class="brief-card brief-urgent" onclick="goView('tasks')">
+      <div class="brief-card-ey">⚠ Needs attention</div>
+      <div class="brief-card-title">3 overdue tasks</div>
+      <div class="brief-card-sub">AV vendor contract · Permit application · Insurance certs — all past due</div>
+    </div>
+    <div class="brief-card" onclick="goProd('gala');switchTab('callsheet')">
+      <div class="brief-card-ey">Tonight · Summerset Gala</div>
+      <div class="brief-card-title">Crew call 3:00 PM · Show 6:30 PM</div>
+      <div class="brief-card-sub">Grand Ballroom, Las Vegas · 340 guests · 12 crew · SM: Sarah M.</div>
+    </div>
+    <div class="brief-card" onclick="goView('calendar')">
+      <div class="brief-card-ey">This week</div>
+      <div class="brief-card-title">Load-in Jun 12 · Tech Jun 13</div>
+      <div class="brief-card-sub">Strike Jun 15 · Milestone sign-off Jun 22 · Tech Summit 96 days out</div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-col">
+
+      <!-- Projects & productions -->
+      <div class="card">
+        <div class="chd">
+          <div class="cht">Projects & productions</div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-ghost btn-sm" onclick="goView('projects')">Projects →</button>
+            <button class="btn btn-ghost btn-sm" onclick="goView('productions')">Productions →</button>
+          </div>
+        </div>
+        <div style="padding:6px 18px;background:rgba(42,140,122,.04);border-bottom:0.5px solid var(--border)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(77,182,172,.5)">Projects</div></div>
+        <div class="work-row" onclick="goProj('sphere')">
+          <div class="work-icon" style="background:var(--teal-dim)">🏗</div>
+          <div class="work-info"><div class="work-name">Sphere Residency Build — Phase 2</div><div class="work-meta"><span>Las Vegas · Q3 2026</span><span>48% complete</span></div></div>
+          <div class="work-right"><span class="pill pill-teal">In progress</span></div>
+        </div>
+        <div class="work-row" onclick="goProj('venue')">
+          <div class="work-icon" style="background:var(--teal-dim)">🏗</div>
+          <div class="work-info"><div class="work-name">Downtown Venue Buildout — AV Infrastructure</div><div class="work-meta"><span>Chicago · Jun 2026</span><span>18% complete</span></div></div>
+          <div class="work-right"><span class="pill pill-plan">Planning</span></div>
+        </div>
+        <div style="padding:6px 18px;background:rgba(42,92,140,.04);border-bottom:0.5px solid var(--border);border-top:0.5px solid var(--border)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(91,159,224,.5)">Productions</div></div>
+        <div class="work-row" onclick="goProd('gala')">
+          <div class="work-icon" style="background:var(--live-dim)">🎭</div>
+          <div class="work-info"><div class="work-name">Summerset Corporate Gala</div><div class="work-meta"><span>Grand Ballroom, LV</span><span>340 guests</span><span>Jun 14</span></div></div>
+          <div class="work-right"><span class="pill pill-live">Live tonight</span></div>
+        </div>
+        <div class="work-row" onclick="goProd('summit')">
+          <div class="work-icon" style="background:var(--blue-dim)">🎭</div>
+          <div class="work-info"><div class="work-name">Tech Summit 2025</div><div class="work-meta"><span>Convention Center, Austin</span><span>1,200 guests</span><span>Aug 3</span></div></div>
+          <div class="work-right"><span class="pill pill-plan">Planning</span><div class="work-date">96 days</div></div>
+        </div>
+        <div class="work-row" onclick="goProd('dinner')">
+          <div class="work-icon" style="background:var(--dark-3)">🎭</div>
+          <div class="work-info"><div class="work-name">Meridian Holiday Dinner</div><div class="work-meta"><span>The Rooftop, LA</span><span>120 guests</span><span>Dec 5</span></div></div>
+          <div class="work-right"><span class="pill pill-draft">Draft</span></div>
+        </div>
+      </div>
+
+      <!-- Tasks -->
+      <div class="card">
+        <div class="chd"><div class="cht">Open tasks</div><button class="cha" onclick="goView('tasks')">View all →</button></div>
+        <div class="task-row">
+          <div class="chk" onclick="toggleTask(this)"></div>
+          <div class="tb"><div class="tn">Confirm AV vendor contract</div><div class="tr-ref">Tech Summit 2025 · Production</div></div>
+          <div class="td over">Apr 27</div>
+        </div>
+        <div class="task-row">
+          <div class="chk" onclick="toggleTask(this)"></div>
+          <div class="tb"><div class="tn">Submit permit application — loading dock</div><div class="tr-ref">Sphere Residency · Project</div></div>
+          <div class="td over">Apr 28</div>
+        </div>
+        <div class="task-row">
+          <div class="chk" onclick="toggleTask(this)"></div>
+          <div class="tb"><div class="tn">Send runsheet to venue coordinator</div><div class="tr-ref">Summerset Gala · Production</div></div>
+          <div class="td">May 3</div>
+        </div>
+        <div class="task-row">
+          <div class="chk done" onclick="toggleTask(this)"></div>
+          <div class="tb"><div class="tn done">Finalize menu selections</div><div class="tr-ref">Summerset Gala</div></div>
+          <div class="td">Apr 22</div>
+        </div>
+        <div class="task-row">
+          <div class="chk" onclick="toggleTask(this)"></div>
+          <div class="tb"><div class="tn">Review structural engineering report</div><div class="tr-ref">Downtown Venue · Project</div></div>
+          <div class="td">May 8</div>
+        </div>
+      </div>
+
+      <!-- Activity -->
+      <div class="card">
+        <div class="chd"><div class="cht">Recent activity</div></div>
+        <div class="act-row"><div class="act-av" style="background:var(--live-dim);color:#FF7043">SM</div><div><div class="act-text"><strong>Sarah M.</strong> started the run of show <span class="act-ref">· Summerset Gala</span></div><div class="act-time">1h ago</div></div></div>
+        <div class="act-row"><div class="act-av" style="background:var(--blue-dim);color:#5B9FE0">TR</div><div><div class="act-text"><strong>Tom R.</strong> uploaded AV contract PDF <span class="act-ref">· Summerset Gala</span></div><div class="act-time">2h ago</div></div></div>
+        <div class="act-row"><div class="act-av" style="background:var(--green-dim);color:#66BB6A">ML</div><div><div class="act-text"><strong>Mara L.</strong> completed 3 tasks <span class="act-ref">· Tech Summit</span></div><div class="act-time">3h ago</div></div></div>
+        <div class="act-row"><div class="act-av" style="background:var(--teal-dim);color:#4DB6AC">DK</div><div><div class="act-text"><strong>Dana K.</strong> added milestone <span class="act-ref">· Downtown Venue</span></div><div class="act-time">Yesterday</div></div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="dash-col">
+      <div class="card">
+        <div class="ns-hd"><div class="ns-ey">Next production</div><div class="ns-name">Tech Summit 2025</div><div class="ns-date">Aug 3, 2025 · Austin, TX</div></div>
+        <div class="ns-body">
+          <div class="ns-row"><span class="ns-lbl">Venue</span><span class="ns-val">Convention Center</span></div>
+          <div class="ns-row"><span class="ns-lbl">Guests</span><span class="ns-val">1,200</span></div>
+          <div class="ns-row"><span class="ns-lbl">Budget</span><span class="ns-val">$142,000</span></div>
+          <div class="ns-row"><span class="ns-lbl">Days out</span><span class="ns-val">96</span></div>
+          <div class="prog-wrap"><div class="prog-lbl"><span>Pre-production</span><span>34%</span></div><div class="prog-bar"><div class="prog-fill" style="width:34%"></div></div></div>
+          <button class="btn btn-outline" style="width:100%;margin-top:12px;font-size:11px" onclick="goProd('summit')">Open workspace →</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chd">
+          <div class="cht">June 2025</div>
+          <div class="mc-nav"><button class="mc-btn" onclick="goView('calendar')">⊞</button></div>
+        </div>
+        <div class="mini-cal">
+          <div class="mc-grid">
+            <div class="mc-dow">S</div><div class="mc-dow">M</div><div class="mc-dow">T</div><div class="mc-dow">W</div><div class="mc-dow">T</div><div class="mc-dow">F</div><div class="mc-dow">S</div>
+            <div class="mc-d other">1</div><div class="mc-d other">2</div><div class="mc-d other">3</div><div class="mc-d other">4</div><div class="mc-d other">5</div><div class="mc-d other">6</div><div class="mc-d other">7</div>
+            <div class="mc-d">8</div><div class="mc-d">9</div><div class="mc-d">10</div><div class="mc-d">11</div><div class="mc-d ev" onclick="goView('calendar')">12</div><div class="mc-d ev" onclick="goView('calendar')">13</div><div class="mc-d show-day" onclick="goProd('gala')">14</div>
+            <div class="mc-d ev" onclick="goView('calendar')">15</div><div class="mc-d">16</div><div class="mc-d">17</div><div class="mc-d">18</div><div class="mc-d">19</div><div class="mc-d">20</div><div class="mc-d">21</div>
+            <div class="mc-d">22</div><div class="mc-d">23</div><div class="mc-d">24</div><div class="mc-d">25</div><div class="mc-d">26</div><div class="mc-d">27</div><div class="mc-d">28</div>
+            <div class="mc-d">29</div><div class="mc-d">30</div><div class="mc-d other">1</div><div class="mc-d other">2</div><div class="mc-d other">3</div><div class="mc-d other">4</div><div class="mc-d other">5</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chd"><div class="cht">Upcoming</div><button class="cha" onclick="goView('calendar')">Full calendar →</button></div>
+        <div class="up-row"><div class="up-date"><div class="up-d">12</div><div class="up-m">Jun</div></div><div class="up-div"></div><div class="up-info"><div class="up-name">Load-in — Summerset Gala</div><div class="up-detail">All crew · 8:00 AM · Las Vegas</div></div></div>
+        <div class="up-row"><div class="up-date"><div class="up-d">14</div><div class="up-m">Jun</div></div><div class="up-div"></div><div class="up-info"><div class="up-name">Show — Summerset Gala</div><div class="up-detail">Crew 3pm · Show 6:30pm</div></div></div>
+        <div class="up-row"><div class="up-date"><div class="up-d">15</div><div class="up-m">Jun</div></div><div class="up-div"></div><div class="up-info"><div class="up-name">Strike — Summerset Gala</div><div class="up-detail">All crew · 8:00 AM</div></div></div>
+        <div class="up-row"><div class="up-date"><div class="up-d">22</div><div class="up-m">Jun</div></div><div class="up-div"></div><div class="up-info"><div class="up-name">Milestone — Sphere Build</div><div class="up-detail">AV infrastructure sign-off</div></div></div>
+        <div class="up-row"><div class="up-date"><div class="up-d">3</div><div class="up-m">Aug</div></div><div class="up-div"></div><div class="up-info"><div class="up-name">Tech Summit 2025</div><div class="up-detail">Convention Center · Austin TX</div></div></div>
+      </div>
+      <div class="card">
+        <div class="chd"><div class="cht">Quick actions</div></div>
+        <div class="qa-grid">
+          <button class="qa-btn" onclick="goView('new-production')"><div class="qa-icon">🎭</div><div class="qa-lbl">New production</div><div class="qa-sub">Start from scratch</div></button>
+          <button class="qa-btn" onclick="goView('new-production')"><div class="qa-icon">🏗</div><div class="qa-lbl">New project</div><div class="qa-sub">Long-term build</div></button>
+          <button class="qa-btn" onclick="goProd('gala');switchTab('ros')"><div class="qa-icon">▶</div><div class="qa-lbl">Open ROS</div><div class="qa-sub">Summerset Gala · Live</div></button>
+          <button class="qa-btn" onclick="goView('calendar')"><div class="qa-icon">📅</div><div class="qa-lbl">Calendar</div><div class="qa-sub">Full schedule view</div></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NEW PRODUCTION WIZARD ══════════ -->
+<div id="view-new-production" class="view">
+  <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between">
+    <div>
+      <div class="ph-ey">Create new</div>
+      <div class="ph-title">New <em>production</em></div>
+    </div>
+    <button class="btn btn-ghost" onclick="goView('dashboard')">← Cancel</button>
+  </div>
+
+  <!-- Steps -->
+  <div class="wizard-steps">
+    <div class="wiz-step active" id="wstep-1"><div class="wiz-step-num">1</div><div class="wiz-step-label">Basics</div></div>
+    <div class="wiz-connector"></div>
+    <div class="wiz-step" id="wstep-2"><div class="wiz-step-num">2</div><div class="wiz-step-label">Phases & dates</div></div>
+    <div class="wiz-connector"></div>
+    <div class="wiz-step" id="wstep-3"><div class="wiz-step-num">3</div><div class="wiz-step-label">Team</div></div>
+    <div class="wiz-connector"></div>
+    <div class="wiz-step" id="wstep-4"><div class="wiz-step-num">4</div><div class="wiz-step-label">Run of show</div></div>
+  </div>
+
+  <!-- Step 1: Basics -->
+  <div id="wiz-1" class="wiz-panel active">
+    <div class="wiz-card">
+      <div style="font-size:14px;font-weight:500;margin-bottom:18px">What are you creating?</div>
+      <div class="form-2" style="margin-bottom:16px">
+        <div id="wtype-prod" onclick="selectWizType('production')" style="border:0.5px solid rgba(42,92,140,.4);background:rgba(42,92,140,.1);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s">
+          <div style="font-size:22px;margin-bottom:8px">🎭</div>
+          <div style="font-size:13px;font-weight:500;color:#5B9FE0;margin-bottom:4px">Production</div>
+          <div style="font-size:11px;color:var(--text-3)">Defined event. Gala, concert, conference, product launch, festival.</div>
+        </div>
+        <div id="wtype-proj" onclick="selectWizType('project')" style="border:0.5px solid var(--border);background:var(--dark-3);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s">
+          <div style="font-size:22px;margin-bottom:8px">🏗</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:4px">Project</div>
+          <div style="font-size:11px;color:var(--text-3)">Long-horizon build. Venue install, product development, touring infrastructure.</div>
+        </div>
+      </div>
+      <div class="form-grp"><div class="form-lbl">Production name</div><input class="form-inp" type="text" id="wiz-name" placeholder="e.g. Annual Leadership Summit 2026" oninput="updateWizPreview()"></div>
+      <div class="form-2">
+        <div class="form-grp"><div class="form-lbl">Type / category</div><select class="form-sel"><option>Corporate event</option><option>Conference</option><option>Concert / live music</option><option>Festival</option><option>Product launch</option><option>Gala</option><option>Private event</option><option>Installed show</option><option>Other</option></select></div>
+        <div class="form-grp"><div class="form-lbl">Show date</div><input class="form-inp" type="date" id="wiz-date" oninput="updateWizPreview()"></div>
+      </div>
+      <div class="form-2">
+        <div class="form-grp"><div class="form-lbl">Venue name</div><input class="form-inp" type="text" id="wiz-venue" placeholder="Venue" oninput="updateWizPreview()"></div>
+        <div class="form-grp"><div class="form-lbl">City</div><input class="form-inp" type="text" id="wiz-city" placeholder="City, State" oninput="updateWizPreview()"></div>
+      </div>
+      <div class="form-2">
+        <div class="form-grp"><div class="form-lbl">Est. guest count</div><input class="form-inp" type="number" placeholder="0"></div>
+        <div class="form-grp"><div class="form-lbl">Budget</div><input class="form-inp" type="text" placeholder="$0"></div>
+      </div>
+    </div>
+    <!-- Preview -->
+    <div style="background:#111110;border:0.5px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 22px;margin-bottom:20px">
+      <div style="font-size:9px;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Preview</div>
+      <div id="wiz-preview-name" style="font-family:var(--disp);font-size:24px;letter-spacing:2px;color:#E8E6DC;margin-bottom:6px">YOUR PRODUCTION NAME</div>
+      <div id="wiz-preview-meta" style="font-size:12px;color:rgba(255,255,255,.4);display:flex;gap:16px;flex-wrap:wrap">
+        <span>📅 Date TBD</span><span>📍 Venue TBD</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end"><button class="btn btn-gold" onclick="wizNext(2)">Next — Phases & dates →</button></div>
+  </div>
+
+  <!-- Step 2: Phases -->
+  <div id="wiz-2" class="wiz-panel">
+    <div class="wiz-card">
+      <div style="font-size:14px;font-weight:500;margin-bottom:6px">Production phases</div>
+      <div style="font-size:12px;color:var(--text-3);margin-bottom:20px">Define the key phases. Add, remove, or rename to fit your production.</div>
+      <div id="phase-list">
+        <div class="phase-row"><div class="phase-color" style="background:#4DB6AC"></div><input class="phase-name-inp" value="Pre-production"><div class="phase-dates"><input class="phase-date-inp" type="date" placeholder="Start"><span style="color:var(--text-3);font-size:11px">→</span><input class="phase-date-inp" type="date" placeholder="End"></div><button onclick="this.closest('.phase-row').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:14px;padding:4px">✕</button></div>
+        <div class="phase-row"><div class="phase-color" style="background:#FFD600"></div><input class="phase-name-inp" value="Load-in"><div class="phase-dates"><input class="phase-date-inp" type="date" placeholder="Start"><span style="color:var(--text-3);font-size:11px">→</span><input class="phase-date-inp" type="date" placeholder="End"></div><button onclick="this.closest('.phase-row').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:14px;padding:4px">✕</button></div>
+        <div class="phase-row"><div class="phase-color" style="background:#CE93D8"></div><input class="phase-name-inp" value="Tech rehearsal"><div class="phase-dates"><input class="phase-date-inp" type="date" placeholder="Start"><span style="color:var(--text-3);font-size:11px">→</span><input class="phase-date-inp" type="date" placeholder="End"></div><button onclick="this.closest('.phase-row').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:14px;padding:4px">✕</button></div>
+        <div class="phase-row"><div class="phase-color" style="background:#E24B4A"></div><input class="phase-name-inp" value="Show"><div class="phase-dates"><input class="phase-date-inp" type="date" placeholder="Start"><span style="color:var(--text-3);font-size:11px">→</span><input class="phase-date-inp" type="date" placeholder="End"></div><button onclick="this.closest('.phase-row').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:14px;padding:4px">✕</button></div>
+        <div class="phase-row"><div class="phase-color" style="background:#FF7043"></div><input class="phase-name-inp" value="Strike"><div class="phase-dates"><input class="phase-date-inp" type="date" placeholder="Start"><span style="color:var(--text-3);font-size:11px">→</span><input class="phase-date-inp" type="date" placeholder="End"></div><button onclick="this.closest('.phase-row').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:14px;padding:4px">✕</button></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="addPhase()">+ Add phase</button>
+    </div>
+    <div style="display:flex;justify-content:space-between"><button class="btn btn-ghost" onclick="wizNext(1)">← Back</button><button class="btn btn-gold" onclick="wizNext(3)">Next — Team →</button></div>
+  </div>
+
+  <!-- Step 3: Team -->
+  <div id="wiz-3" class="wiz-panel">
+    <div class="wiz-card">
+      <div style="font-size:14px;font-weight:500;margin-bottom:6px">Invite your team</div>
+      <div style="font-size:12px;color:var(--text-3);margin-bottom:20px">Add team members by email. You can always add more later.</div>
+      <div id="crew-list">
+        <div class="crew-inv-row"><input class="form-inp" type="email" placeholder="Email address" style="flex:2"><select class="form-sel" style="flex:1"><option>Stage manager</option><option>Technical director</option><option>Lighting designer</option><option>FOH engineer</option><option>Video operator</option><option>Stagehand</option><option>Client</option><option>Other</option></select><button onclick="this.closest('.crew-inv-row').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:16px;padding:0 4px">✕</button></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="addCrewRow()">+ Add team member</button>
+      <div style="margin-top:18px;padding-top:18px;border-top:0.5px solid var(--border)">
+        <div style="font-size:12px;font-weight:500;margin-bottom:8px">Access levels</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.7">
+          <span style="color:var(--gold)">Admin</span> — full access, can edit everything<br>
+          <span style="color:#5B9FE0">Dept head</span> — full ROS, their dept schedule and vendor contacts<br>
+          <span style="color:#66BB6A">Crew</span> — call times and live ROS view only<br>
+          <span style="color:#FFAB40">Client</span> — curated schedule and file uploads only
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between"><button class="btn btn-ghost" onclick="wizNext(2)">← Back</button><button class="btn btn-gold" onclick="wizNext(4)">Next — Run of show →</button></div>
+  </div>
+
+  <!-- Step 4: ROS setup -->
+  <div id="wiz-4" class="wiz-panel">
+    <div class="wiz-card">
+      <div style="font-size:14px;font-weight:500;margin-bottom:6px">Set up your run of show</div>
+      <div style="font-size:12px;color:var(--text-3);margin-bottom:20px">Start from a template or build from scratch. You can always edit everything later.</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
+        <div onclick="selectROSTemplate('blank')" id="rt-blank" style="border:0.5px solid rgba(201,168,76,.4);background:var(--gold-dim);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s">
+          <div style="font-size:22px;margin-bottom:8px">📄</div>
+          <div style="font-size:13px;font-weight:500;color:var(--gold);margin-bottom:4px">Blank</div>
+          <div style="font-size:11px;color:var(--text-3)">Start completely fresh and build your cues from scratch.</div>
+        </div>
+        <div onclick="selectROSTemplate('corporate')" id="rt-corp" style="border:0.5px solid var(--border);background:var(--dark-3);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s">
+          <div style="font-size:22px;margin-bottom:8px">🏢</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:4px">Corporate event</div>
+          <div style="font-size:11px;color:var(--text-3)">Pre-show, cocktail, dinner, program, reception flow.</div>
+        </div>
+        <div onclick="selectROSTemplate('concert')" id="rt-conc" style="border:0.5px solid var(--border);background:var(--dark-3);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s">
+          <div style="font-size:22px;margin-bottom:8px">🎸</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text-2);margin-bottom:4px">Concert / show</div>
+          <div style="font-size:11px;color:var(--text-3)">Doors, support act, changeover, headliner, encore flow.</div>
+        </div>
+      </div>
+      <div style="background:var(--dark-3);border-radius:8px;padding:14px;font-size:12px;color:var(--text-3)">
+        ✓ Your production workspace, call sheet, and documents will be set up automatically based on the info you provided.
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between">
+      <button class="btn btn-ghost" onclick="wizNext(3)">← Back</button>
+      <button class="btn btn-gold" onclick="finishWizard()">Create production →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PRODUCTIONS LIST ══════════ -->
+<div id="view-productions" class="view">
+  <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between">
+    <div><div class="ph-ey">Show management</div><div class="ph-title">My <em>productions</em></div></div>
+    <button class="btn btn-gold" onclick="goView('new-production')">+ New production</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div class="card clickable" onclick="goProd('gala')" style="overflow:visible">
+      <div style="display:grid;grid-template-columns:5px 1fr"><div style="background:#E24B4A;border-radius:11px 0 0 11px"></div><div style="padding:18px 22px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px"><div><div style="font-size:15px;font-weight:500;margin-bottom:5px">Summerset Corporate Gala</div><div style="font-size:12px;color:var(--text-3);display:flex;gap:14px;flex-wrap:wrap"><span>📍 Grand Ballroom, LV</span><span>🗓 Jun 12–15</span><span>👥 340 guests</span><span>💰 $86K</span></div></div><span class="pill pill-live">Live tonight</span></div><div style="display:flex;gap:16px;margin-top:12px;align-items:center"><div style="flex:1"><div style="font-size:10px;color:var(--text-3);margin-bottom:4px">Tasks complete</div><div class="prog-bar"><div class="prog-fill" style="width:72%"></div></div></div><div style="font-size:12px;color:var(--text-3)">72%</div></div></div></div>
+    </div>
+    <div class="card clickable" onclick="goProd('summit')" style="overflow:visible">
+      <div style="display:grid;grid-template-columns:5px 1fr"><div style="background:#378ADD;border-radius:11px 0 0 11px"></div><div style="padding:18px 22px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px"><div><div style="font-size:15px;font-weight:500;margin-bottom:5px">Tech Summit 2025</div><div style="font-size:12px;color:var(--text-3);display:flex;gap:14px;flex-wrap:wrap"><span>📍 Convention Center, Austin</span><span>🗓 Aug 1–4</span><span>👥 1,200</span><span>💰 $142K</span></div></div><span class="pill pill-plan">Planning</span></div><div style="display:flex;gap:16px;margin-top:12px;align-items:center"><div style="flex:1"><div style="font-size:10px;color:var(--text-3);margin-bottom:4px">Tasks complete</div><div class="prog-bar"><div class="prog-fill" style="width:34%"></div></div></div><div style="font-size:12px;color:var(--text-3)">34%</div></div></div></div>
+    </div>
+    <div class="card clickable" onclick="goProd('dinner')" style="overflow:visible">
+      <div style="display:grid;grid-template-columns:5px 1fr"><div style="background:#1D9E75;border-radius:11px 0 0 11px"></div><div style="padding:18px 22px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px"><div><div style="font-size:15px;font-weight:500;margin-bottom:5px">Meridian Holiday Dinner</div><div style="font-size:12px;color:var(--text-3);display:flex;gap:14px;flex-wrap:wrap"><span>📍 The Rooftop, LA</span><span>🗓 Dec 5</span><span>👥 120</span><span>💰 $28K</span></div></div><span class="pill pill-draft">Draft</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PROJECTS ══════════ -->
+<div id="view-projects" class="view">
+  <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between">
+    <div><div class="ph-ey">Long-horizon builds</div><div class="ph-title">My <em>projects</em></div></div>
+    <button class="btn btn-gold" onclick="goView('new-production')">+ New project</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div class="card clickable" onclick="goProj('sphere')" style="overflow:visible">
+      <div style="display:grid;grid-template-columns:5px 1fr"><div style="background:#4DB6AC;border-radius:11px 0 0 11px"></div><div style="padding:20px 22px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px"><div><div style="font-size:15px;font-weight:500;margin-bottom:5px">Sphere Residency Build — Phase 2</div><div style="font-size:12px;color:var(--text-3);display:flex;gap:14px;flex-wrap:wrap"><span>📍 Las Vegas, NV</span><span>🗓 Mar 2025 – Sep 2026</span><span>👥 8 members</span><span>💰 $2.4M</span></div></div><span class="pill pill-teal">In progress</span></div><div class="gantt-wrap" style="padding:0"><div class="gantt"><div class="gantt-hdr"><div class="gantt-month">Apr</div><div class="gantt-month">May</div><div class="gantt-month">Jun</div><div class="gantt-month">Jul</div><div class="gantt-month">Aug</div><div class="gantt-month">Sep</div></div><div class="gantt-row"><div class="gantt-lbl">AV infrastructure</div><div class="gantt-track"><div class="gantt-bar" style="left:0;width:55%;background:#4DB6AC">In progress</div><div class="gantt-today" style="left:20%"></div></div></div><div class="gantt-row"><div class="gantt-lbl">Rigging system</div><div class="gantt-track"><div class="gantt-bar" style="left:10%;width:45%;background:#2A8C7A">In progress</div></div></div><div class="gantt-row"><div class="gantt-lbl">Control room</div><div class="gantt-track"><div class="gantt-bar" style="left:30%;width:50%;background:var(--dark-3);color:var(--text-3)">Upcoming</div></div></div></div></div><div style="display:flex;gap:16px;margin-top:12px;align-items:center"><div style="flex:1"><div class="prog-bar"><div class="prog-fill" style="width:48%"></div></div></div><div style="font-size:12px;color:var(--text-3)">48% · 14 open tasks</div></div></div></div>
+    </div>
+    <div class="card clickable" onclick="goProj('venue')" style="overflow:visible">
+      <div style="display:grid;grid-template-columns:5px 1fr"><div style="background:#5B9FE0;border-radius:11px 0 0 11px"></div><div style="padding:20px 22px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px"><div><div style="font-size:15px;font-weight:500;margin-bottom:5px">Downtown Venue Buildout — AV Infrastructure</div><div style="font-size:12px;color:var(--text-3);display:flex;gap:14px;flex-wrap:wrap"><span>📍 Chicago, IL</span><span>🗓 Jan – Jun 2026</span><span>👥 12 members</span><span>💰 $840K</span></div></div><span class="pill pill-plan">Planning</span></div><div class="gantt-wrap" style="padding:0"><div class="gantt"><div class="gantt-hdr"><div class="gantt-month">Apr</div><div class="gantt-month">May</div><div class="gantt-month">Jun</div><div class="gantt-month">Jul</div><div class="gantt-month">Aug</div><div class="gantt-month">Sep</div></div><div class="gantt-row"><div class="gantt-lbl">Design & engineering</div><div class="gantt-track"><div class="gantt-bar" style="left:0;width:35%;background:#5B9FE0">In progress</div><div class="gantt-today" style="left:20%"></div></div></div><div class="gantt-row"><div class="gantt-lbl">Procurement</div><div class="gantt-track"><div class="gantt-bar" style="left:25%;width:30%;background:var(--dark-3);color:var(--text-3)">Upcoming</div></div></div></div></div><div style="display:flex;gap:16px;margin-top:12px;align-items:center"><div style="flex:1"><div class="prog-bar"><div class="prog-fill" style="width:18%"></div></div></div><div style="font-size:12px;color:var(--text-3)">18% · 22 open tasks</div></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ CALENDAR ══════════ -->
+<div id="view-calendar" class="view">
+  <div class="cal-toolbar">
+    <div class="cal-nav-group">
+      <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+      <div class="cal-month-title" id="cal-title">June 2025</div>
+      <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+      <button class="btn btn-ghost btn-sm" onclick="calGoToday()">Today</button>
+    </div>
+    <div class="cal-legend">
+      <div class="cal-leg-item"><div class="cal-leg-dot cev-load"></div>Load-in</div>
+      <div class="cal-leg-item"><div class="cal-leg-dot cev-tech"></div>Tech</div>
+      <div class="cal-leg-item"><div class="cal-leg-dot cev-show"></div>Show</div>
+      <div class="cal-leg-item"><div class="cal-leg-dot cev-strike"></div>Strike</div>
+      <div class="cal-leg-item"><div class="cal-leg-dot cev-call"></div>Crew call</div>
+      <div class="cal-leg-item"><div class="cal-leg-dot cev-mile"></div>Milestone</div>
+    </div>
+    <button class="btn btn-gold btn-sm" onclick="openAddEvent()">+ Add event</button>
+  </div>
+  <div class="cal-grid-wrap">
+    <div class="cal-dow-row">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+    </div>
+    <div id="cal-weeks"></div>
+  </div>
+</div>
+
+<!-- ══════════ TASKS ══════════ -->
+<div id="view-tasks" class="view">
+  <div class="ph" style="display:flex;align-items:flex-end;justify-content:space-between">
+    <div><div class="ph-ey">All work</div><div class="ph-title">My <em>tasks</em></div></div>
+    <button class="btn btn-gold" onclick="openModal('add-task')">+ Add task</button>
+  </div>
+  <div class="card">
+    <div style="padding:8px 18px;background:rgba(232,53,10,.04);border-bottom:0.5px solid var(--border)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(232,53,10,.5)">Overdue</div></div>
+    <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Confirm AV vendor contract</div><div class="tr-ref">Tech Summit 2025 · Production · Assigned: Jordan K.</div></div><div class="td over">Apr 27</div></div>
+    <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Submit permit application — loading dock</div><div class="tr-ref">Sphere Residency · Project · Assigned: Tom R.</div></div><div class="td over">Apr 28</div></div>
+    <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Review insurance certificates</div><div class="tr-ref">Summerset Gala · Production · Assigned: Jordan K.</div></div><div class="td over">May 1</div></div>
+    <div style="padding:8px 18px;background:rgba(42,92,140,.04);border-bottom:0.5px solid var(--border);border-top:0.5px solid var(--border)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(91,159,224,.5)">This week</div></div>
+    <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Send runsheet to venue coordinator</div><div class="tr-ref">Summerset Gala · Production</div></div><div class="td">May 3</div></div>
+    <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Review structural engineering report</div><div class="tr-ref">Downtown Venue · Project</div></div><div class="td">May 8</div></div>
+    <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Get F&amp;B headcount from client</div><div class="tr-ref">Meridian Holiday Dinner · Production</div></div><div class="td">May 10</div></div>
+    <div style="padding:8px 18px;background:rgba(255,255,255,.02);border-bottom:0.5px solid var(--border);border-top:0.5px solid var(--border)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-3)">Upcoming</div></div>
+    <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Finalize cable routing plan with architect</div><div class="tr-ref">Sphere Residency · Project</div></div><div class="td">May 15</div></div>
+    <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Order Dante switches — 48-port PoE</div><div class="tr-ref">Sphere Residency · Project</div></div><div class="td">May 20</div></div>
+    <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Finalize menu selections with catering</div><div class="tr-ref">Summerset Gala · Completed Apr 22</div></div></div>
+    <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Sign Dante network design contract</div><div class="tr-ref">Sphere Residency · Completed Apr 10</div></div></div>
+  </div>
+</div>
+
+<!-- ══════════ PRODUCTION DETAIL ══════════ -->
+<div id="view-production-detail" class="view">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+    <button class="btn btn-ghost btn-sm" onclick="goView('productions')">← Productions</button>
+  </div>
+  <div style="background:#111110;border:0.5px solid rgba(232,53,10,.2);border-radius:12px;padding:24px 28px;margin-bottom:18px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(232,53,10,.08) 0%,transparent 70%)"></div>
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,53,10,.45);margin-bottom:6px">Production workspace</div>
+    <div style="font-family:var(--disp);font-size:30px;letter-spacing:2px;color:#E8E6DC;margin-bottom:12px">SUMMERSET CORPORATE GALA</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+      <div style="font-size:12px;color:rgba(255,255,255,.4)">📍 <strong style="color:rgba(255,255,255,.75)">Grand Ballroom, Las Vegas NV</strong></div>
+      <div style="font-size:12px;color:rgba(255,255,255,.4)">🗓 <strong style="color:rgba(255,255,255,.75)">Jun 12–15, 2025</strong></div>
+      <div style="font-size:12px;color:rgba(255,255,255,.4)">👥 <strong style="color:rgba(255,255,255,.75)">340 guests</strong></div>
+      <div style="font-size:12px;color:rgba(255,255,255,.4)">💰 <strong style="color:rgba(255,255,255,.75)">$86,000</strong></div>
+      <span class="pill pill-live">Live tonight</span>
+    </div>
+  </div>
+
+  <div class="prod-tabs" id="prod-tab-bar">
+    <button class="pt active" onclick="switchTab('overview',this)">Overview</button>
+    <button class="pt" onclick="switchTab('ros',this)">Run of show</button>
+    <button class="pt" onclick="switchTab('callsheet',this)">Call sheet</button>
+    <button class="pt" onclick="switchTab('calendar',this)">Calendar</button>
+    <button class="pt" onclick="switchTab('tasks',this)">Tasks</button>
+    <button class="pt" onclick="switchTab('documents',this)">Documents</button>
+    <button class="pt" onclick="switchTab('team',this)">Team</button>
+    <button class="pt" onclick="switchTab('budget',this)">Budget</button>
+    <button class="pt" onclick="switchTab('vendors',this)">Vendors</button>
+    <button class="pt" onclick="switchTab('files',this)">Files</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="tab-overview" class="tab-content active">
+    <div class="live-banner"><div class="live-l"><div class="live-dot"></div><div><div class="live-title">Show is live now</div><div class="live-sub">Sarah M. calling · Q14 of 23 · 5 connected</div></div></div><button class="btn btn-danger" onclick="switchTab('ros')">Open ROS →</button></div>
+    <div style="display:grid;grid-template-columns:1fr 260px;gap:16px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card"><div class="chd"><div class="cht">Production phases</div></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:14px 16px">
+          <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--green-dim);border:0.5px solid rgba(58,122,68,.3)"><div style="font-size:9px;color:#66BB6A;font-weight:500;margin-bottom:3px">✓ Done</div><div style="font-size:11px;color:#66BB6A">Pre-prod</div></div>
+          <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--green-dim);border:0.5px solid rgba(58,122,68,.3)"><div style="font-size:9px;color:#66BB6A;font-weight:500;margin-bottom:3px">✓ Done</div><div style="font-size:11px;color:#66BB6A">Load-in</div></div>
+          <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--green-dim);border:0.5px solid rgba(58,122,68,.3)"><div style="font-size:9px;color:#66BB6A;font-weight:500;margin-bottom:3px">✓ Done</div><div style="font-size:11px;color:#66BB6A">Tech</div></div>
+          <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--live-dim);border:0.5px solid rgba(232,53,10,.25)"><div style="font-size:9px;color:var(--live);font-weight:500;margin-bottom:3px">🔴 Live</div><div style="font-size:11px;color:var(--live)">Show</div></div>
+          <div style="text-align:center;padding:10px 6px;border-radius:8px;background:var(--dark-3);border:0.5px solid var(--border)"><div style="font-size:9px;color:var(--text-3);font-weight:500;margin-bottom:3px">Upcoming</div><div style="font-size:11px;color:var(--text-3)">Strike</div></div>
+        </div></div>
+        <div class="card"><div class="chd"><div class="cht">Open tasks</div><button class="cha" onclick="switchTab('tasks')">View all →</button></div>
+          <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Send runsheet to venue coordinator</div></div><div class="td">May 3</div></div>
+          <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Review insurance certificates</div></div><div class="td over">May 1</div></div>
+          <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Finalize menu selections</div></div><div class="td">Apr 22</div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card"><div class="ns-hd"><div class="ns-ey">Show info</div><div class="ns-name">Tonight</div><div class="ns-date">Jun 14, 2025 · Night 1</div></div><div class="ns-body">
+          <div class="ns-row"><span class="ns-lbl">Crew call</span><span class="ns-val">3:00 PM</span></div>
+          <div class="ns-row"><span class="ns-lbl">Doors</span><span class="ns-val">6:30 PM</span></div>
+          <div class="ns-row"><span class="ns-lbl">Strike</span><span class="ns-val">Jun 15 · 8 AM</span></div>
+        </div></div>
+        <div class="card"><div class="chd"><div class="cht">Quick links</div></div>
+          <div class="row clickable" onclick="switchTab('ros')"><span style="font-size:13px">▶</span><span style="font-size:12px">Run of show</span></div>
+          <div class="row clickable" onclick="switchTab('callsheet')"><span style="font-size:13px">📋</span><span style="font-size:12px">Call sheet</span></div>
+          <div class="row clickable" onclick="switchTab('documents')"><span style="font-size:13px">📄</span><span style="font-size:12px">Documents</span></div>
+          <div class="row clickable" onclick="switchTab('budget')"><span style="font-size:13px">💰</span><span style="font-size:12px">Budget</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RUN OF SHOW -->
+  <div id="tab-ros" class="tab-content">
+    <div class="ros-toolbar">
+      <div class="ros-status live"><div class="ros-dot"></div>Live · Cue 14 of 23</div>
+      <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="togglePrint()">🖨 Print preview</button>
+        <button class="btn btn-ghost btn-sm" onclick="addSection()">+ Section header</button>
+        <button class="btn btn-ghost btn-sm" onclick="addCue()">+ Add cue</button>
+        <button class="btn btn-gold btn-sm" onclick="openLiveCaller()">▶ Live caller</button>
+      </div>
+    </div>
+    <div id="ros-builder">
+      <div style="overflow-x:auto;border-radius:10px;border:0.5px solid var(--border)">
+        <table class="ros-tbl" id="ros-tbl"><thead><tr><th style="width:28px"></th><th style="width:55px">Time</th><th>Item / cue</th><th style="width:80px">Dept</th><th style="width:65px">Duration</th><th>Notes</th><th style="width:32px"></th></tr></thead><tbody id="ros-body"></tbody></table>
+      </div>
+      <div class="ros-add" onclick="addCue()"><span style="font-size:16px;opacity:.4">+</span>Add cue row (or press Enter in last row)</div>
+    </div>
+    <div id="ros-print" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-size:13px;color:var(--text-2)">Print preview — how it looks on paper</div>
+        <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="togglePrint()">← Back to editor</button><button class="btn btn-gold btn-sm" onclick="window.print()">Print / Save PDF</button></div>
+      </div>
+      <div class="print-wrap" id="print-content"></div>
+    </div>
+  </div>
+
+  <!-- CALL SHEET -->
+  <div id="tab-callsheet" class="tab-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div><div style="font-size:13px;font-weight:500">Call sheet — Jun 14, 2025</div><div style="font-size:12px;color:var(--text-3)">Summerset Corporate Gala · Grand Ballroom, Las Vegas</div></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm">Export PDF</button><button class="btn btn-gold btn-sm">Send to crew</button></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="card"><div class="chd"><div class="cht">Crew calls</div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">3:00p</div><div class="tb"><div class="tn">General crew call — all departments</div></div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">3:30p</div><div class="tb"><div class="tn">Lighting focus & programming</div><div class="tr-ref">LD, board op</div></div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">4:30p</div><div class="tb"><div class="tn">Soundcheck</div><div class="tr-ref">FOH, monitors, RF</div></div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">5:00p</div><div class="tb"><div class="tn">SM crew walkthrough — all dept heads</div></div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">6:00p</div><div class="tb"><div class="tn">Crew ready / places</div></div></div>
+      </div>
+      <div class="card"><div class="chd"><div class="cht">Show schedule</div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">6:30p</div><div class="tb"><div class="tn">Doors open / cocktail reception</div></div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">7:40p</div><div class="tb"><div class="tn">Welcome remarks — CEO (~10 min)</div></div></div>
+        <div class="task-row" style="background:rgba(232,53,10,.05)"><div style="font-family:var(--mono);font-size:11px;color:var(--live);width:44px;flex-shrink:0">NOW</div><div class="tb"><div class="tn" style="color:var(--live)">Dinner service</div></div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">~9:10p</div><div class="tb"><div class="tn">Awards presentation (~35 min)</div></div></div>
+        <div class="task-row"><div style="font-family:var(--mono);font-size:11px;color:var(--text-3);width:44px;flex-shrink:0">11:15p</div><div class="tb"><div class="tn">Last call / closing</div></div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px"><div class="chd"><div class="cht">Key contacts tonight</div></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr)">
+        <div style="padding:12px 16px;border-right:0.5px solid var(--border)"><div style="font-size:10px;color:var(--text-3);margin-bottom:3px">Lead producer</div><div style="font-weight:500;font-size:13px">Jordan K.</div><div style="font-size:11px;color:var(--text-3)">(702) 555-0101</div></div>
+        <div style="padding:12px 16px;border-right:0.5px solid var(--border)"><div style="font-size:10px;color:var(--text-3);margin-bottom:3px">Stage manager</div><div style="font-weight:500;font-size:13px">Sarah M.</div><div style="font-size:11px;color:var(--text-3)">(702) 555-0192</div></div>
+        <div style="padding:12px 16px;border-right:0.5px solid var(--border)"><div style="font-size:10px;color:var(--text-3);margin-bottom:3px">TD / AV</div><div style="font-weight:500;font-size:13px">Tom R.</div><div style="font-size:11px;color:var(--text-3)">(702) 555-0233</div></div>
+        <div style="padding:12px 16px"><div style="font-size:10px;color:var(--text-3);margin-bottom:3px">Venue coordinator</div><div style="font-weight:500;font-size:13px">Lisa T.</div><div style="font-size:11px;color:var(--text-3)">(702) 555-0344</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTION CALENDAR -->
+  <div id="tab-calendar" class="tab-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-size:13px;font-weight:500">Production calendar — Summerset Corporate Gala</div>
+      <button class="btn btn-gold btn-sm" onclick="openAddEvent()">+ Add event</button>
+    </div>
+    <div class="cal-grid-wrap">
+      <div class="cal-dow-row"><div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div></div>
+      <div class="cal-week">
+        <div class="cal-day other-month"><div class="cal-day-num">1</div></div><div class="cal-day other-month"><div class="cal-day-num">2</div></div><div class="cal-day other-month"><div class="cal-day-num">3</div></div><div class="cal-day other-month"><div class="cal-day-num">4</div></div><div class="cal-day other-month"><div class="cal-day-num">5</div></div><div class="cal-day other-month"><div class="cal-day-num">6</div></div><div class="cal-day other-month"><div class="cal-day-num">7</div></div>
+      </div>
+      <div class="cal-week">
+        <div class="cal-day"><div class="cal-day-num">8</div></div><div class="cal-day"><div class="cal-day-num">9</div></div><div class="cal-day"><div class="cal-day-num">10</div></div><div class="cal-day"><div class="cal-day-num">11</div></div>
+        <div class="cal-day"><div class="cal-day-num">12</div><div class="cal-event cev-load">8am Load-in</div><div class="cal-event cev-call">All crew</div></div>
+        <div class="cal-day"><div class="cal-day-num">13</div><div class="cal-event cev-tech">2pm Tech rehearsal</div><div class="cal-event cev-call">SM call 1pm</div></div>
+        <div class="cal-day" style="background:rgba(232,53,10,.06)"><div class="cal-day-num" style="color:var(--live)">14 🔴</div><div class="cal-event cev-call">Crew 3pm</div><div class="cal-event cev-show">Show 6:30pm</div></div>
+      </div>
+      <div class="cal-week">
+        <div class="cal-day"><div class="cal-day-num">15</div><div class="cal-event cev-strike">8am Strike</div></div>
+        <div class="cal-day"><div class="cal-day-num">16</div></div><div class="cal-day"><div class="cal-day-num">17</div></div><div class="cal-day"><div class="cal-day-num">18</div></div><div class="cal-day"><div class="cal-day-num">19</div></div><div class="cal-day"><div class="cal-day-num">20</div></div><div class="cal-day"><div class="cal-day-num">21</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKS TAB -->
+  <div id="tab-tasks" class="tab-content">
+    <div class="card"><div class="chd"><div class="cht">Production tasks</div><button class="btn btn-gold btn-sm">+ Add task</button></div>
+      <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Send runsheet to venue coordinator</div><div class="tr-ref">Due May 3 · Assigned to Jordan K.</div></div><div class="td">May 3</div></div>
+      <div class="task-row"><div class="chk" onclick="toggleTask(this)"></div><div class="tb"><div class="tn">Review insurance certificates from all vendors</div><div class="tr-ref">Due May 1 · Assigned to Jordan K.</div></div><div class="td over">May 1</div></div>
+      <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Confirm final guest count with client</div><div class="tr-ref">Completed Apr 20</div></div></div>
+      <div class="task-row"><div class="chk done" onclick="toggleTask(this)"></div><div class="tb"><div class="tn done">Finalize menu selections with MGM catering</div><div class="tr-ref">Completed Apr 22</div></div></div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div id="tab-documents" class="tab-content">
+    <div id="doc-library">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <div><div style="font-size:13px;font-weight:500;margin-bottom:3px">Documents</div><div style="font-size:12px;color:var(--text-3)">All production docs live here. One click to open, edit, and export.</div></div>
+        <button class="btn btn-gold btn-sm">+ New document</button>
+      </div>
+      <!-- Saved docs -->
+      <div style="margin-bottom:22px">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-3);margin-bottom:10px">Saved documents</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="card clickable row" onclick="openDoc('callsheet')" style="border-radius:9px;padding:14px 18px">
+            <span style="font-size:18px">📋</span>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500">Call sheet — Jun 14, 2025</div><div style="font-size:11px;color:var(--text-3)">Last edited by Jordan K. · Today · Show day call sheet</div></div>
+            <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();window.print()">Print</button><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openDoc('callsheet')">Open →</button></div>
+          </div>
+          <div class="card clickable row" onclick="openDoc('ros-print')" style="border-radius:9px;padding:14px 18px">
+            <span style="font-size:18px">▶</span>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500">Run of show — v4</div><div style="font-size:11px;color:var(--text-3)">Last edited by Sarah M. · Apr 28 · 23 cues</div></div>
+            <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();switchTab('ros')">Edit ROS</button><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openDoc('ros-print')">Print →</button></div>
+          </div>
+          <div class="card clickable row" onclick="openDoc('prod-schedule')" style="border-radius:9px;padding:14px 18px">
+            <span style="font-size:18px">📅</span>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500">Production schedule</div><div style="font-size:11px;color:var(--text-3)">Last edited by Jordan K. · Apr 25</div></div>
+            <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();window.print()">Print</button><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openDoc('prod-schedule')">Open →</button></div>
+          </div>
+        </div>
+      </div>
+      <!-- Templates -->
+      <div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-3);margin-bottom:10px">Start from a template</div>
+        <div class="doc-grid">
+          <div class="doc-template" onclick="openDoc('callsheet')"><div class="doc-icon">📋</div><div class="doc-name">Call sheet</div><div class="doc-desc">Crew calls by time and department, show schedule, key contacts. Pre-filled from your production data.</div><span class="doc-tag">Pre-filled</span></div>
+          <div class="doc-template" onclick="openDoc('prod-schedule')"><div class="doc-icon">📅</div><div class="doc-name">Production schedule</div><div class="doc-desc">Day-by-day schedule from load-in through strike. Phases, times, and department assignments.</div><span class="doc-tag">Pre-filled</span></div>
+          <div class="doc-template" onclick="openDoc('crew-contact')"><div class="doc-icon">👥</div><div class="doc-name">Crew contact sheet</div><div class="doc-desc">Everyone on the team — roles, phone numbers, emails. Generated from your team roster.</div><span class="doc-tag">Auto-generated</span></div>
+          <div class="doc-template" onclick="openDoc('vendor-list')"><div class="doc-icon">🏪</div><div class="doc-name">Vendor contact sheet</div><div class="doc-desc">All confirmed vendors with contacts, categories, and contract status.</div><span class="doc-tag">Auto-generated</span></div>
+          <div class="doc-template" onclick="openDoc('site-survey')"><div class="doc-icon">🏟</div><div class="doc-name">Site survey</div><div class="doc-desc">Venue details, power specs, loading access, rigging notes, Wi-Fi info.</div><span class="doc-tag">Template</span></div>
+          <div class="doc-template" onclick="openDoc('day-of')"><div class="doc-icon">☀️</div><div class="doc-name">Day-of briefing</div><div class="doc-desc">Show overview, timeline, emergency contacts, venue rules. For the full crew.</div><span class="doc-tag">Template</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document editor (hidden by default) -->
+    <div id="doc-editor-view" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <button class="btn btn-ghost btn-sm" onclick="closeDoc()">← Documents</button>
+        <div style="flex:1;font-size:13px;font-weight:500" id="doc-editor-title">Call sheet</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Print</button>
+          <button class="btn btn-ghost btn-sm">Export PDF</button>
+          <button class="btn btn-gold btn-sm">Save</button>
+        </div>
+      </div>
+      <div class="doc-editor" id="doc-editor-content"></div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div id="tab-team" class="tab-content">
+    <div class="card"><div class="chd"><div class="cht">Production team</div><button class="btn btn-gold btn-sm">+ Add member</button></div>
+      <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--purp-dim);color:#B39DDB;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">JK</div><div class="tb"><div class="tn">Jordan Kim</div><div class="tr-ref">Lead producer · All access</div></div><span class="pill pill-gold">Admin</span></div>
+      <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--live-dim);color:#FF7043;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">SM</div><div class="tb"><div class="tn">Sarah M.</div><div class="tr-ref">Stage manager · All access</div></div><span class="pill pill-gold">Admin</span></div>
+      <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--blue-dim);color:#5B9FE0;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">TR</div><div class="tb"><div class="tn">Tom R.</div><div class="tr-ref">Technical director · Full + AV dept</div></div><span class="pill pill-plan">Dept head</span></div>
+      <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--gold-dim);color:var(--gold);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">DL</div><div class="tb"><div class="tn">Dana L.</div><div class="tr-ref">Lighting designer · ROS + LX dept</div></div><span class="pill pill-plan">Dept head</span></div>
+      <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--green-dim);color:#66BB6A;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">PN</div><div class="tb"><div class="tn">Priya N.</div><div class="tr-ref">Stagehand · Call times + ROS view</div></div><span class="pill pill-draft">Crew</span></div>
+      <div class="task-row"><div style="width:30px;height:30px;border-radius:50%;background:var(--dark-3);color:var(--text-3);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">SC</div><div class="tb"><div class="tn">Sarah Chen</div><div class="tr-ref">Client · Schedule + files only</div></div><span class="pill pill-amber">Client</span></div>
+    </div>
+  </div>
+
+  <!-- BUDGET -->
+  <div id="tab-budget" class="tab-content">
+    <div class="card"><div class="chd"><div class="cht">Budget tracker</div><button class="btn btn-ghost btn-sm">Export</button></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px 16px;border-bottom:0.5px solid var(--border)">
+        <div style="background:var(--dark-3);border-radius:8px;padding:13px"><div style="font-size:10px;color:var(--text-3);margin-bottom:4px">Total budget</div><div style="font-size:22px;font-weight:500">$86,000</div></div>
+        <div style="background:var(--dark-3);border-radius:8px;padding:13px"><div style="font-size:10px;color:var(--text-3);margin-bottom:4px">Committed</div><div style="font-size:22px;font-weight:500">$85,600</div></div>
+        <div style="background:var(--dark-3);border-radius:8px;padding:13px"><div style="font-size:10px;color:var(--text-3);margin-bottom:4px">Remaining</div><div style="font-size:22px;font-weight:500;color:#66BB6A">+$400</div></div>
+      </div>
+      <table style="width:100%;font-size:13px;border-collapse:collapse">
+        <thead><tr style="background:var(--dark-3)"><th style="text-align:left;padding:9px 18px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Line item</th><th style="text-align:right;padding:9px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Budgeted</th><th style="text-align:right;padding:9px 10px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Actual</th><th style="text-align:right;padding:9px 18px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);font-weight:500">Variance</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:0.5px solid var(--border)"><td style="padding:10px 18px">Venue rental</td><td style="padding:10px;text-align:right">$22,000</td><td style="padding:10px;text-align:right">$22,000</td><td style="padding:10px 18px;text-align:right;color:#66BB6A">$0</td></tr>
+          <tr style="border-bottom:0.5px solid var(--border)"><td style="padding:10px 18px">Food & beverage</td><td style="padding:10px;text-align:right">$28,000</td><td style="padding:10px;text-align:right">$29,400</td><td style="padding:10px 18px;text-align:right;color:var(--live)">-$1,400</td></tr>
+          <tr style="border-bottom:0.5px solid var(--border)"><td style="padding:10px 18px">AV & production</td><td style="padding:10px;text-align:right">$14,000</td><td style="padding:10px;text-align:right">$13,200</td><td style="padding:10px 18px;text-align:right;color:#66BB6A">+$800</td></tr>
+          <tr style="border-bottom:0.5px solid var(--border)"><td style="padding:10px 18px">Décor & florals</td><td style="padding:10px;text-align:right">$8,500</td><td style="padding:10px;text-align:right">$8,500</td><td style="padding:10px 18px;text-align:right;color:#66BB6A">$0</td></tr>
+          <tr><td style="padding:10px 18px">Contingency</td><td style="padding:10px;text-align:right">$3,000</td><td style="padding:10px;text-align:right">$1,700</td><td style="padding:10px 18px;text-align:right;color:#66BB6A">+$1,300</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VENDORS -->
+  <div id="tab-vendors" class="tab-content">
+    <div class="card"><div class="chd"><div class="cht">Vendors</div><button class="btn btn-gold btn-sm">+ Add vendor</button></div>
+      <div class="task-row"><div style="font-size:18px;flex-shrink:0">🔊</div><div class="tb"><div class="tn">Apex Sound & Light</div><div class="tr-ref">AV / Production · ★★★★★</div></div><span class="pill pill-green">Confirmed</span></div>
+      <div class="task-row"><div style="font-size:18px;flex-shrink:0">🌸</div><div class="tb"><div class="tn">Desert Bloom Florals</div><div class="tr-ref">Décor · ★★★★☆</div></div><span class="pill pill-green">Confirmed</span></div>
+      <div class="task-row"><div style="font-size:18px;flex-shrink:0">🍽</div><div class="tb"><div class="tn">MGM Grand Catering</div><div class="tr-ref">Food & Beverage · ★★★★★</div></div><span class="pill pill-green">Confirmed</span></div>
+      <div class="task-row"><div style="font-size:18px;flex-shrink:0">👥</div><div class="tb"><div class="tn">ProStaff Events</div><div class="tr-ref">Staffing</div></div><span class="pill pill-draft">Quote pending</span></div>
+    </div>
+  </div>
+
+  <!-- FILES -->
+  <div id="tab-files" class="tab-content">
+    <div class="card"><div class="chd"><div class="cht">Files</div><button class="btn btn-gold btn-sm">+ Upload</button></div>
+      <div class="task-row"><div style="font-size:18px;flex-shrink:0">📄</div><div class="tb"><div class="tn">AV_Contract_Signed.pdf</div><div class="tr-ref">Tom R. · 2h ago</div></div><span class="pill pill-green">New</span></div>
+      <div class="task-row"><div style="font-size:18px;flex-shrink:0">📊</div><div class="tb"><div class="tn">Budget_Final.xlsx</div><div class="tr-ref">Jordan K. · Apr 22</div></div></div>
+      <div class="task-row"><div style="font-size:18px;flex-shrink:0">📄</div><div class="tb"><div class="tn">Venue_Contract.pdf</div><div class="tr-ref">Jordan K. · Mar 15</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ LIVE ROS CALLER ══════════ -->
+<div id="view-live-ros" class="view">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+    <button class="btn btn-ghost btn-sm" onclick="goProd('gala');switchTab('ros')">← Back to ROS editor</button>
+    <div style="display:flex;align-items:center;gap:7px;background:var(--live-dim);border:0.5px solid rgba(232,53,10,.3);border-radius:6px;padding:5px 12px;font-size:12px;font-weight:500;color:var(--live)"><div style="width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.4s ease-in-out infinite"></div>LIVE · Cue 14 of 23</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 270px;gap:16px">
+    <div style="background:#0A0A08;border:0.5px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden">
+      <div style="padding:13px 18px;border-bottom:0.5px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:11px;color:rgba(255,255,255,.35)">Summerset Gala · Jun 14 · Sarah M. calling</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" id="live-back" onclick="liveBack()" style="color:rgba(255,255,255,.4);border-color:rgba(255,255,255,.1)">‹ Back</button>
+          <button style="background:rgba(196,154,0,.13);color:#C49A00;border:0.5px solid rgba(196,154,0,.3);font-family:var(--sans);font-size:12px;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:500" id="hold-btn" onclick="toggleHold()">Hold</button>
+          <button style="background:var(--live);color:#fff;border:none;font-family:var(--sans);font-size:14px;padding:8px 26px;border-radius:6px;cursor:pointer;font-weight:500;letter-spacing:.5px" id="go-btn" onclick="liveGo()">GO ›</button>
+        </div>
+      </div>
+      <div style="padding:12px 18px 0">
+        <div style="background:rgba(232,53,10,.12);border:0.5px solid rgba(232,53,10,.25);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+          <div style="font-size:10px;font-weight:500;color:var(--live);text-transform:uppercase;letter-spacing:1.5px;flex-shrink:0">▶ Standing by</div>
+          <div style="font-size:13px;color:#fff;font-weight:500;flex:1" id="live-callout-txt">Dinner service — house music cross to ambient</div>
+          <div style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3)" id="live-callout-q">Q14</div>
+        </div>
+        <div style="height:10px"></div>
+      </div>
+      <div style="max-height:500px;overflow-y:auto" id="live-list"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div style="background:#0A0A08;border:0.5px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden">
+        <div style="background:var(--live);padding:10px 15px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:10px;font-weight:500;color:#fff;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:#fff;animation:pulse 1.4s ease-in-out infinite"></div>Crew view</div>
+          <div style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.6)" id="live-clock">—</div>
+        </div>
+        <div style="padding:15px">
+          <div style="font-size:10px;color:rgba(255,255,255,.22);font-family:var(--mono);margin-bottom:8px" id="crew-prev-txt">↑ Q13 — Welcome remarks complete</div>
+          <div style="font-family:var(--serif);font-size:18px;color:#fff;font-weight:400;line-height:1.25;margin-bottom:6px" id="crew-cur-txt">Dinner service begins</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:12px" id="crew-note-txt">House music cross to ambient. F&B starts. SM holds.</div>
+          <div style="height:0.5px;background:rgba(255,255,255,.07);margin-bottom:10px"></div>
+          <div style="font-size:9px;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px">Next</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.5)" id="crew-next-txt">Q15 — Awards walk-up music</div>
+        </div>
+      </div>
+      <div class="card"><div class="chd"><div class="cht">Connected</div></div>
+        <div class="task-row"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0"></div><div class="tb"><div class="tn">Sarah M.</div><div class="tr-ref">SM · Calling</div></div></div>
+        <div class="task-row"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0"></div><div class="tb"><div class="tn">Tom R.</div><div class="tr-ref">TD · iPad</div></div></div>
+        <div class="task-row"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0"></div><div class="tb"><div class="tn">Dana L.</div><div class="tr-ref">LD · Phone</div></div></div>
+        <div class="task-row"><div style="width:7px;height:7px;border-radius:50%;background:var(--text-3);flex-shrink:0"></div><div class="tb"><div class="tn">Ray G.</div><div class="tr-ref">Crew · Offline</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD EVENT MODAL -->
+<div class="modal-overlay" id="modal-add-event" onclick="if(event.target===this)closeModal('add-event')">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title">Add calendar event</div><button class="modal-close" onclick="closeModal('add-event')">✕</button></div>
+    <div class="modal-body">
+      <div style="font-size:12px;color:var(--text-3);margin-bottom:14px">What type of event?</div>
+      <div class="ev-type-grid">
+        <div class="ev-type-btn selected" id="evt-load" onclick="selectEvType('load')"><div class="ev-type-icon">🚛</div><div class="ev-type-label">Load-in</div></div>
+        <div class="ev-type-btn" id="evt-tech" onclick="selectEvType('tech')"><div class="ev-type-icon">🔧</div><div class="ev-type-label">Tech rehearsal</div></div>
+        <div class="ev-type-btn" id="evt-reh" onclick="selectEvType('reh')"><div class="ev-type-icon">🎭</div><div class="ev-type-label">Rehearsal</div></div>
+        <div class="ev-type-btn" id="evt-show" onclick="selectEvType('show')"><div class="ev-type-icon">🔴</div><div class="ev-type-label">Show</div></div>
+        <div class="ev-type-btn" id="evt-strike" onclick="selectEvType('strike')"><div class="ev-type-icon">📦</div><div class="ev-type-label">Strike</div></div>
+        <div class="ev-type-btn" id="evt-call" onclick="selectEvType('call')"><div class="ev-type-icon">👥</div><div class="ev-type-label">Crew call</div></div>
+        <div class="ev-type-btn" id="evt-mile" onclick="selectEvType('mile')"><div class="ev-type-icon">🏁</div><div class="ev-type-label">Milestone</div></div>
+        <div class="ev-type-btn" id="evt-meet" onclick="selectEvType('meet')"><div class="ev-type-icon">💬</div><div class="ev-type-label">Meeting</div></div>
+        <div class="ev-type-btn" id="evt-other" onclick="selectEvType('other')"><div class="ev-type-icon">📌</div><div class="ev-type-label">Other</div></div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="form-grp"><div class="form-lbl">Event title</div><input class="form-inp" type="text" id="ev-title" placeholder="e.g. Load-in — Summerset Gala"></div>
+      <div class="form-2">
+        <div class="form-grp"><div class="form-lbl">Date</div><input class="form-inp" type="date" id="ev-date"></div>
+        <div class="form-grp"><div class="form-lbl">Time</div><input class="form-inp" type="time" id="ev-time"></div>
+      </div>
+      <div class="form-grp"><div class="form-lbl">Production / project</div>
+        <select class="form-sel"><option>Summerset Corporate Gala</option><option>Tech Summit 2025</option><option>Meridian Holiday Dinner</option><option>Sphere Residency Build</option></select>
+      </div>
+      <div class="form-grp"><div class="form-lbl">Notes</div><input class="form-inp" type="text" placeholder="Optional notes or details"></div>
+    </div>
+    <div class="modal-ft"><button class="btn btn-ghost" onclick="closeModal('add-event')">Cancel</button><button class="btn btn-gold" onclick="saveEvent()">Add to calendar</button></div>
+  </div>
+</div>
+
+<script>
+// ── ROS DATA ──
+const CUES=[
+  {q:'Q1',time:'6:00p',title:'House open — pre-show music',dept:'all',dur:'—',notes:'Ambient playlist 75%.',past:true,sec:false},
+  {q:'Q2',time:'6:30p',title:'Doors open / cocktail reception',dept:'sm',dur:'60m',notes:'House music up. F&B starts.',past:true,sec:false},
+  {q:'Q3',time:'6:30p',title:'LX: Cocktail hour wash',dept:'lx',dur:'—',notes:'Warm amber, no specials.',past:true,sec:false},
+  {q:'Q4',time:'7:25p',title:'Announce: Guests to seats',dept:'sm',dur:'5m',notes:'MC on SM cue.',past:true,sec:false},
+  {q:'Q5',time:'7:30p',title:'House music fade to 20%',dept:'snd',dur:'30s',notes:'Slow cross.',past:true,sec:false},
+  {q:'Q6',time:'7:30p',title:'LX: Dinner wash',dept:'lx',dur:'—',notes:'Chandelier 60%.',past:true,sec:false},
+  {q:'Q7',time:'7:35p',title:'Video: Welcome reel',dept:'vid',dur:'2m',notes:'Full screen. Audio 85%.',past:true,sec:false},
+  {q:'Q8',time:'7:38p',title:'CEO walk-up music',dept:'snd',dur:'—',notes:'SM cues on CEO standing.',past:true,sec:false},
+  {q:'Q9',time:'7:39p',title:'Mic open — CEO remarks',dept:'snd',dur:'~10m',notes:'Open podium mic. Kill music.',past:true,sec:false},
+  {q:'Q10',time:'7:49p',title:'LX: House back to dinner',dept:'lx',dur:'8ct',notes:'Return to dinner wash.',past:true,sec:false},
+  {q:'Q11',time:'7:50p',title:'Applause sting',dept:'snd',dur:'—',notes:'SM calls on CEO step-back.',past:true,sec:false},
+  {q:'',time:'',title:'DINNER SERVICE',dept:'',dur:'',notes:'',past:false,sec:true},
+  {q:'Q12',time:'7:52p',title:'Dinner service — music cross to ambient',dept:'snd',dur:'~75m',notes:'House music to ambient. F&B starts. SM holds for awards.',past:false,current:true,sec:false},
+  {q:'Q13',time:'~9:10p',title:'Awards walk-up music — Award 1',dept:'snd',dur:'—',notes:'Upbeat sting on GO.',past:false,sec:false},
+  {q:'Q14',time:'~9:10p',title:'LX: Awards stage wash',dept:'lx',dur:'—',notes:'Stage up, tables down. Follow spot.',past:false,sec:false},
+  {q:'',time:'',title:'LIVE MUSIC & RECEPTION',dept:'',dur:'',notes:'',past:false,sec:true},
+  {q:'Q15',time:'~9:45p',title:'Band walk-up',dept:'sm',dur:'—',notes:'Band on stage. SM cues on clear.',past:false,sec:false},
+  {q:'Q16',time:'~9:48p',title:'LX: Live music scene',dept:'lx',dur:'—',notes:'Full stage wash, dance floor up.',past:false,sec:false},
+  {q:'Q17',time:'11:10p',title:'Last call announcement',dept:'sm',dur:'—',notes:'MC to podium.',past:false,sec:false},
+  {q:'Q18',time:'11:15p',title:'Closing remarks + walk-out music',dept:'snd',dur:'—',notes:'Exit music. House lights up slowly.',past:false,sec:false},
+  {q:'Q19',time:'11:25p',title:'House lights full — event close',dept:'lx',dur:'—',notes:'Full house. FOH out. Strike standby.',past:false,sec:false},
+];
+let liveIdx=12,onHold=false;
+const DL={sm:'SM',lx:'LX',snd:'SND',vid:'VID',rig:'RIG',all:'ALL'};
+
+function renderROS(){
+  const tb=document.getElementById('ros-body');if(!tb)return;
+  tb.innerHTML='';
+  CUES.forEach((c,i)=>{
+    if(c.sec){
+      const tr=document.createElement('tr');tr.className='sec-header-row';
+      tr.innerHTML=`<td colspan="7"><input class="sec-header-input" value="${c.title}" placeholder="Section header…" onchange="CUES[${i}].title=this.value"><button onclick="CUES.splice(${i},1);renderROS()" style="background:none;border:none;color:var(--text-3);cursor:pointer;padding:6px 12px;opacity:.5">✕</button></td>`;
+      tb.appendChild(tr);return;
+    }
+    const tr=document.createElement('tr');
+    tr.className='ros-row-tr'+(c.current?' cur-cue':'')+(c.past?' past':'');
+    tr.draggable=true;tr.dataset.i=i;
+    tr.innerHTML=`<td><div class="ros-drag">⠿</div></td>
+      <td><input class="ros-cell" value="${c.time}" style="width:55px" onchange="CUES[${i}].time=this.value"></td>
+      <td><input class="ros-cell title-c" value="${c.title}" style="width:100%" onchange="CUES[${i}].title=this.value;updateLive()"></td>
+      <td><select class="dept-sel d-${c.dept}" onchange="this.className='dept-sel d-'+this.value;CUES[${i}].dept=this.value">
+        <option value="sm" ${c.dept==='sm'?'selected':''}>SM</option>
+        <option value="lx" ${c.dept==='lx'?'selected':''}>LX</option>
+        <option value="snd" ${c.dept==='snd'?'selected':''}>SND</option>
+        <option value="vid" ${c.dept==='vid'?'selected':''}>VID</option>
+        <option value="rig" ${c.dept==='rig'?'selected':''}>RIG</option>
+        <option value="all" ${c.dept==='all'?'selected':''}>ALL</option>
+      </select></td>
+      <td><input class="ros-cell" value="${c.dur}" style="width:55px" onchange="CUES[${i}].dur=this.value"></td>
+      <td><input class="ros-cell note-c" value="${c.notes}" style="width:100%" onchange="CUES[${i}].notes=this.value"></td>
+      <td><button onclick="CUES.splice(${i},1);renderROS()" style="background:none;border:none;color:var(--text-3);cursor:pointer;padding:8px;font-size:11px;opacity:.4">✕</button></td>`;
+    tr.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(i===CUES.length-1)addCue();else document.getElementById('ros-body')?.rows[i+1]?.querySelector('input')?.focus()}});
+    tb.appendChild(tr);
+  });
+  setupDrag();
+}
+
+function addCue(){CUES.push({q:`Q${CUES.filter(c=>!c.sec).length+1}`,time:'',title:'',dept:'sm',dur:'',notes:'',past:false,sec:false});renderROS();setTimeout(()=>document.getElementById('ros-body')?.lastElementChild?.querySelector('.title-c')?.focus(),50)}
+function addSection(){CUES.push({q:'',time:'',title:'NEW SECTION',dept:'',dur:'',notes:'',past:false,sec:true});renderROS()}
+
+function setupDrag(){
+  let di=null;
+  document.querySelectorAll('.ros-row-tr').forEach(r=>{
+    r.addEventListener('dragstart',()=>{di=+r.dataset.i;r.style.opacity='.4'});
+    r.addEventListener('dragend',()=>{r.style.opacity='';di=null});
+    r.addEventListener('dragover',e=>{e.preventDefault();r.style.background='rgba(201,168,76,.06)'});
+    r.addEventListener('dragleave',()=>r.style.background='');
+    r.addEventListener('drop',e=>{e.preventDefault();r.style.background='';const dj=+r.dataset.i;if(di===null||di===dj)return;const[m]=CUES.splice(di,1);CUES.splice(dj,0,m);renderROS()});
+  });
+}
+
+let printVisible=false;
+function togglePrint(){
+  printVisible=!printVisible;
+  document.getElementById('ros-builder').style.display=printVisible?'none':'block';
+  document.getElementById('ros-print').style.display=printVisible?'block':'none';
+  if(printVisible)renderPrint();
+}
+function renderPrint(){
+  const el=document.getElementById('print-content');if(!el)return;
+  el.innerHTML=`<div class="print-hd"><div class="print-show-name">SUMMERSET CORPORATE GALA</div><div class="print-meta"><span>June 14, 2025</span><span>Grand Ballroom, Las Vegas NV</span><span>SM: Sarah M.</span><span>340 guests</span><span>Printed: ${new Date().toLocaleString()}</span></div></div>
+  <table class="print-tbl"><thead><tr><th>Cue</th><th>Time</th><th>Item</th><th>Dept</th><th>Dur</th><th>Notes</th></tr></thead><tbody>
+  ${CUES.map(c=>c.sec?`<tr><td colspan="6" class="print-sec-hd" style="padding:8px 9px">${c.title}</td></tr>`:`<tr><td style="font-family:monospace;font-size:10px;color:var(--lt-3)">${c.q}</td><td style="font-family:monospace;font-size:11px">${c.time}</td><td class="pitem">${c.title}</td><td><span class="print-dept">${DL[c.dept]||''}</span></td><td style="font-size:11px">${c.dur}</td><td style="font-size:11px;color:var(--lt-3)">${c.notes}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+// ── LIVE CALLER ──
+function renderLiveList(){
+  const el=document.getElementById('live-list');if(!el)return;
+  const cueCues=CUES.filter(c=>!c.sec);
+  let realIdx=0;
+  el.innerHTML=CUES.map((c,i)=>{
+    if(c.sec)return`<div style="padding:8px 18px;background:rgba(201,168,76,.05);border-bottom:0.5px solid rgba(255,255,255,.04)"><div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(201,168,76,.4)">${c.title}</div></div>`;
+    const idx=realIdx++;const isCur=i===liveIdx,isPast=i<liveIdx;
+    return`<div onclick="liveJump(${i})" style="display:grid;grid-template-columns:52px 1fr auto;border-bottom:0.5px solid rgba(255,255,255,.04);cursor:pointer;transition:background .1s;${isCur?'background:rgba(232,53,10,.1);border-left:3px solid var(--live)':''}${isPast?'opacity:.3':''}">
+      <div style="font-family:var(--mono);font-size:10px;color:${isCur?'var(--live)':'rgba(255,255,255,.22)'};padding:12px 0 12px 18px">${c.q}</div>
+      <div style="padding:11px 8px"><div style="font-size:12px;color:${isCur?'#fff':'rgba(255,255,255,.7)'};font-weight:${isCur?'500':'400'};margin-bottom:2px">${c.title}</div><div style="font-size:10px;color:rgba(255,255,255,.25)">${c.notes}</div></div>
+      <div style="padding:11px 16px"><span style="font-size:10px;padding:2px 6px;border-radius:3px;font-family:var(--mono);background:${c.dept==='lx'?'rgba(255,214,0,.12)':c.dept==='snd'?'rgba(0,188,212,.12)':c.dept==='sm'?'rgba(232,53,10,.12)':'rgba(255,255,255,.06)'};color:${c.dept==='lx'?'#FFD600':c.dept==='snd'?'#4DD0E1':c.dept==='sm'?'var(--live)':'rgba(255,255,255,.4)'}">${DL[c.dept]||''}</span></div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>{const rows=el.querySelectorAll('[onclick]');rows[liveIdx]?.scrollIntoView({block:'center',behavior:'smooth'})},80);
+}
+
+function updateLive(){
+  const c=CUES[liveIdx],p=CUES[liveIdx-1],n=CUES[liveIdx+1];
+  const nreal=n?.sec?CUES[liveIdx+2]:n;
+  const g=id=>document.getElementById(id);
+  if(g('live-callout-txt'))g('live-callout-txt').textContent=c?.title||'';
+  if(g('live-callout-q'))g('live-callout-q').textContent=c?.q||'';
+  if(g('crew-prev-txt'))g('crew-prev-txt').textContent=p?.sec?(CUES[liveIdx-2]?`↑ ${CUES[liveIdx-2].q} — ${CUES[liveIdx-2].title}`:''):p?`↑ ${p.q} — ${p.title}`:'';
+  if(g('crew-cur-txt'))g('crew-cur-txt').textContent=c?.title||'';
+  if(g('crew-note-txt'))g('crew-note-txt').textContent=c?.notes||'';
+  if(g('crew-next-txt'))g('crew-next-txt').textContent=nreal?`${nreal.q} — ${nreal.title}`:'— End of show';
+}
+
+function liveGo(){if(onHold){toggleHold();return}if(liveIdx<CUES.length-1){CUES[liveIdx].past=true;CUES[liveIdx].current=false;liveIdx++;if(CUES[liveIdx].sec)liveIdx++;CUES[liveIdx].current=true;renderLiveList();updateLive()}}
+function liveBack(){if(liveIdx>0){CUES[liveIdx].current=false;liveIdx--;if(CUES[liveIdx].sec&&liveIdx>0)liveIdx--;CUES[liveIdx].past=false;CUES[liveIdx].current=true;renderLiveList();updateLive()}}
+function liveJump(i){CUES[liveIdx].current=false;for(let j=0;j<CUES.length;j++){CUES[j].past=j<i;CUES[j].current=false}liveIdx=i;CUES[i].current=true;renderLiveList();updateLive()}
+function toggleHold(){onHold=!onHold;const b=document.getElementById('hold-btn'),g=document.getElementById('go-btn');if(b){b.textContent=onHold?'Release':'Hold';b.style.background=onHold?'rgba(196,154,0,.25)':'rgba(196,154,0,.13)'}if(g)g.textContent=onHold?'GO (release) ›':'GO ›'}
+function openLiveCaller(){goView('live-ros');renderLiveList();updateLive()}
+
+function updateClock(){const el=document.getElementById('live-clock');if(el)el.textContent=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true})}
+updateClock();setInterval(updateClock,15000);
+
+// ── CALENDAR ──
+let calYear=2025,calMonth=5; // June 2025 (0-indexed)
+const CAL_EVENTS={
+  '2025-6-12':[{t:'8am Load-in',cls:'cev-load'},{t:'All crew',cls:'cev-call'}],
+  '2025-6-13':[{t:'2pm Tech rehearsal',cls:'cev-tech'},{t:'SM call 1pm',cls:'cev-call'}],
+  '2025-6-14':[{t:'Crew call 3pm',cls:'cev-call'},{t:'Show 6:30pm',cls:'cev-show'}],
+  '2025-6-15':[{t:'8am Strike',cls:'cev-strike'}],
+  '2025-6-22':[{t:'Milestone: AV sign-off',cls:'cev-mile'}],
+  '2025-8-1':[{t:'Load-in: Tech Summit',cls:'cev-load'}],
+  '2025-8-3':[{t:'Show: Tech Summit',cls:'cev-show'}],
+};
+let selectedDate=null,selectedEvType='load';
+
+function renderCal(){
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const el=document.getElementById('cal-title');if(el)el.textContent=`${months[calMonth]} ${calYear}`;
+  const el2=document.getElementById('cal-weeks');if(!el2)return;
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const prevDays=new Date(calYear,calMonth,0).getDate();
+  const today=new Date();
+  let html='';let day=1;let nextDay=1;
+  for(let w=0;w<6;w++){
+    if(w>0&&day>days)break;
+    html+='<div class="cal-week">';
+    for(let d=0;d<7;d++){
+      const cellNum=w*7+d;
+      if(cellNum<first){
+        const pd=prevDays-first+cellNum+1;
+        html+=`<div class="cal-day other-month"><div class="cal-day-num">${pd}</div></div>`;
+      } else if(day>days){
+        html+=`<div class="cal-day other-month"><div class="cal-day-num">${nextDay++}</div></div>`;
+      } else {
+        const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===day;
+        const key=`${calYear}-${calMonth+1}-${day}`;
+        const evs=CAL_EVENTS[key]||[];
+        const isSel=selectedDate===key;
+        html+=`<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="calDayClick('${key}',${day})">`;
+        html+=isToday?`<div class="cal-day-num"><div style="background:var(--text-1);color:var(--black);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">${day}</div></div>`:`<div class="cal-day-num">${day}</div>`;
+        evs.forEach(e=>html+=`<div class="cal-event ${e.cls}">${e.t}</div>`);
+        html+='</div>';day++;
+      }
+    }
+    html+='</div>';
+  }
+  el2.innerHTML=html;
+}
+
+function calNav(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderCal()}
+function calGoToday(){const t=new Date();calYear=t.getFullYear();calMonth=t.getMonth();renderCal()}
+function calDayClick(key,day){
+  selectedDate=key;
+  document.getElementById('ev-date').value=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  openModal('add-event');
+}
+function openAddEvent(){openModal('add-event')}
+function saveEvent(){
+  const title=document.getElementById('ev-title').value;
+  const date=document.getElementById('ev-date').value;
+  if(!title||!date){closeModal('add-event');return}
+  const[y,m,d]=date.split('-').map(Number);
+  const key=`${y}-${m}-${d}`;
+  const cls={load:'cev-load',tech:'cev-tech',reh:'cev-reh',show:'cev-show',strike:'cev-strike',call:'cev-call',mile:'cev-mile',meet:'cev-meet',other:'cev-call'}[selectedEvType]||'cev-meet';
+  const time=document.getElementById('ev-time').value;
+  const label=time?`${time} ${title}`:title;
+  if(!CAL_EVENTS[key])CAL_EVENTS[key]=[];
+  CAL_EVENTS[key].push({t:label,cls});
+  closeModal('add-event');
+  renderCal();
+  document.getElementById('ev-title').value='';
+}
+function selectEvType(t){
+  selectedEvType=t;
+  document.querySelectorAll('.ev-type-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('evt-'+t)?.classList.add('selected');
+}
+
+// ── DOCUMENTS ──
+const DOC_TEMPLATES={
+  callsheet:{title:'Call sheet — Jun 14, 2025',sections:[
+    {title:'Show information',fields:[{l:'Production',v:'Summerset Corporate Gala'},{l:'Date',v:'June 14, 2025'},{l:'Venue',v:'Grand Ballroom, Las Vegas NV'},{l:'SM',v:'Sarah M.'},{l:'Lead producer',v:'Jordan Kim'}]},
+    {title:'Crew calls',textarea:'3:00 PM — General crew call (all departments)\n3:30 PM — Lighting focus & programming (LD, board op)\n4:30 PM — Soundcheck (FOH, monitors, RF)\n5:00 PM — SM crew walkthrough (all dept heads)\n6:00 PM — Crew ready / places'},
+    {title:'Show schedule',textarea:'6:30 PM — Doors open / cocktail reception\n7:40 PM — Welcome remarks — CEO (~10 min)\n7:52 PM — Dinner service (SM holds for awards)\n~9:10 PM — Awards presentation (~35 min)\n~9:45 PM — Live music / dancing\n11:15 PM — Last call / closing\n11:30 PM — Strike begins'},
+    {title:'Key contacts',textarea:'Jordan Kim (Lead producer) — (702) 555-0101\nSarah M. (Stage manager) — (702) 555-0192\nTom R. (TD/AV) — (702) 555-0233\nLisa T. (Venue coordinator) — (702) 555-0344'},
+    {title:'Venue notes',textarea:'Load-in via freight elevator only — dock on north side\nNo confetti or glitter per venue policy\nBar must close 30 min before event end\nMGM catering only for F&B'},
+  ]},
+  'prod-schedule':{title:'Production schedule — Summerset Gala',sections:[
+    {title:'Production details',fields:[{l:'Production',v:'Summerset Corporate Gala'},{l:'Venue',v:'Grand Ballroom, Las Vegas NV'},{l:'Dates',v:'June 12–15, 2025'},{l:'Guests',v:'340'},{l:'Budget',v:'$86,000'}]},
+    {title:'Phase schedule',textarea:'June 12 — Load-in\n  8:00 AM — All crew call\n  8:00 AM–5:00 PM — Vendor load-in\n  3:00 PM — AV setup begins\n\nJune 13 — Tech rehearsal\n  1:00 PM — SM and dept head call\n  2:00 PM — Tech rehearsal begins\n  6:00 PM — End of day\n\nJune 14 — Show day\n  3:00 PM — Full crew call\n  4:30 PM — Soundcheck\n  6:00 PM — Crew places\n  6:30 PM — Doors / show\n  11:30 PM — Strike begins\n\nJune 15 — Strike\n  8:00 AM — All crew\n  12:00 PM — Load-out complete'},
+  ]},
+  'crew-contact':{title:'Crew contact sheet — Summerset Gala',sections:[
+    {title:'Production leadership',textarea:'Jordan Kim — Lead producer\n  jordan@company.com · (702) 555-0101\n\nSarah M. — Stage manager\n  sarah@sm.com · (702) 555-0192'},
+    {title:'Technical',textarea:'Tom R. — Technical director / AV\n  tom@av.com · (702) 555-0233\n\nDana L. — Lighting designer\n  dana@lx.com · (702) 555-0244\n\nMarcus B. — FOH audio\n  mb@audio.com · (702) 555-0255'},
+    {title:'Crew',textarea:'Priya N. — Stagehand · (702) 555-0266\nRay G. — Stagehand · (702) 555-0277'},
+    {title:'Venue & client',textarea:'Lisa T. — Venue coordinator · (702) 555-0344\nSarah Chen — Client (Summerset Co.) · (702) 555-0191'},
+  ]},
+  'vendor-list':{title:'Vendor contact sheet — Summerset Gala',sections:[
+    {title:'Confirmed vendors',textarea:'Apex Sound & Light — AV / Production\n  contact@apexsound.com · (702) 555-9001 · ★★★★★\n\nDesert Bloom Florals — Décor\n  hello@desertbloom.co · (702) 555-9002 · ★★★★☆\n\nMGM Grand Catering — Food & Beverage\n  events@mgmresorts.com · (702) 555-9003 · ★★★★★\n\nThe Rhythm Section — Entertainment\n  booking@rhythmsection.band · (702) 555-9004 · ★★★★☆'},
+    {title:'Pending',textarea:'ProStaff Events — Staffing\n  info@prostaff.com · Quote requested Apr 28'},
+  ]},
+  'site-survey':{title:'Site survey — Grand Ballroom, Las Vegas',sections:[
+    {title:'Venue details',fields:[{l:'Venue',v:'Grand Ballroom'},{l:'Address',v:'3799 S Las Vegas Blvd, Las Vegas NV'},{l:'Coordinator',v:'Lisa T. · (702) 555-0344'},{l:'Capacity',v:'400 seated / 600 standing'},{l:'Ceiling height',v:'32 ft'}]},
+    {title:'Power & utilities',textarea:'Main power: 400A 3-phase service — dock level\nDistro: 2x 100A sub-feeds available in hall\nBackup generator: Available on request (+$)\nWi-Fi: MGM event Wi-Fi — credentials from coordinator'},
+    {title:'Loading & access',textarea:'Loading dock: North side of building, Harmon Ave entrance\nFreight elevator: 10x12 ft, 5,000 lb capacity\nSetup hours: Access from 7:00 AM day of event\nParking: Self-park MGM Grand — vendor passes available'},
+    {title:'Notes',textarea:'Rigging from existing grid — 1 ton per point max. House LDs available for consultation. No pyro, confetti, or fog without prior approval.'},
+  ]},
+  'day-of':{title:'Day-of briefing — Jun 14, 2025',sections:[
+    {title:'Show overview',fields:[{l:'Show',v:'Summerset Corporate Gala'},{l:'Venue',v:'Grand Ballroom, Las Vegas'},{l:'Guests',v:'340'},{l:'SM',v:'Sarah M.'}]},
+    {title:'Schedule',textarea:'3:00 PM — Crew call (all departments)\n6:00 PM — Crew to places\n6:30 PM — Doors open\n7:40 PM — Program begins\n11:30 PM — Strike begins'},
+    {title:'Emergency contacts',textarea:'Emergency: 911\nVenue security: (702) 555-0300\nOn-site EMT: Available through venue\nSM radio channel: Channel 3\nProducer: Jordan K. (702) 555-0101'},
+    {title:'Important rules',textarea:'- No confetti or glitter\n- Bar closes 30 min before event end\n- All vendor load-out by 2:00 AM\n- No smoking inside venue\n- Client representatives: Sarah Chen (Summerset Co.)'},
+  ]},
+  'ros-print':{title:'Run of show — Summerset Gala',sections:[]},
+};
+
+let currentDoc=null;
+function openDoc(id){
+  currentDoc=id;
+  const tmpl=DOC_TEMPLATES[id];if(!tmpl)return;
+  document.getElementById('doc-library').style.display='none';
+  document.getElementById('doc-editor-view').style.display='block';
+  document.getElementById('doc-editor-title').textContent=tmpl.title;
+  if(id==='ros-print'){
+    renderPrint();
+    document.getElementById('doc-editor-content').innerHTML=`<div class="doc-editor-toolbar"><button class="btn btn-ghost btn-sm" onclick="switchTab('ros')">Edit in ROS builder →</button><button class="btn btn-gold btn-sm" onclick="window.print()">Print / Save PDF</button></div><div id="print-content" style="padding:24px"></div>`;
+    renderPrint();return;
+  }
+  let html=`<input class="doc-title-input" value="${tmpl.title}">`;
+  tmpl.sections.forEach((s,si)=>{
+    html+=`<div class="doc-section"><div class="doc-section-hd" onclick="this.nextSibling.style.display=this.nextSibling.style.display==='none'?'flex':'none'"><div class="doc-section-title">${s.title}</div><div style="font-size:12px;color:var(--text-3)">▾</div></div><div class="doc-section-body">`;
+    if(s.fields)s.fields.forEach(f=>html+=`<div class="doc-field"><div class="doc-field-label">${f.l}</div><input class="doc-field-input" value="${f.v}"></div>`);
+    if(s.textarea)html+=`<textarea class="doc-field-textarea">${s.textarea}</textarea>`;
+    html+='</div></div>';
+  });
+  document.getElementById('doc-editor-content').innerHTML=html;
+}
+function closeDoc(){
+  document.getElementById('doc-library').style.display='block';
+  document.getElementById('doc-editor-view').style.display='none';
+}
+
+// ── WIZARD ──
+let wizStep=1,wizType='production',wizROSTemplate='blank';
+function wizNext(step){
+  wizStep=step;
+  document.querySelectorAll('.wiz-panel').forEach((p,i)=>p.classList.toggle('active',i===step-1));
+  document.querySelectorAll('.wiz-step').forEach((s,i)=>{
+    s.classList.toggle('active',i===step-1);
+    s.classList.toggle('done',i<step-1);
+  });
+}
+function selectWizType(t){
+  wizType=t;
+  const p=document.getElementById('wtype-prod'),j=document.getElementById('wtype-proj');
+  if(t==='production'){p.style.border='0.5px solid rgba(42,92,140,.4)';p.style.background='rgba(42,92,140,.1)';j.style.border='0.5px solid var(--border)';j.style.background='var(--dark-3)'}
+  else{j.style.border='0.5px solid rgba(42,140,122,.4)';j.style.background='rgba(42,140,122,.1)';p.style.border='0.5px solid var(--border)';p.style.background='var(--dark-3)'}
+}
+function updateWizPreview(){
+  const name=document.getElementById('wiz-name')?.value||'YOUR PRODUCTION NAME';
+  const venue=document.getElementById('wiz-venue')?.value||'Venue TBD';
+  const city=document.getElementById('wiz-city')?.value||'';
+  const date=document.getElementById('wiz-date')?.value;
+  document.getElementById('wiz-preview-name').textContent=name.toUpperCase()||'YOUR PRODUCTION NAME';
+  document.getElementById('wiz-preview-meta').innerHTML=`<span>📅 ${date||'Date TBD'}</span><span>📍 ${[venue,city].filter(Boolean).join(', ')||'Venue TBD'}</span>`;
+}
+function addPhase(){
+  const colors=['#4DB6AC','#FFD600','#CE93D8','#E24B4A','#FF7043','#5B9FE0','#81C784'];
+  const c=colors[document.querySelectorAll('.phase-row').length%colors.length];
+  const row=document.createElement('div');row.className='phase-row';
+  row.innerHTML=`<div class="phase-color" style="background:${c}"></div><input class="phase-name-inp" placeholder="Phase name"><div class="phase-dates"><input class="phase-date-inp" type="date" placeholder="Start"><span style="color:var(--text-3);font-size:11px">→</span><input class="phase-date-inp" type="date" placeholder="End"></div><button onclick="this.closest('.phase-row').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:14px;padding:4px">✕</button>`;
+  document.getElementById('phase-list').appendChild(row);
+}
+function addCrewRow(){
+  const row=document.createElement('div');row.className='crew-inv-row';
+  row.innerHTML=`<input class="form-inp" type="email" placeholder="Email address" style="flex:2"><select class="form-sel" style="flex:1"><option>Stage manager</option><option>Technical director</option><option>Lighting designer</option><option>FOH engineer</option><option>Stagehand</option><option>Client</option><option>Other</option></select><button onclick="this.closest('.crew-inv-row').remove()" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:16px;padding:0 4px">✕</button>`;
+  document.getElementById('crew-list').appendChild(row);
+}
+function selectROSTemplate(t){
+  wizROSTemplate=t;
+  ['blank','corp','conc'].forEach(id=>{
+    const el=document.getElementById('rt-'+id);if(!el)return;
+    const active=id===t||((t==='corporate'&&id==='corp')||(t==='concert'&&id==='conc'));
+    el.style.border=active?'0.5px solid rgba(201,168,76,.4)':'0.5px solid var(--border)';
+    el.style.background=active?'var(--gold-dim)':'var(--dark-3)';
+  });
+}
+function finishWizard(){
+  const name=document.getElementById('wiz-name')?.value||'New Production';
+  alert(`✓ "${name}" created successfully!\n\nIn the real app this would open your new production workspace.`);
+  goView('productions');
+}
+
+// ── NAVIGATION ──
+const VIEWS=['dashboard','new-production','productions','projects','calendar','tasks','production-detail','live-ros'];
+function goView(id){
+  VIEWS.forEach(v=>{const el=document.getElementById('view-'+v);if(el)el.classList.remove('active')});
+  const t=document.getElementById('view-'+id);if(t)t.classList.add('active');
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  const map={dashboard:'sb-dashboard',productions:'sb-productions',projects:'sb-projects',calendar:'sb-calendar',tasks:'sb-tasks'};
+  if(map[id])document.getElementById(map[id])?.classList.add('active');
+  const labels={dashboard:'Dashboard',productions:'My productions','new-production':'New production',projects:'My projects',calendar:'Calendar',tasks:'Tasks','production-detail':'Summerset Gala','live-ros':'Summerset Gala → Live ROS'};
+  const bc=document.getElementById('bc');if(bc)bc.innerHTML=`<span class="cur">${labels[id]||id}</span>`;
+  window.scrollTo(0,0);
+  if(id==='calendar')renderCal();
+  if(id==='production-detail')renderROS();
+  if(id==='live-ros'){renderLiveList();updateLive()}
+}
+
+function goProd(id){
+  goView('production-detail');
+  switchTab('overview');
+  const bc=document.getElementById('bc');if(bc)bc.innerHTML=`<span style="cursor:pointer;color:var(--text-3)" onclick="goView('productions')">Productions</span><span style="color:var(--text-3);margin:0 4px">/</span><span class="cur">Summerset Gala</span>`;
+}
+function goProj(id){
+  goView('projects');
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  const t=document.getElementById('tab-'+id);if(t)t.classList.add('active');
+  document.querySelectorAll('#prod-tab-bar .pt').forEach(p=>p.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  else document.querySelectorAll('#prod-tab-bar .pt').forEach(p=>{
+    const m={'overview':'Overview','ros':'Run of show','callsheet':'Call sheet','calendar':'Calendar','tasks':'Tasks','documents':'Documents','team':'Team','budget':'Budget','vendors':'Vendors','files':'Files'};
+    if(p.textContent===m[id])p.classList.add('active');
+  });
+  if(id==='ros')renderROS();
+}
+
+// ── MODAL ──
+function openModal(id){const el=document.getElementById('modal-'+id);if(el)el.classList.add('open')}
+function closeModal(id){const el=document.getElementById('modal-'+id);if(el)el.classList.remove('open')}
+
+// ── TASKS ──
+function toggleTask(el){el.classList.toggle('done');el.closest('.task-row')?.querySelector('.tn')?.classList.toggle('done')}
+
+// ── DATE ──
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const NOW=new Date();
+const de=document.getElementById('dash-date');
+if(de)de.textContent=`${DAYS[NOW.getDay()]}, ${MONTHS[NOW.getMonth()]} ${NOW.getDate()}`;
+
+// ── INIT ──
+renderCal();
+renderROS();
+</script>
+</body>
+</html>
