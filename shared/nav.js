@@ -28,7 +28,7 @@ function buildNav(breadcrumb) {
   if (!nav) return;
 
   nav.innerHTML = `
-    <a class="nav-logo" href="${BASE}index.html">PRODUCTION<span>.</span>CENTRAL</a>
+    <a class="nav-logo" href="${BASE}index.php">PRODUCTION<span>.</span>CENTRAL</a>
     <div class="nav-bc" id="nav-bc">
       ${breadcrumb || '<span class="cur">' + (PC_PAGES[window.PC_PAGE]?.label || 'Dashboard') + '</span>'}
     </div>
