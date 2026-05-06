@@ -21,6 +21,18 @@ try {
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
+    // DEBUG — remove after fixing
+    echo '<pre>';
+    echo 'Username entered: ' . htmlspecialchars($username) . "\n";
+    echo 'User found in DB: ' . ($user ? 'YES' : 'NO') . "\n";
+    if ($user) {
+        echo 'Hash in DB: ' . $user['password'] . "\n";
+        echo 'password_verify result: ' . (password_verify($password, $user['password']) ? 'TRUE' : 'FALSE') . "\n";
+    }
+    echo '</pre>';
+    die('--- DEBUG END ---');
+    // END DEBUG
+
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id']  = $user['id'];
         $_SESSION['username'] = $user['username'];
