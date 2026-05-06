@@ -1,10 +1,10 @@
 <?php
-// Database Connection Configuration
-$db_host = 'localhost';
-$db_port = '5432';
-$db_name = 'my_website_db';
-$db_user = 'postgres';
-$db_password = 'your_password'; // Change this to your PostgreSQL password
+// Database Connection Configuration - Railway.com Setup
+$db_host = getenv('PGHOST') ?: 'postgres.railway.internal';
+$db_port = getenv('PGPORT') ?: '5432';
+$db_name = getenv('PGDATABASE') ?: 'railway';
+$db_user = getenv('PGUSER') ?: 'postgres';
+$db_password = getenv('PGPASSWORD') ?: 'weClyUXLTNPRvKFQFobjNuWLymxCsRhu';
 $db_charset = 'utf8';
 
 try {
@@ -12,7 +12,10 @@ try {
         "pgsql:host=$db_host;port=$db_port;dbname=$db_name",
         $db_user,
         $db_password,
-        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        array(
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        )
     );
 } catch (PDOException $e) {
     die('Database connection failed: ' . $e->getMessage());
@@ -21,3 +24,4 @@ try {
 // Start session
 session_start();
 ?>
+
