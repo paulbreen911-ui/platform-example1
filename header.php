@@ -20,7 +20,7 @@
     <a class="nav-link" href="/#education">Education</a>
     <a class="nav-link" href="/#reference">Reference</a>
     <a class="nav-link" href="/#technology">Technology</a>
-    <a class="nav-link" href="/tools/index.html">Tools</a>
+    <a class="nav-link" href="/tools/tools-index.html">Tools</a>
     <a class="nav-link" href="/#life">Life</a>
     <a class="nav-link store" href="/#store">Store</a>
   </div>
