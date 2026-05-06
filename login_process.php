@@ -1,5 +1,6 @@
 <?php
 ob_start();
+ini_set('session.save_path', '/tmp');
 require_once 'config.php';
 
 // Only accept POST
