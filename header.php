@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// Session is started in config.php — included before header.php on every page
 ?>
 <!DOCTYPE html>
 <html lang="en">
