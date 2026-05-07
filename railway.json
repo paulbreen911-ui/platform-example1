@@ -1,9 +1,0 @@
-{
-  "build": {
-    "builder": "nixpacks"
-  },
-  "deploy": {
-    "startCommand": "php -S 0.0.0.0:8080",
-    "restartPolicyMaxRetries": 5
-  }
-}
