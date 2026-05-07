@@ -4,7 +4,7 @@ ob_start();
 // Database connection — Railway PostgreSQL
 $db_name     = getenv('PGDATABASE') ?: 'railway';
 $db_host     = getenv('PGHOST')     ?: 'postgres.railway.internal';
-$db_password = getenv('PGPASSWORD') ?: '';
+$db_password = getenv('PGPASSWORD') ?: 'weClyUXLTNPRvKFQFobjNuWLymxCsRhu';
 $db_port     = getenv('PGPORT')     ?: '5432';
 $db_user     = getenv('PGUSER')     ?: 'postgres';
 
