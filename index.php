@@ -1,12 +1,37 @@
 <?php
-
 if ($_SERVER['HTTP_HOST'] === 'productioncentral.org') {
     header('Location: https://www.productioncentral.org' . $_SERVER['REQUEST_URI'], true, 301);
     exit;
 }
 
 require_once 'config.php';
+require_once 'functions.php';
+
 $page_title = 'Home';
+
+// Live forum threads for homepage
+$live_threads = $pdo->query('
+    SELECT ft.id, ft.title, ft.reply_count, ft.created_at,
+           fc.name AS cat_name, fc.color AS cat_color,
+           u.username
+    FROM   forum_threads ft
+    JOIN   forum_categories fc ON fc.id = ft.category_id
+    JOIN   users u ON u.id = ft.user_id
+    ORDER  BY COALESCE(ft.last_reply_at, ft.created_at) DESC
+    LIMIT  4
+')->fetchAll();
+
+// Live stats
+$stats = $pdo->query('
+    SELECT
+        (SELECT COUNT(*) FROM users)          AS member_count,
+        (SELECT COUNT(*) FROM forum_threads)  AS thread_count,
+        (SELECT COUNT(*) FROM forum_replies)  AS reply_count
+')->fetch();
+
+$member_count = number_format($stats['member_count'] ?: 8400);
+$post_count   = number_format(($stats['thread_count'] + $stats['reply_count']) ?: 2100);
+
 include 'header.php';
 ?>
 
@@ -36,11 +61,11 @@ include 'header.php';
   </div>
 
   <div class="hero-stats">
-    <div class="hero-stat"><div class="hero-stat-n">8,400+</div><div class="hero-stat-l">Members</div></div>
+    <div class="hero-stat"><div class="hero-stat-n"><?php echo $member_count; ?>+</div><div class="hero-stat-l">Members</div></div>
     <div class="hero-stat-div"></div>
     <div class="hero-stat"><div class="hero-stat-n">340+</div><div class="hero-stat-l">Venues catalogued</div></div>
     <div class="hero-stat-div"></div>
-    <div class="hero-stat"><div class="hero-stat-n">2,100+</div><div class="hero-stat-l">Forum posts</div></div>
+    <div class="hero-stat"><div class="hero-stat-n"><?php echo $post_count; ?>+</div><div class="hero-stat-l">Forum posts</div></div>
   </div>
 </section>
 
@@ -53,7 +78,7 @@ include 'header.php';
     <a class="sc sc-ref" href="#reference"><div class="sc-icon">🗂</div><div class="sc-name">Reference</div><div class="sc-desc">Venues, scans &amp; shows</div><div class="sc-arr">→</div></a>
     <a class="sc sc-tech" href="#technology"><div class="sc-icon">⚙️</div><div class="sc-name">Technology</div><div class="sc-desc">Manuals, specs &amp; gear</div><div class="sc-arr">→</div></a>
     <a class="sc sc-tools" href="/tools/index.html"><div class="sc-icon">🔧</div><div class="sc-name">Tools</div><div class="sc-desc">Calculators &amp; test patterns</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-forum" href="#forum"><div class="sc-icon">💬</div><div class="sc-name">Forum</div><div class="sc-desc">Discussion, jobs &amp; gear</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-forum" href="/forum.php"><div class="sc-icon">💬</div><div class="sc-name">Forum</div><div class="sc-desc">Discussion, jobs &amp; gear</div><div class="sc-arr">→</div></a>
     <a class="sc sc-life" href="#life"><div class="sc-icon">🌿</div><div class="sc-name">Life</div><div class="sc-desc">Health, fitness &amp; wellness</div><div class="sc-arr">→</div></a>
     <a class="sc sc-store" href="#store"><div class="sc-icon">🛒</div><div class="sc-name">Store</div><div class="sc-desc">Gaff tape, duvatine &amp; merch</div><div class="sc-arr">→</div></a>
   </div>
@@ -97,18 +122,32 @@ include 'header.php';
   </div>
 </section>
 
-<!-- FORUM -->
+<!-- FORUM — live data -->
 <section class="section" id="forum">
   <div class="sec-hd">
     <div><div class="sec-ey">Community</div><div class="sec-title">FORUM</div><div class="sec-sub">Open to everyone. Read without an account — join free to post.</div></div>
-    <a class="see-all" href="#">Browse all posts →</a>
+    <a class="see-all" href="/forum.php">Browse all posts →</a>
   </div>
   <div class="forum-grid">
     <div class="forum-posts">
-      <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:#CC884A">Vendor rec</div><div class="fp-title">Best wireless IEM systems for outdoor festival use in high-RF environments?</div><div class="fp-meta"><span>Jordan K.</span><span>2h ago</span><span>🔥 Trending</span></div></div><div class="fp-replies"><div class="fp-n">22</div><div class="fp-l">replies</div></div></div>
-      <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:#4A9ECC">Stage management</div><div class="fp-title">Handling live run of show updates when the client changes timing day-of</div><div class="fp-meta"><span>Mara L.</span><span>5h ago</span></div></div><div class="fp-replies"><div class="fp-n">14</div><div class="fp-l">replies</div></div></div>
-      <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:#8888CC">Lighting</div><div class="fp-title">MA3 vs EOS for a touring LD — switching after 8 years on grandMA2</div><div class="fp-meta"><span>Dana L.</span><span>1d ago</span></div></div><div class="fp-replies"><div class="fp-n">38</div><div class="fp-l">replies</div></div></div>
-      <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:var(--gold)">Contracts</div><div class="fp-title">Force majeure language that has actually held up — share your clauses</div><div class="fp-meta"><span>Tom R.</span><span>2d ago</span></div></div><div class="fp-replies"><div class="fp-n">47</div><div class="fp-l">replies</div></div></div>
+      <?php if (empty($live_threads)): ?>
+        <!-- Fallback placeholder threads if DB has none yet -->
+        <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:#CC884A">Vendor rec</div><div class="fp-title">Best wireless IEM systems for outdoor festival use in high-RF environments?</div><div class="fp-meta"><span>Jordan K.</span><span>2h ago</span><span>🔥 Trending</span></div></div><div class="fp-replies"><div class="fp-n">22</div><div class="fp-l">replies</div></div></div>
+        <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:#4A9ECC">Stage management</div><div class="fp-title">Handling live run of show updates when the client changes timing day-of</div><div class="fp-meta"><span>Mara L.</span><span>5h ago</span></div></div><div class="fp-replies"><div class="fp-n">14</div><div class="fp-l">replies</div></div></div>
+        <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:#8888CC">Lighting</div><div class="fp-title">MA3 vs EOS for a touring LD — switching after 8 years on grandMA2</div><div class="fp-meta"><span>Dana L.</span><span>1d ago</span></div></div><div class="fp-replies"><div class="fp-n">38</div><div class="fp-l">replies</div></div></div>
+        <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:var(--gold)">Contracts</div><div class="fp-title">Force majeure language that has actually held up — share your clauses</div><div class="fp-meta"><span>Tom R.</span><span>2d ago</span></div></div><div class="fp-replies"><div class="fp-n">47</div><div class="fp-l">replies</div></div></div>
+      <?php else: ?>
+        <?php foreach ($live_threads as $t): ?>
+          <a class="fp" href="/forum_thread.php?id=<?php echo $t['id']; ?>" style="text-decoration:none">
+            <div class="fp-left">
+              <div class="fp-cat" style="color:<?php echo e($t['cat_color']); ?>"><?php echo e($t['cat_name']); ?></div>
+              <div class="fp-title"><?php echo e($t['title']); ?></div>
+              <div class="fp-meta"><span><?php echo e($t['username']); ?></span><span><?php echo time_ago($t['created_at']); ?></span></div>
+            </div>
+            <div class="fp-replies"><div class="fp-n"><?php echo $t['reply_count']; ?></div><div class="fp-l">replies</div></div>
+          </a>
+        <?php endforeach; ?>
+      <?php endif; ?>
     </div>
     <div class="forum-sidebar">
       <div class="sidebar-card">
@@ -161,7 +200,7 @@ include 'header.php';
     <div class="join-feat">Project management</div>
     <div class="join-feat">Live run of show</div>
     <div class="join-feat">Team collaboration</div>
-    <div class="join-feat">Documents & templates</div>
+    <div class="join-feat">Documents &amp; templates</div>
     <div class="join-feat">No credit card required</div>
   </div>
   <div class="join-ctas">
