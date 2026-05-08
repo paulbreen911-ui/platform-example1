@@ -1,7 +1,7 @@
 <?php
 require_once 'config.php';
+require_once 'functions.php';
 
-// Already logged in — send to profile
 if (isset($_SESSION['user_id'])) {
     header('Location: /myprofile.php');
     exit;
@@ -12,14 +12,16 @@ $errors = [];
 $values = ['username' => '', 'email' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
+
     $username = trim($_POST['username'] ?? '');
-    $email    = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $email    = trim($_POST['email']    ?? '');
+    $password = $_POST['password']         ?? '';
     $confirm  = $_POST['confirm_password'] ?? '';
+    $ip       = client_ip();
 
     $values = ['username' => $username, 'email' => $email];
 
-    // Validate
     if (empty($username)) {
         $errors[] = 'Username is required.';
     } elseif (strlen($username) < 3 || strlen($username) > 30) {
@@ -28,15 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Username can only contain letters, numbers, and underscores.';
     }
 
-    if (empty($email)) {
-        $errors[] = 'Email is required.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'Please enter a valid email address.';
     }
 
-    if (empty($password)) {
-        $errors[] = 'Password is required.';
-    } elseif (strlen($password) < 8) {
+    if (strlen($password) < 8) {
         $errors[] = 'Password must be at least 8 characters.';
     }
 
@@ -44,7 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Passwords do not match.';
     }
 
-    // Check for existing username/email
+    if (!rate_limit_check($pdo, "register:{$ip}", 'register', 5, 3600)) {
+        $errors[] = 'Too many registration attempts from this IP. Try again in an hour.';
+    }
+
     if (empty($errors)) {
         try {
             $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ? OR email = ?');
@@ -52,10 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $existing = $stmt->fetch();
 
             if ($existing) {
-                // Find out which one is taken
-                $stmt2 = $pdo->prepare('SELECT id FROM users WHERE username = ?');
-                $stmt2->execute([$username]);
-                if ($stmt2->fetch()) {
+                $ck = $pdo->prepare('SELECT id FROM users WHERE username = ?');
+                $ck->execute([$username]);
+                if ($ck->fetch()) {
                     $errors[] = 'That username is already taken.';
                 } else {
                     $errors[] = 'An account with that email already exists.';
@@ -66,12 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // All good — create the account
     if (empty($errors)) {
         try {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
+            $stmt = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?) RETURNING id');
             $stmt->execute([$username, $email, $hashed]);
+            $new_id = $stmt->fetchColumn();
+
+            // Send verification email (non-blocking — failure won't stop registration)
+            $new_user = ['id' => $new_id, 'username' => $username, 'email' => $email];
+            @send_verification_email($pdo, $new_user);
 
             header('Location: /login.php?registered=1');
             exit;
@@ -93,32 +97,27 @@ include 'header.php';
 
     <?php if (!empty($errors)): ?>
       <div class="auth-error">
-        <?php foreach ($errors as $error): ?>
-          <div><?php echo htmlspecialchars($error); ?></div>
-        <?php endforeach; ?>
+        <?php foreach ($errors as $error): ?><div><?php echo e($error); ?></div><?php endforeach; ?>
       </div>
     <?php endif; ?>
 
-    <form method="POST" action="/register.php" class="auth-form">
+    <form method="POST" class="auth-form">
+      <?php echo csrf_field(); ?>
       <div class="auth-field">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" required
-               autocomplete="username"
-               maxlength="30"
-               value="<?php echo htmlspecialchars($values['username']); ?>">
+        <input type="text" id="username" name="username" required autocomplete="username"
+               maxlength="30" value="<?php echo e($values['username']); ?>">
         <div class="auth-field-hint">Letters, numbers, and underscores only.</div>
       </div>
       <div class="auth-field">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required
-               autocomplete="email"
-               value="<?php echo htmlspecialchars($values['email']); ?>">
+        <input type="email" id="email" name="email" required autocomplete="email"
+               value="<?php echo e($values['email']); ?>">
       </div>
       <div class="auth-field">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required
-               autocomplete="new-password"
-               minlength="8">
+               autocomplete="new-password" minlength="8">
         <div class="auth-field-hint">At least 8 characters.</div>
       </div>
       <div class="auth-field">
