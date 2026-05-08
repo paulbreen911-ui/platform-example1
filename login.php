@@ -1,7 +1,7 @@
 <?php
 require_once 'config.php';
+require_once 'functions.php';
 
-// Already logged in — send to profile
 if (isset($_SESSION['user_id'])) {
     header('Location: /myprofile.php');
     exit;
@@ -21,8 +21,9 @@ include 'header.php';
     <?php if (isset($_GET['error'])): ?>
       <div class="auth-error">
         <?php
-          if ($_GET['error'] === 'invalid') echo 'Incorrect username or password. Please try again.';
-          if ($_GET['error'] === 'required') echo 'Please fill in all fields.';
+          if ($_GET['error'] === 'invalid')   echo 'Incorrect username or password.';
+          if ($_GET['error'] === 'required')  echo 'Please fill in all fields.';
+          if ($_GET['error'] === 'ratelimit') echo 'Too many failed attempts. Please wait 5 minutes.';
         ?>
       </div>
     <?php endif; ?>
@@ -31,7 +32,12 @@ include 'header.php';
       <div class="auth-success">Account created — you can now sign in.</div>
     <?php endif; ?>
 
+    <?php if (isset($_GET['reset'])): ?>
+      <div class="auth-success">Password reset. You can sign in with your new password.</div>
+    <?php endif; ?>
+
     <form method="POST" action="/login_process.php" class="auth-form">
+      <?php echo csrf_field(); ?>
       <div class="auth-field">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required autocomplete="username">
@@ -45,6 +51,7 @@ include 'header.php';
 
     <div class="auth-footer">
       <p>Don't have an account? <a href="/register.php">Join free</a></p>
+      <p><a href="/forgot_password.php">Forgot your password?</a></p>
       <p class="auth-demo">Demo: <strong>testuser</strong> / <strong>password123</strong></p>
     </div>
   </div>
