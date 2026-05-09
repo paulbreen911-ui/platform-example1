@@ -2,7 +2,7 @@
 // TEMPORARY DEBUG FILE — DELETE AFTER USE
 // Visit: https://www.productioncentral.org/debug_env.php
 
-$vars = ['R2_ACCOUNT_ID', 'R2_API_TOKEN', 'R2_BUCKET', 'R2_PUBLIC_URL'];
+$vars = ['R2_ACCOUNT_ID', 'R2_API_TOKEN', 'R2_ACCESS_KEY', 'R2_SECRET_KEY', 'R2_BUCKET', 'R2_PUBLIC_URL'];
 
 echo '<pre>';
 foreach ($vars as $v) {
