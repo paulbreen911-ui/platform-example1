@@ -23,7 +23,7 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
     <a class="nav-link" href="/#education">Education</a>
     <a class="nav-link" href="/#reference">Reference</a>
     <a class="nav-link" href="/#technology">Technology</a>
-    <a class="nav-link" href="/tools/tools-index.html">Tools</a>
+    <a class="nav-link" href="/tools.php">Tools</a>
     <a class="nav-link" href="/#life">Life</a>
     <a class="nav-link store" href="/#store">Store</a>
   </div>
@@ -53,7 +53,7 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
     <a class="mobile-nav-link" href="/#education">Education</a>
     <a class="mobile-nav-link" href="/#reference">Reference</a>
     <a class="mobile-nav-link" href="/#technology">Technology</a>
-    <a class="mobile-nav-link" href="/tools/tools-index.html">Tools</a>
+    <a class="mobile-nav-link" href="/tools.php">Tools</a>
     <a class="mobile-nav-link" href="/#life">Life</a>
     <a class="mobile-nav-link" href="/#store" style="color:var(--gold)">Store</a>
     <div class="mobile-nav-divider"></div>

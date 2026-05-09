@@ -610,3 +610,64 @@ input[type="radio"]:checked + .color-swatch {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── TOOLS PAGE ──────────────────────────────────────────── */
+
+.tools-page { max-width: 1000px; margin: 0 auto; padding: calc(var(--nav-h) + 48px) 40px 80px; }
+
+.tools-page-hd { margin-bottom: 40px; }
+.tools-page-title { font-family: var(--disp); font-size: 56px; letter-spacing: 2px; line-height: .95; margin-bottom: 12px; }
+.tools-page-sub { font-size: 14px; color: var(--text-2); max-width: 520px; line-height: 1.7; }
+
+.tools-page-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 48px; }
+
+.tool-card-lg {
+  display: flex; align-items: center; gap: 18px;
+  background: var(--dark-2); border: .5px solid var(--border);
+  border-radius: 12px; padding: 20px 22px;
+  text-decoration: none; color: inherit;
+  transition: background .15s, border-color .15s, transform .15s;
+}
+.tool-card-lg:not(.tool-card-lg-coming):hover {
+  background: var(--dark-3);
+  border-color: rgba(255,255,255,.12);
+  transform: translateY(-2px);
+}
+.tool-card-lg-coming { cursor: default; }
+
+.tool-card-lg-icon {
+  width: 48px; height: 48px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.tool-card-lg-body { flex: 1; min-width: 0; }
+.tool-card-lg-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.tool-card-lg-desc { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+.tool-card-lg-action { flex-shrink: 0; }
+
+.tool-tag-live {
+  font-size: 11px; font-weight: 500; padding: 4px 10px;
+  border-radius: 5px; white-space: nowrap;
+  background: rgba(217,79,42,.12); color: #D94F2A;
+  border: .5px solid rgba(217,79,42,.25);
+}
+.tool-tag-coming {
+  font-size: 11px; padding: 4px 10px; border-radius: 5px;
+  white-space: nowrap; background: rgba(255,255,255,.04);
+  color: var(--text-3); border: .5px solid var(--border);
+}
+
+.tools-suggest {
+  background: var(--dark-2); border: .5px solid var(--border);
+  border-radius: 12px; padding: 28px 32px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.tools-suggest-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.tools-suggest-sub { font-size: 13px; color: var(--text-2); }
+
+@media (max-width: 768px) {
+  .tools-page { padding: calc(var(--nav-h) + 32px) 20px 60px; }
+  .tools-page-grid { grid-template-columns: 1fr; }
+  .tools-suggest { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .tool-card-lg-action { display: none; }
+}

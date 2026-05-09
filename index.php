@@ -10,27 +10,34 @@ require_once 'functions.php';
 $page_title = 'Home';
 
 // Live forum threads for homepage
-$live_threads = $pdo->query('
-    SELECT ft.id, ft.title, ft.reply_count, ft.created_at,
-           fc.name AS cat_name, fc.color AS cat_color,
-           u.username
-    FROM   forum_threads ft
-    JOIN   forum_categories fc ON fc.id = ft.category_id
-    JOIN   users u ON u.id = ft.user_id
-    ORDER  BY COALESCE(ft.last_reply_at, ft.created_at) DESC
-    LIMIT  4
-')->fetchAll();
+$live_threads = [];
+$member_count = '8,400';
+$post_count   = '2,100';
 
-// Live stats
-$stats = $pdo->query('
-    SELECT
-        (SELECT COUNT(*) FROM users)          AS member_count,
-        (SELECT COUNT(*) FROM forum_threads)  AS thread_count,
-        (SELECT COUNT(*) FROM forum_replies)  AS reply_count
-')->fetch();
+try {
+    $live_threads = $pdo->query('
+        SELECT ft.id, ft.title, ft.reply_count, ft.created_at,
+               fc.name AS cat_name, fc.color AS cat_color,
+               u.username
+        FROM   forum_threads ft
+        JOIN   forum_categories fc ON fc.id = ft.category_id
+        JOIN   users u ON u.id = ft.user_id
+        ORDER  BY COALESCE(ft.last_reply_at, ft.created_at) DESC
+        LIMIT  4
+    ')->fetchAll();
 
-$member_count = number_format($stats['member_count'] ?: 8400);
-$post_count   = number_format(($stats['thread_count'] + $stats['reply_count']) ?: 2100);
+    $stats = $pdo->query('
+        SELECT
+            (SELECT COUNT(*) FROM users)         AS member_count,
+            (SELECT COUNT(*) FROM forum_threads) AS thread_count,
+            (SELECT COUNT(*) FROM forum_replies) AS reply_count
+    ')->fetch();
+
+    $member_count = number_format($stats['member_count'] ?: 8400);
+    $post_count   = number_format(($stats['thread_count'] + $stats['reply_count']) ?: 2100);
+} catch (PDOException $e) {
+    // Tables not yet created — site loads with placeholder content
+}
 
 include 'header.php';
 ?>
@@ -77,7 +84,7 @@ include 'header.php';
     <a class="sc sc-edu" href="#education"><div class="sc-icon">🎓</div><div class="sc-name">Education</div><div class="sc-desc">Docs, videos &amp; courses</div><div class="sc-arr">→</div></a>
     <a class="sc sc-ref" href="#reference"><div class="sc-icon">🗂</div><div class="sc-name">Reference</div><div class="sc-desc">Venues, scans &amp; shows</div><div class="sc-arr">→</div></a>
     <a class="sc sc-tech" href="#technology"><div class="sc-icon">⚙️</div><div class="sc-name">Technology</div><div class="sc-desc">Manuals, specs &amp; gear</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-tools" href="/tools/index.html"><div class="sc-icon">🔧</div><div class="sc-name">Tools</div><div class="sc-desc">Calculators &amp; test patterns</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-tools" href="/tools.php"><div class="sc-icon">🔧</div><div class="sc-name">Tools</div><div class="sc-desc">Calculators &amp; test patterns</div><div class="sc-arr">→</div></a>
     <a class="sc sc-forum" href="/forum.php"><div class="sc-icon">💬</div><div class="sc-name">Forum</div><div class="sc-desc">Discussion, jobs &amp; gear</div><div class="sc-arr">→</div></a>
     <a class="sc sc-life" href="#life"><div class="sc-icon">🌿</div><div class="sc-name">Life</div><div class="sc-desc">Health, fitness &amp; wellness</div><div class="sc-arr">→</div></a>
     <a class="sc sc-store" href="#store"><div class="sc-icon">🛒</div><div class="sc-name">Store</div><div class="sc-desc">Gaff tape, duvatine &amp; merch</div><div class="sc-arr">→</div></a>
@@ -100,7 +107,7 @@ include 'header.php';
 <section class="section" id="tools">
   <div class="sec-hd">
     <div><div class="sec-ey">Utilities</div><div class="sec-title">TOOLS</div><div class="sec-sub">Interactive technical utilities — use them on site, in prep, or in the truck.</div></div>
-    <a class="see-all" href="/tools/index.html">All tools →</a>
+    <a class="see-all" href="/tools.php">All tools →</a>
   </div>
   <div class="tools-grid">
     <a class="tool-card" href="/tools/test-pattern-generator.html" style="text-decoration:none;color:inherit"><div class="tool-icon" style="background:#1A0E0E">📺</div><div class="tool-name">Test pattern generator</div><div class="tool-desc">Full-screen patterns for display calibration</div><span class="tool-tag">Launch tool</span></a>
