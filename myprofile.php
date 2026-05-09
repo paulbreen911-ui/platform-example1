@@ -386,25 +386,90 @@ include 'header.php';
       <div class="settings-card">
         <div class="settings-card-title">Profile photo</div>
         <div class="settings-avatar-row">
-          <?php if ($has_avatar): ?>
-            <img src="<?php echo e($user['avatar_url']); ?>" alt="avatar" class="settings-avatar-preview">
-          <?php else: ?>
-            <div class="profile-avatar" style="width:60px;height:60px;font-size:24px"><?php echo strtoupper(substr($user['username'], 0, 1)); ?></div>
-          <?php endif; ?>
-          <form method="POST" class="auth-form" style="flex:1;gap:10px">
-            <?php echo csrf_field(); ?>
-            <input type="hidden" name="action" value="update_avatar">
-            <div class="auth-field">
-              <label>Image URL</label>
-              <input type="url" name="avatar_url"
-                     value="<?php echo e($user['avatar_url'] ?? ''); ?>"
-                     placeholder="https://example.com/photo.jpg">
-              <div class="auth-field-hint">Link to a publicly hosted image (jpg, png, webp).</div>
+          <div id="avatar-preview-wrap">
+            <?php if ($has_avatar): ?>
+              <img src="<?php echo e($user['avatar_url']); ?>" alt="avatar" class="settings-avatar-preview" id="avatar-preview">
+            <?php else: ?>
+              <div class="profile-avatar" style="width:60px;height:60px;font-size:24px" id="avatar-initial"><?php echo strtoupper(substr($user['username'], 0, 1)); ?></div>
+            <?php endif; ?>
+          </div>
+          <div style="flex:1">
+            <div class="auth-field" style="margin-bottom:10px">
+              <label>Upload photo</label>
+              <input type="file" id="avatar-file-input" accept="image/jpeg,image/png,image/gif,image/webp"
+                     style="display:none" onchange="uploadAvatar(this)">
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button type="button" class="btn-gold-lg" style="font-size:13px;padding:9px 20px"
+                        onclick="document.getElementById('avatar-file-input').click()">
+                  Choose photo
+                </button>
+                <?php if ($has_avatar): ?>
+                  <button type="button" class="btn-ghost-lg" style="font-size:13px;padding:9px 16px"
+                          onclick="removeAvatar()">Remove</button>
+                <?php endif; ?>
+              </div>
+              <div class="auth-field-hint">JPG, PNG, GIF or WebP. Max 5MB.</div>
             </div>
-            <button type="submit" class="btn-gold-lg" style="font-size:13px;padding:9px 20px">Update photo →</button>
-          </form>
+            <div id="avatar-status" style="font-size:13px;display:none"></div>
+          </div>
         </div>
       </div>
+
+      <script>
+      const CSRF = document.querySelector('meta[name="csrf-token"]').content;
+
+      async function uploadAvatar(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        const status = document.getElementById('avatar-status');
+        status.style.display = 'block';
+        status.style.color = 'var(--text-2)';
+        status.textContent = 'Uploading…';
+
+        const form = new FormData();
+        form.append('avatar', file);
+        form.append('csrf_token', CSRF);
+
+        try {
+          const res  = await fetch('/upload_avatar.php', { method: 'POST', body: form });
+          const data = await res.json();
+          if (data.error) {
+            status.style.color = '#F4805A';
+            status.textContent = data.error;
+          } else {
+            status.style.color = '#7DD4A0';
+            status.textContent = 'Photo updated.';
+            // Update preview
+            const wrap = document.getElementById('avatar-preview-wrap');
+            wrap.innerHTML = '<img src="' + data.url + '?t=' + Date.now() + '" class="settings-avatar-preview" id="avatar-preview" alt="avatar">';
+            // Update header avatar too if present
+            const headerAv = document.querySelector('.profile-avatar-img');
+            if (headerAv) headerAv.src = data.url + '?t=' + Date.now();
+          }
+        } catch (e) {
+          status.style.color = '#F4805A';
+          status.textContent = 'Upload failed. Please try again.';
+        }
+      }
+
+      async function removeAvatar() {
+        if (!confirm('Remove your profile photo?')) return;
+        const status = document.getElementById('avatar-status');
+        status.style.display = 'block';
+        status.style.color = 'var(--text-2)';
+        status.textContent = 'Removing…';
+
+        const form = new FormData();
+        form.append('csrf_token', CSRF);
+        form.append('action', 'update_avatar');
+        form.append('avatar_url', '');
+
+        const res = await fetch('/myprofile.php?tab=settings', { method: 'POST', body: form });
+        if (res.ok) {
+          window.location.reload();
+        }
+      }
+      </script>
 
       <!-- Identity -->
       <div class="settings-card">
