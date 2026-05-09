@@ -581,3 +581,32 @@ body.nav-open { overflow: hidden; }
   .profile-tabs { overflow-x: auto; }
   .profile-tab { white-space: nowrap; }
 }
+
+/* ── FORUM POST PAGE ─────────────────────────────────────── */
+
+.forum-post-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 32px;
+  align-items: start;
+  max-width: 1000px;
+}
+
+.color-swatch {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: border-color .15s, transform .15s;
+}
+input[type="radio"]:checked + .color-swatch {
+  border-color: var(--text-1);
+  transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .forum-post-layout {
+    grid-template-columns: 1fr;
+  }
+}
