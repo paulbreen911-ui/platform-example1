@@ -125,7 +125,7 @@ include 'header.php';
     </div>
   <?php endif; ?>
 
-  <?php if (!$user['email_verified']): ?>
+  <?php if (!($user['email_verified'] ?? false)): ?>
     <div class="verify-banner">
       <span>⚠ Your email address is not verified.</span>
       <form method="POST" style="display:inline">
@@ -153,7 +153,7 @@ include 'header.php';
         <div class="profile-card-label">Email</div>
         <div class="profile-card-value">
           <?php echo e($user['email']); ?>
-          <?php if ($user['email_verified']): ?>
+          <?php if ($user['email_verified'] ?? false): ?>
             <span class="verified-badge">✓</span>
           <?php endif; ?>
         </div>
@@ -239,7 +239,7 @@ include 'header.php';
           <div class="auth-field">
             <label>Email</label>
             <input type="email" name="email" required value="<?php echo e($user['email']); ?>">
-            <?php if (!$user['email_verified']): ?>
+            <?php if (!($user['email_verified'] ?? false)): ?>
               <div class="auth-field-hint" style="color:#F4805A">Not verified</div>
             <?php endif; ?>
           </div>

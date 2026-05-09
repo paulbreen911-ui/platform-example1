@@ -99,14 +99,17 @@ function rate_limit_reset(PDO $pdo, string $key, string $action): void {
  * to Postmark, Resend, SendGrid, etc.
  */
 function send_email(string $to, string $subject, string $body): bool {
-    $from    = 'noreply@productioncentral.org';
-    $headers = implode("\r\n", [
-        "From: Production Central <{$from}>",
-        'Content-Type: text/plain; charset=UTF-8',
-        'MIME-Version: 1.0',
-        'X-Mailer: PHP/' . PHP_VERSION,
+    // Railway has no local mail server. Tokens are stored in DB for manual retrieval.
+    // To enable real email: add SMTP env vars and integrate PHPMailer/Resend/Postmark.
+    $log = implode("\n", [
+        '--- ' . date('Y-m-d H:i:s') . ' ---',
+        'To: ' . $to,
+        'Subject: ' . $subject,
+        $body,
+        '',
     ]);
-    return mail($to, $subject, $body, $headers);
+    @file_put_contents('/tmp/mail.log', $log, FILE_APPEND);
+    return true;
 }
 
 /**
