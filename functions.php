@@ -202,8 +202,8 @@ function client_ip(): string {
 /**
  * Sanitise output for HTML contexts.
  */
-function e(string $s): string {
-    return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+function e(?string $s): string {
+    return htmlspecialchars($s ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
 /**

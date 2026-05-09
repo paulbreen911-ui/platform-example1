@@ -65,7 +65,7 @@ include 'header.php';
             <div class="forum-cat-dot" style="background:<?php echo e($c['color']); ?>"></div>
             <div class="forum-cat-info">
               <div class="forum-cat-name"><?php echo e($c['name']); ?></div>
-              <div class="forum-cat-desc"><?php echo e($c['description']); ?></div>
+              <div class="forum-cat-desc"><?php echo e($c['description'] ?? ''); ?></div>
             </div>
             <div class="forum-cat-count"><?php echo $c['thread_count']; ?><br><span>threads</span></div>
           </a>
