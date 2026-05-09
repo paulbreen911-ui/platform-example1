@@ -220,26 +220,27 @@ function time_ago(string $datetime): string {
 }
 
 /**
- * Simple markdown-lite: bold, italic, code, blockquote, line breaks.
- * Safe — always runs through htmlspecialchars first.
+ * Format post body: plain text only, line breaks preserved, URLs linked.
+ * No HTML or markdown — all input is escaped before processing.
  */
 function format_post(string $text): string {
+    // Escape everything first
     $s = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    // Code blocks
-    $s = preg_replace('/```(.+?)```/s', '<pre class="post-code"><code>$1</code></pre>', $s);
-    // Inline code
-    $s = preg_replace('/`([^`]+)`/', '<code class="post-inline-code">$1</code>', $s);
-    // Bold
-    $s = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $s);
-    // Italic
-    $s = preg_replace('/\*(.+?)\*/', '<em>$1</em>', $s);
-    // Blockquote
-    $s = preg_replace('/^&gt; (.+)$/m', '<blockquote class="post-blockquote">$1</blockquote>', $s);
-    // Line breaks
+
+    // Auto-link http/https URLs (nofollow + new tab, no JS schemes possible)
+    $s = preg_replace_callback(
+        '/https?:\/\/[^\s\'"<>()\[\]]{3,}/i',
+        function ($m) {
+            $url = rtrim($m[0], '.,;:!?)');
+            $display = mb_strlen($url) > 60 ? mb_substr($url, 0, 60) . '…' : $url;
+            return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer nofollow">' . $display . '</a>';
+        },
+        $s
+    );
+
     $s = nl2br($s);
     return $s;
 }
-
 /**
  * Truncate text to $max chars, appending ellipsis.
  */

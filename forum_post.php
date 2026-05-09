@@ -142,7 +142,7 @@ include 'header.php';
           <label>Post</label>
           <textarea name="body" class="reply-textarea" rows="10" required
                     placeholder="Write your post…"><?php echo e($_POST['body'] ?? ''); ?></textarea>
-          <div class="auth-field-hint">Supports **bold**, *italic*, `code`, and ```code blocks```</div>
+          <div class="auth-field-hint">Plain text. URLs are linked automatically.</div>
         </div>
 
         <div style="display:flex;gap:10px;align-items:center;margin-top:8px">

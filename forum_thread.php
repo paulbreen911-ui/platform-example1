@@ -137,7 +137,7 @@ include 'header.php';
               <?php echo csrf_field(); ?>
               <textarea name="body" class="reply-textarea" placeholder="Write your reply…" rows="5" required><?php echo e($_POST['body'] ?? ''); ?></textarea>
               <div class="reply-form-footer">
-                <div class="reply-form-hint">Supports **bold**, *italic*, `code`, and ```code blocks```</div>
+                <div class="reply-form-hint">Plain text. URLs are linked automatically.</div>
                 <button type="submit" class="btn-gold-lg" style="font-size:13px;padding:10px 22px">Post reply →</button>
               </div>
             </form>
