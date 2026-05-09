@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Send verification email (non-blocking — failure won't stop registration)
             $new_user = ['id' => $new_id, 'username' => $username, 'email' => $email];
-            @send_verification_email($pdo, $new_user);
+            send_verification_email($pdo, $new_user);
 
             header('Location: /login.php?registered=1');
             exit;

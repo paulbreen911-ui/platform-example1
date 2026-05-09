@@ -94,22 +94,49 @@ function rate_limit_reset(PDO $pdo, string $key, string $action): void {
 // ── EMAIL ─────────────────────────────────────────────────────
 
 /**
- * Send a plain-text email via PHP's mail().
- * For production, swap the body of this function with an API call
- * to Postmark, Resend, SendGrid, etc.
+ * Send email via Resend API (https://resend.com).
+ * Requires RESEND_API_KEY environment variable set in Railway.
  */
 function send_email(string $to, string $subject, string $body): bool {
-    // Railway has no local mail server. Tokens are stored in DB for manual retrieval.
-    // To enable real email: add SMTP env vars and integrate PHPMailer/Resend/Postmark.
-    $log = implode("\n", [
-        '--- ' . date('Y-m-d H:i:s') . ' ---',
-        'To: ' . $to,
-        'Subject: ' . $subject,
-        $body,
-        '',
+    $api_key = getenv('RESEND_API_KEY');
+
+    if (!$api_key) {
+        // Fallback: log to file if no API key configured
+        $log = implode("\n", [
+            '--- ' . date('Y-m-d H:i:s') . ' ---',
+            'To: ' . $to,
+            'Subject: ' . $subject,
+            $body,
+            '',
+        ]);
+        @file_put_contents('/tmp/mail.log', $log, FILE_APPEND);
+        return false;
+    }
+
+    $payload = json_encode([
+        'from'    => 'Production Central <noreply@productioncentral.org>',
+        'to'      => [$to],
+        'subject' => $subject,
+        'text'    => $body,
     ]);
-    @file_put_contents('/tmp/mail.log', $log, FILE_APPEND);
-    return true;
+
+    $ch = curl_init('https://api.resend.com/emails');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => $payload,
+        CURLOPT_HTTPHEADER     => [
+            'Authorization: Bearer ' . $api_key,
+            'Content-Type: application/json',
+        ],
+        CURLOPT_TIMEOUT        => 10,
+    ]);
+
+    $response = curl_exec($ch);
+    $status   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return $status === 200 || $status === 201;
 }
 
 /**
