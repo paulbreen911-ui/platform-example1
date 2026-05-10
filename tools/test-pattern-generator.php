@@ -1037,7 +1037,7 @@ function stpUpdateOutputControls() {
   if (countEl) {
     countEl.style.display = n > 0 ? 'inline' : 'none';
     countEl.style.color = 'var(--text3)';
-    countEl.textContent = n === 1 ? '1 output open' : `${n} outputs open`;
+    countEl.textContent = n === 1 ? '1 output open' : '' + (n) + ' outputs open';
   }
 }
 
