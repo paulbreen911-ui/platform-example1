@@ -10,7 +10,7 @@ $tools = [
         'icon'   => '📺',
         'name'   => 'Test Pattern Generator',
         'desc'   => 'Full-screen test patterns for display calibration and alignment.',
-        'url'    => '/tools/test-pattern-generator.html',
+        'url'    => '/tools/test-pattern-generator.php',
         'status' => 'live',
         'color'  => '#1A0E0E',
     ],

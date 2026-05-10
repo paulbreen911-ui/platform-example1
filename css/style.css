@@ -709,3 +709,8 @@ input[type="radio"]:checked + .color-swatch {
   width: 60px; height: 60px; border-radius: 50%;
   object-fit: cover; border: .5px solid var(--border);
 }
+
+/* ── TOOL PAGES ──────────────────────────────────────────── */
+body.tool-page { padding-top: var(--nav-h); }
+body.tool-page .wrap { padding-top: 24px; }
+.nav-link.active { color: var(--text-1) !important; }
