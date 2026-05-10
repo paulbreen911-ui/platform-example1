@@ -1,8 +1,9 @@
 <?php
-// Tool page — lives in /tools/
-$page_title = 'Test Pattern Generator';
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
+$page_title = 'Test Pattern Generator';
+$_username  = $_SESSION['username'] ?? null;
+$_user_id   = $_SESSION['user_id']  ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -860,9 +861,6 @@ require_once __DIR__ . '/../functions.php';
 </head>
 <body class="tool-page">
 
-<?php
-// Minimal nav for tool pages — no <main> wrapper, tool handles its own layout
-?>
 <nav class="nav">
   <a class="nav-logo" href="/">PRODUCTION<span>.</span>CENTRAL</a>
   <div class="nav-links">
@@ -875,13 +873,13 @@ require_once __DIR__ . '/../functions.php';
     <a class="nav-link store" href="/#store">Store</a>
   </div>
   <div class="nav-right">
-    <?php if (isset($_SESSION['user_id'])): ?>
-      <a class="nav-link" href="/myprofile.php"><?php echo e($_SESSION['username']); ?></a>
-      <a class="btn-signin" href="/logout.php">Log out</a>
-    <?php else: ?>
-      <a class="btn-signin" href="/login.php">Sign in</a>
-      <a class="btn-join" href="/register.php">Join free →</a>
-    <?php endif; ?>
+<?php if ($_user_id): ?>
+    <a class="nav-link" href="/myprofile.php"><?php echo htmlspecialchars($_username); ?></a>
+    <a class="btn-signin" href="/logout.php">Log out</a>
+<?php else: ?>
+    <a class="btn-signin" href="/login.php">Sign in</a>
+    <a class="btn-join" href="/register.php">Join free →</a>
+<?php endif; ?>
   </div>
   <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMobileNav()">
     <span></span><span></span><span></span>
@@ -893,18 +891,18 @@ require_once __DIR__ . '/../functions.php';
     <a class="mobile-nav-link" href="/forum.php">Forum</a>
     <a class="mobile-nav-link" href="/tools.php" style="color:var(--gold)">← Back to Tools</a>
     <div class="mobile-nav-divider"></div>
-    <?php if (isset($_SESSION['user_id'])): ?>
-      <a class="mobile-nav-link" href="/myprofile.php">My Profile</a>
-      <a class="mobile-nav-link" href="/logout.php">Log out</a>
-    <?php else: ?>
-      <a class="mobile-nav-link" href="/login.php">Sign in</a>
-      <a class="btn-gold-lg" href="/register.php" style="margin-top:8px;text-align:center">Join free →</a>
-    <?php endif; ?>
+<?php if ($_user_id): ?>
+    <a class="mobile-nav-link" href="/myprofile.php">My Profile</a>
+    <a class="mobile-nav-link" href="/logout.php">Log out</a>
+<?php else: ?>
+    <a class="mobile-nav-link" href="/login.php">Sign in</a>
+    <a class="btn-gold-lg" href="/register.php" style="margin-top:8px;text-align:center">Join free →</a>
+<?php endif; ?>
   </div>
 </div>
 <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="toggleMobileNav()"></div>
 <script>
-function toggleMobileNav() {
+function toggleMobileNav(){
   document.getElementById('mobile-nav').classList.toggle('open');
   document.getElementById('mobile-nav-overlay').classList.toggle('open');
   document.body.classList.toggle('nav-open');
