@@ -1,9 +1,8 @@
 <?php
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
-$page_title = 'Test Pattern Generator';
-$_username  = $_SESSION['username'] ?? null;
-$_user_id   = $_SESSION['user_id']  ?? null;
+$_username = $_SESSION['username'] ?? null;
+$_user_id  = $_SESSION['user_id']  ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -878,7 +877,7 @@ $_user_id   = $_SESSION['user_id']  ?? null;
     <a class="btn-signin" href="/logout.php">Log out</a>
 <?php else: ?>
     <a class="btn-signin" href="/login.php">Sign in</a>
-    <a class="btn-join" href="/register.php">Join free →</a>
+    <a class="btn-join" href="/register.php">Join free &rarr;</a>
 <?php endif; ?>
   </div>
   <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMobileNav()">
@@ -889,14 +888,14 @@ $_user_id   = $_SESSION['user_id']  ?? null;
 <div class="mobile-nav" id="mobile-nav">
   <div class="mobile-nav-inner">
     <a class="mobile-nav-link" href="/forum.php">Forum</a>
-    <a class="mobile-nav-link" href="/tools.php" style="color:var(--gold)">← Back to Tools</a>
+    <a class="mobile-nav-link" href="/tools.php" style="color:var(--gold)">&larr; Back to Tools</a>
     <div class="mobile-nav-divider"></div>
 <?php if ($_user_id): ?>
     <a class="mobile-nav-link" href="/myprofile.php">My Profile</a>
     <a class="mobile-nav-link" href="/logout.php">Log out</a>
 <?php else: ?>
     <a class="mobile-nav-link" href="/login.php">Sign in</a>
-    <a class="btn-gold-lg" href="/register.php" style="margin-top:8px;text-align:center">Join free →</a>
+    <a class="btn-gold-lg" href="/register.php" style="margin-top:8px;text-align:center">Join free &rarr;</a>
 <?php endif; ?>
   </div>
 </div>
