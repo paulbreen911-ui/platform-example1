@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
 
 $page_title = 'CIE Chromaticity Plotter';
 
-include 'header.php';
+include __DIR__ . '/../header.php';
 ?>
 
 <style>
@@ -999,4 +999,4 @@ window.addEventListener('load',()=>{
 window.addEventListener('resize', resizeCanvas);
 </script>
 
-<?php include 'footer.php'; ?>
+<?php include __DIR__ . '/../footer.php'; ?>
