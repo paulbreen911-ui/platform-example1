@@ -726,26 +726,34 @@ function drawChart() {
   grad.addColorStop(1,'rgba(0,50,255,0.05)');
   ctx.fillStyle=grad; ctx.fill(); ctx.restore();
 
-  // CIE colour fill — rasterise inside locus
-  const step=Math.ceil(W/180);
-  for(let px=0;px<W;px+=step){
-    for(let py=0;py<H;py+=step){
-      const pad=W*0.09;
-      const x=((px-pad)/(W-2*pad))*0.85;
-      const y=((H-pad-py)/(H-2*pad))*0.95;
-      if(x<0||y<0||x>0.85||y>0.95) continue;
-      if(!pointInLocus(x,y)) continue;
-      const Y=0.5, X=(x/y)*Y, Z=((1-x-y)/y)*Y;
-      let r= 3.2404542*X-1.5371385*Y-0.4985314*Z;
-      let g=-0.9692660*X+1.8760108*Y+0.0415560*Z;
-      let b= 0.0556434*X-0.2040259*Y+1.0572252*Z;
-      const mx=Math.max(r,g,b); if(mx>0){r/=mx;g/=mx;b/=mx;}
-      r=Math.max(0,Math.min(1,r)); g=Math.max(0,Math.min(1,g)); b=Math.max(0,Math.min(1,b));
-      const gm=c=>c<=0.0031308?12.92*c:1.055*Math.pow(c,1/2.4)-0.055;
-      ctx.fillStyle=`rgba(${Math.round(gm(r)*255)},${Math.round(gm(g)*255)},${Math.round(gm(b)*255)},0.72)`;
-      ctx.fillRect(px,py,step,step);
+  // CIE colour fill — full-resolution ImageData pixel write (no blockiness)
+  const imgData = ctx.createImageData(W, H);
+  const buf     = imgData.data;
+  const pad2    = W * 0.09;
+  const gm = c => c <= 0.0031308 ? 12.92*c : 1.055*Math.pow(c, 1/2.4) - 0.055;
+  for (let py = 0; py < H; py++) {
+    for (let px = 0; px < W; px++) {
+      const cx = ((px - pad2) / (W - 2*pad2)) * 0.85;
+      const cy = ((H - pad2 - py) / (H - 2*pad2)) * 0.95;
+      if (cx < 0 || cy < 0 || cx > 0.85 || cy > 0.95) continue;
+      if (!pointInLocus(cx, cy)) continue;
+      const Yv = 0.5, Xv = (cx/cy)*Yv, Zv = ((1-cx-cy)/cy)*Yv;
+      let r =  3.2404542*Xv - 1.5371385*Yv - 0.4985314*Zv;
+      let g = -0.9692660*Xv + 1.8760108*Yv + 0.0415560*Zv;
+      let b =  0.0556434*Xv - 0.2040259*Yv + 1.0572252*Zv;
+      const mx = Math.max(r, g, b);
+      if (mx > 0) { r /= mx; g /= mx; b /= mx; }
+      r = Math.max(0, Math.min(1, r));
+      g = Math.max(0, Math.min(1, g));
+      b = Math.max(0, Math.min(1, b));
+      const idx = (py * W + px) * 4;
+      buf[idx]   = Math.round(gm(r) * 255);
+      buf[idx+1] = Math.round(gm(g) * 255);
+      buf[idx+2] = Math.round(gm(b) * 255);
+      buf[idx+3] = 184; // ~72% opacity
     }
   }
+  ctx.putImageData(imgData, 0, 0);
 
   // Locus outline
   ctx.save();
