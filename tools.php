@@ -15,6 +15,14 @@ $tools = [
         'color'  => '#1A0E0E',
     ],
     [
+        'icon'   => '🎨',
+        'name'   => 'CIE Chromaticity Plotter',
+        'desc'   => 'Plot brand colors on the CIE 1931 diagram. Gamut analysis across Rec.709, DCI-P3, and Rec.2020.',
+        'url'    => '/tools/cie-color-plotter.php',
+        'status' => 'live',
+        'color'  => '#0A1A1A',
+    ],
+    [
         'icon'   => '📡',
         'name'   => 'RF Frequency Planner',
         'desc'   => 'Intermodulation-free wireless frequency coordination.',
