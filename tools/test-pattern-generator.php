@@ -1207,7 +1207,7 @@ function downloadStandalonePattern(fmt) {
   const type  = document.getElementById('stp-type').value;
   const nProj = document.getElementById('stp-projectors').value;
   const fname = `Production Central_${type}_${W}x${H}_${nProj}P`;
-  const svgStr = `<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${body}</svg>`;
+  const svgStr = '<?xml version="1.0" encoding="UTF-8"?>' + `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${body}</svg>`;
   if (fmt === 'png8') fmt = 'png';
   if (fmt === 'svg') {
     const blob=new Blob([svgStr],{type:'image/svg+xml'});
