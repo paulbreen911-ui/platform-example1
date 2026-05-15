@@ -7,7 +7,10 @@ if (!empty($_GET['q'])) {
     $stmt = $pdo->prepare("
         SELECT * FROM find_best_venue_match(?)
     ");
-    $stmt->execute([$_GET['q']]);
+    
+    $q = $_GET['q'];
+    $stmt->execute([$q]);
+
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 ?>
