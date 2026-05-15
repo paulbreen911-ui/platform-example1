@@ -3,6 +3,14 @@ require_once dirname(__DIR__) . '/config.php';
 require_once dirname(__DIR__) . '/functions.php';
 require_login();
 
+// Fetch the logged-in user record
+$user = get_user_by_id($pdo, $_SESSION['user_id']);
+if (!$user) {
+    session_destroy();
+    header('Location: /login.php');
+    exit;
+}
+
 $gamesDir = __DIR__ . '/games/';
 $gameId   = strtoupper(trim($_GET['id'] ?? ''));
 $spectate = !empty($_GET['spectate']);

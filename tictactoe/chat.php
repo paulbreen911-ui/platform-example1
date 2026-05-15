@@ -2,6 +2,9 @@
 require_once dirname(__DIR__) . '/config.php';
 require_once dirname(__DIR__) . '/functions.php';
 require_login();
+
+$user = get_user_by_id($pdo, $_SESSION['user_id']);
+if (!$user) { header('Location: /login.php'); exit; }
 header('Content-Type: application/json');
 
 $gamesDir = __DIR__ . '/games/';

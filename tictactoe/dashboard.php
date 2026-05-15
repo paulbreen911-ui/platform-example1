@@ -4,6 +4,14 @@ require_once dirname(__DIR__) . '/config.php';
 require_once dirname(__DIR__) . '/functions.php';
 require_login();   // redirects to /login.php if not authenticated
 
+// Fetch the logged-in user record (same pattern as myprofile.php)
+$user = get_user_by_id($pdo, $_SESSION['user_id']);
+if (!$user) {
+    session_destroy();
+    header('Location: /login.php');
+    exit;
+}
+
 $page_title = 'Noughts & Crosses';
 
 // ── Clean up stale games (>1 hour old) ───────────────────────────────────
