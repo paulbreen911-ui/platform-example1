@@ -613,12 +613,27 @@ input[type=file].hidden { display: none; }
 
         <div class="prop-group">
           <h4>Navigation Controls</h4>
+
+          <!-- Rotate drag pad -->
+          <div id="rotate-pad"
+            style="
+              width:100%; height:110px; border-radius:8px; margin-bottom:12px;
+              background: radial-gradient(ellipse at center, rgba(255,140,60,0.07) 0%, rgba(255,140,60,0.02) 60%, transparent 100%);
+              border: 1px dashed rgba(255,140,60,0.35);
+              display:flex; flex-direction:column; align-items:center; justify-content:center;
+              cursor:grab; user-select:none; position:relative; overflow:hidden;
+            "
+          >
+            <div style="font-size:22px; opacity:0.5; pointer-events:none;">⊕</div>
+            <div style="font-family:var(--mono);font-size:9px;color:rgba(255,140,60,0.5);margin-top:4px;letter-spacing:0.1em;pointer-events:none;">DRAG TO ROTATE</div>
+            <div id="rotate-pad-hint" style="font-family:var(--mono);font-size:8px;color:var(--text-label);margin-top:2px;pointer-events:none;">← → tilt · ↑ ↓ pitch</div>
+          </div>
+
           <div style="font-family:var(--mono);font-size:10px;color:var(--text-label);line-height:2">
             <div>W / S — Move Forward / Back</div>
             <div>A / D — Move Left / Right</div>
             <div>Q / E — Move Up / Down</div>
-            <div>Mouse drag — Rotate</div>
-            <div>Scroll — Zoom</div>
+            <div>Scroll — Zoom (in viewer)</div>
           </div>
           <div class="divider"></div>
           <div class="checkbox-row">
@@ -998,22 +1013,36 @@ setInterval(() => {
   }
 }, 50);
 
-// Mouse drag on viewport (if implemented)
+// Mouse drag on the rotate pad
 let dragging = false, lastMouseX, lastMouseY;
-document.addEventListener('mousedown', (e) => {
-  if (e.target.id === 'viewport-canvas') { dragging = true; lastMouseX = e.clientX; lastMouseY = e.clientY; }
+const rotatePad = document.getElementById('rotate-pad');
+
+rotatePad.addEventListener('mousedown', (e) => {
+  dragging = true;
+  lastMouseX = e.clientX; lastMouseY = e.clientY;
+  rotatePad.style.cursor = 'grabbing';
+  rotatePad.style.background = 'radial-gradient(ellipse at center, rgba(255,140,60,0.14) 0%, rgba(255,140,60,0.04) 60%, transparent 100%)';
+  e.preventDefault();
 });
 document.addEventListener('mousemove', (e) => {
   if (!dragging) return;
   const dx = e.clientX - lastMouseX, dy = e.clientY - lastMouseY;
   lastMouseX = e.clientX; lastMouseY = e.clientY;
-  state.camera.ry += dx * 0.3;
-  state.camera.rx += dy * 0.3;
+  state.camera.ry += dx * 0.4;
+  state.camera.rx += dy * 0.4;
+  // clamp pitch
+  state.camera.rx = Math.max(-89, Math.min(89, state.camera.rx));
   document.getElementById('cam-ry').value = state.camera.ry.toFixed(1);
   document.getElementById('cam-rx').value = state.camera.rx.toFixed(1);
   send({ type: 'camera', ...state.camera });
 });
-document.addEventListener('mouseup', () => dragging = false);
+document.addEventListener('mouseup', () => {
+  if (dragging) {
+    dragging = false;
+    rotatePad.style.cursor = 'grab';
+    rotatePad.style.background = 'radial-gradient(ellipse at center, rgba(255,140,60,0.07) 0%, rgba(255,140,60,0.02) 60%, transparent 100%)';
+  }
+});
 
 // ─── LIGHTS ───────────────────────────────────────────────────────────────────
 document.getElementById('new-light-intensity').addEventListener('input', (e) => document.getElementById('light-int-val').textContent = (+e.target.value).toFixed(1));
