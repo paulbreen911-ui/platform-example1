@@ -322,7 +322,7 @@ include 'header.php';
 
     <div class="profile-actions">
       <a class="btn-ghost-lg" href="/">← Home</a>
-      <a class="btn-gold-lg" href="/dashboard.php">Dashboard →</a>
+      <a class="btn-gold-lg" href="/app/dashboard.php">Dashboard →</a>
       <a class="btn-ghost-lg" href="?tab=settings">Edit profile</a>
       <a class="btn-signin" href="/logout.php">Log out</a>
     </div>
