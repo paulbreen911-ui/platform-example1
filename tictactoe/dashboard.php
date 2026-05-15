@@ -165,7 +165,7 @@ include dirname(__DIR__) . '/header.php';
     <!-- Create -->
     <div class="nc-card nc-card-accent">
       <div class="nc-card-title">Create a room</div>
-      <form action="tictactoe/create.php" method="POST">
+      <form action="create.php" method="POST">
         <input
           class="nc-input"
           type="text"
@@ -192,7 +192,7 @@ include dirname(__DIR__) . '/header.php';
     <!-- Join by code -->
     <div class="nc-card nc-card-red">
       <div class="nc-card-title">Join by code</div>
-      <form action="tictactoe/join.php" method="POST">
+      <form action="join.php" method="POST">
         <input
           class="nc-input"
           type="text"
@@ -263,13 +263,13 @@ include dirname(__DIR__) . '/header.php';
               </td>
               <td style="text-align:right">
                 <?php if ($g['status'] === 'waiting'): ?>
-                  <form method="POST" action="tictactoe/join.php" style="display:inline">
+                  <form method="POST" action="join.php" style="display:inline">
                     <input type="hidden" name="game_id"     value="<?= $g['id'] ?>">
                     <input type="hidden" name="player_name" value="<?= $prefill ?>">
                     <button type="submit" class="btn-ghost-lg" style="font-size:12px;padding:7px 16px">Join →</button>
                   </form>
                 <?php else: ?>
-                  <a class="btn-ghost-lg" href="tictactoe/game.php?id=<?= $g['id'] ?>&spectate=1"
+                  <a class="btn-ghost-lg" href="game.php?id=<?= $g['id'] ?>&spectate=1"
                      style="font-size:12px;padding:7px 16px">Watch →</a>
                 <?php endif; ?>
               </td>
