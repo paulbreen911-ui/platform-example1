@@ -425,6 +425,114 @@ input[type=file].hidden { display: none; }
   font-family: var(--mono); font-size: 10px; color: var(--text-label);
   text-align: center; padding: 12px; line-height: 1.6;
 }
+
+/* ─── INPUT DEVICES PANEL ──────────────────────────────────────────── */
+#panel-input { padding: 0; overflow-y: auto; }
+.input-col { display: flex; flex-direction: column; gap: 0; height: 100%; }
+
+.device-card {
+  background: var(--panel); border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+}
+.device-card-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.device-icon { font-size: 18px; }
+.device-name { font-family: var(--mono); font-size: 11px; color: var(--text); flex:1; }
+.device-status {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+  padding: 2px 8px; border-radius: 10px; text-transform: uppercase;
+  background: rgba(255,68,102,0.12); color: var(--danger); border: 1px solid rgba(255,68,102,0.2);
+}
+.device-status.connected {
+  background: rgba(68,255,170,0.1); color: var(--success); border-color: rgba(68,255,170,0.25);
+}
+
+/* Gamepad axis viz */
+.gp-axes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.axis-viz {
+  position: relative; width: 60px; height: 60px; margin: 0 auto;
+  border: 1px solid var(--border); border-radius: 50%; background: var(--bg);
+}
+.axis-dot {
+  position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); transform: translate(-50%, -50%);
+  top: 50%; left: 50%; transition: top 0.05s, left 0.05s;
+  box-shadow: 0 0 6px rgba(255,140,60,0.6);
+}
+.axis-label { text-align: center; font-family: var(--mono); font-size: 9px; color: var(--text-label); margin-top: 2px; }
+
+.gp-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.gp-btn-indicator {
+  width: 20px; height: 20px; border-radius: 4px; border: 1px solid var(--border);
+  background: var(--bg); display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 8px; color: var(--text-dim); cursor: pointer;
+  transition: all 0.08s;
+}
+.gp-btn-indicator.pressed { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 8px rgba(255,140,60,0.5); }
+
+/* Mapping table */
+.mapping-table { width: 100%; border-collapse: collapse; }
+.mapping-table th {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-label); padding: 6px 8px; text-align: left;
+  border-bottom: 1px solid var(--border); background: var(--panel2);
+}
+.mapping-table td { padding: 5px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: middle; }
+.mapping-table tr:hover td { background: rgba(255,255,255,0.02); }
+.mapping-source {
+  font-family: var(--mono); font-size: 10px; color: var(--accent3);
+  background: rgba(60,240,255,0.07); border: 1px solid rgba(60,240,255,0.15);
+  padding: 2px 7px; border-radius: 4px; display: inline-block;
+}
+.mapping-target { font-family: var(--mono); font-size: 10px; color: var(--text); }
+.mapping-scale { font-family: var(--mono); font-size: 10px; color: var(--text-label); }
+.mapping-del { color: var(--text-dim); cursor: pointer; font-size: 13px; }
+.mapping-del:hover { color: var(--danger); }
+
+.add-mapping-row { display: grid; grid-template-columns: 1fr 1fr 70px auto; gap: 6px; align-items: end; margin-top: 10px; }
+.add-mapping-row select, .add-mapping-row input {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); font-family: var(--mono); font-size: 10px;
+  padding: 5px 6px; border-radius: 4px; width: 100%;
+}
+.add-mapping-row select:focus, .add-mapping-row input:focus { outline: none; border-color: var(--accent); }
+
+/* Key capture */
+.key-capture-btn {
+  padding: 5px 10px; font-family: var(--mono); font-size: 10px;
+  border: 1px dashed rgba(60,240,255,0.4); background: rgba(60,240,255,0.05);
+  color: var(--accent3); border-radius: 4px; cursor: pointer; text-transform: uppercase;
+  letter-spacing: 0.08em; white-space: nowrap; min-width: 80px; text-align: center;
+  transition: all 0.15s;
+}
+.key-capture-btn.listening {
+  border-color: var(--accent); color: var(--accent); background: rgba(255,140,60,0.1);
+  animation: blink 0.6s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+/* Live value bars */
+.live-bar-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.live-bar-label { font-family: var(--mono); font-size: 9px; color: var(--text-label); min-width: 90px; }
+.live-bar { flex:1; height: 4px; background: var(--panel2); border-radius: 2px; overflow: hidden; }
+.live-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; width: 0%; transition: width 0.05s; }
+.live-bar-val { font-family: var(--mono); font-size: 9px; color: var(--text-dim); min-width: 40px; text-align: right; }
+
+.midi-note-display {
+  font-family: var(--mono); font-size: 11px; color: var(--accent2);
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 4px 10px; border-radius: 4px; min-width: 80px; text-align: center;
+}
+
+.section-divider {
+  padding: 8px 16px 6px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-label);
+  background: var(--panel2); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
 </style>
 </head>
 <body>
@@ -438,6 +546,7 @@ input[type=file].hidden { display: none; }
       <button class="tab-btn" data-panel="camera">Camera</button>
       <button class="tab-btn" data-panel="lights">Lights</button>
       <button class="tab-btn" data-panel="env">Environment</button>
+      <button class="tab-btn" data-panel="input">⎮ Input</button>
     </div>
     <div class="spacer"></div>
     <div class="conn-badge">
@@ -734,6 +843,225 @@ input[type=file].hidden { display: none; }
       </div>
     </div>
 
+    <!-- ═══ INPUT DEVICES PANEL ══════════════════════════════════════════ -->
+    <div class="panel-tab-content" id="panel-input">
+      <div class="input-col">
+
+        <!-- ── GAMEPAD ── -->
+        <div class="section-divider">
+          🎮 Gamepad / USB Controller
+          <button class="btn small" onclick="inputSys.scanGamepads()" style="width:auto">Scan</button>
+        </div>
+        <div class="device-card">
+          <div class="device-card-header">
+            <span class="device-icon">🎮</span>
+            <span class="device-name" id="gp-name">No gamepad detected</span>
+            <span class="device-status" id="gp-status">Disconnected</span>
+          </div>
+          <div class="gp-axes">
+            <div>
+              <div class="axis-viz" id="axis-viz-0"><div class="axis-dot" id="axis-dot-0"></div></div>
+              <div class="axis-label">Left Stick</div>
+            </div>
+            <div>
+              <div class="axis-viz" id="axis-viz-1"><div class="axis-dot" id="axis-dot-1"></div></div>
+              <div class="axis-label">Right Stick</div>
+            </div>
+          </div>
+          <div class="gp-buttons" id="gp-buttons">
+            <!-- filled dynamically -->
+          </div>
+          <!-- Live axis values -->
+          <div id="gp-live-bars"></div>
+        </div>
+
+        <!-- ── MIDI ── -->
+        <div class="section-divider">
+          🎹 MIDI
+          <button class="btn small" onclick="inputSys.initMIDI()" style="width:auto">Connect MIDI</button>
+        </div>
+        <div class="device-card">
+          <div class="device-card-header">
+            <span class="device-icon">🎹</span>
+            <span class="device-name" id="midi-name">No MIDI device</span>
+            <span class="device-status" id="midi-status">Disconnected</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+            <span style="font-family:var(--mono);font-size:10px;color:var(--text-label)">Last event:</span>
+            <span class="midi-note-display" id="midi-last">—</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--text-label)">Ch</span>
+            <span class="midi-note-display" id="midi-ch">—</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--text-label)">Val</span>
+            <span class="midi-note-display" id="midi-val">—</span>
+          </div>
+          <div id="midi-live-bars"></div>
+        </div>
+
+        <!-- ── KEYBOARD ── -->
+        <div class="section-divider">⌨ Keyboard Bindings</div>
+        <div class="device-card">
+          <div id="kbd-live-indicator" style="font-family:var(--mono);font-size:10px;color:var(--text-label);margin-bottom:8px">
+            Keys held: <span id="kbd-held" style="color:var(--accent3)">none</span>
+          </div>
+        </div>
+
+        <!-- ── MAPPING TABLE ── -->
+        <div class="section-divider">
+          ⇌ Input Mappings
+          <span style="font-family:var(--mono);font-size:9px;color:var(--text-label)" id="mapping-count">0 bindings</span>
+        </div>
+        <div class="device-card" style="flex:1;overflow-y:auto">
+
+          <!-- Preset loader -->
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+            <select id="preset-select" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:10px;padding:5px 8px;border-radius:4px">
+              <option value="">— Load Preset —</option>
+            </select>
+            <button class="btn small" style="white-space:nowrap;padding:5px 12px"
+              onclick="const s=document.getElementById('preset-select');if(s.value)inputSys.loadPreset(s.value)">Load</button>
+            <button class="btn small danger" style="white-space:nowrap;padding:5px 10px"
+              onclick="inputSys.clearAllMappings()">Clear All</button>
+          </div>
+
+          <!-- MIDI Learn shortcut -->
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
+            <span style="font-family:var(--mono);font-size:10px;color:var(--text-label)">MIDI Learn:</span>
+            <select id="midi-learn-target" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:10px;padding:4px 6px;border-radius:4px">
+              <option value="cam.ry">Camera Yaw</option>
+              <option value="cam.rx">Camera Pitch</option>
+              <option value="cam.z">Camera Z</option>
+              <option value="cam.x">Camera X</option>
+              <option value="cam.fov">Camera FOV</option>
+              <option value="obj.rot.y">Object Rot Y</option>
+              <option value="obj.pos.x">Object Pos X</option>
+              <option value="obj.scale">Object Scale</option>
+              <option value="transport.seek">Timeline Seek</option>
+            </select>
+            <button id="midi-learn-btn" class="key-capture-btn"
+              onclick="inputSys.startMIDILearn(document.getElementById('midi-learn-target').value)">⊕ MIDI Learn</button>
+          </div>
+
+          <!-- Add mapping row -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div>
+              <label style="font-family:var(--mono);font-size:9px;color:var(--text-label);display:block;margin-bottom:4px">SOURCE</label>
+              <select id="map-source">
+                <optgroup label="Gamepad Axes">
+                  <option value="gp_axis_0_x">Left Stick X</option>
+                  <option value="gp_axis_0_y">Left Stick Y</option>
+                  <option value="gp_axis_1_x">Right Stick X</option>
+                  <option value="gp_axis_1_y">Right Stick Y</option>
+                  <option value="gp_axis_2">Trigger L</option>
+                  <option value="gp_axis_3">Trigger R</option>
+                </optgroup>
+                <optgroup label="Gamepad Buttons">
+                  <option value="gp_btn_0">Button 0 (A/Cross)</option>
+                  <option value="gp_btn_1">Button 1 (B/Circle)</option>
+                  <option value="gp_btn_2">Button 2 (X/Square)</option>
+                  <option value="gp_btn_3">Button 3 (Y/Triangle)</option>
+                  <option value="gp_btn_12">D-Pad Up</option>
+                  <option value="gp_btn_13">D-Pad Down</option>
+                  <option value="gp_btn_14">D-Pad Left</option>
+                  <option value="gp_btn_15">D-Pad Right</option>
+                </optgroup>
+                <optgroup label="MIDI CC">
+                  <option value="midi_cc_1">MIDI CC 1 (Mod Wheel)</option>
+                  <option value="midi_cc_7">MIDI CC 7 (Volume)</option>
+                  <option value="midi_cc_10">MIDI CC 10 (Pan)</option>
+                  <option value="midi_cc_11">MIDI CC 11 (Expression)</option>
+                  <option value="midi_cc_74">MIDI CC 74 (Filter)</option>
+                  <option value="midi_note">MIDI Note Velocity</option>
+                </optgroup>
+                <optgroup label="Keyboard (or capture below)">
+                  <option value="kbd_capture">— Capture Key —</option>
+                  <option value="kbd_Space">Space</option>
+                  <option value="kbd_KeyW">W</option>
+                  <option value="kbd_KeyS">S</option>
+                  <option value="kbd_KeyA">A</option>
+                  <option value="kbd_KeyD">D</option>
+                  <option value="kbd_ArrowLeft">Arrow Left</option>
+                  <option value="kbd_ArrowRight">Arrow Right</option>
+                  <option value="kbd_ArrowUp">Arrow Up</option>
+                  <option value="kbd_ArrowDown">Arrow Down</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <label style="font-family:var(--mono);font-size:9px;color:var(--text-label);display:block;margin-bottom:4px">TARGET</label>
+              <select id="map-target">
+                <optgroup label="Camera">
+                  <option value="cam.x">Camera X</option>
+                  <option value="cam.y">Camera Y</option>
+                  <option value="cam.z">Camera Z</option>
+                  <option value="cam.rx">Camera Pitch</option>
+                  <option value="cam.ry">Camera Yaw</option>
+                  <option value="cam.fov">Camera FOV</option>
+                </optgroup>
+                <optgroup label="Selected Object">
+                  <option value="obj.pos.x">Object Pos X</option>
+                  <option value="obj.pos.y">Object Pos Y</option>
+                  <option value="obj.pos.z">Object Pos Z</option>
+                  <option value="obj.rot.x">Object Rot X</option>
+                  <option value="obj.rot.y">Object Rot Y</option>
+                  <option value="obj.rot.z">Object Rot Z</option>
+                  <option value="obj.scale">Object Scale</option>
+                </optgroup>
+                <optgroup label="Transport">
+                  <option value="transport.seek">Timeline Seek</option>
+                  <option value="transport.play">Play/Pause Toggle</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px">
+            <div>
+              <label style="font-family:var(--mono);font-size:9px;color:var(--text-label);display:block;margin-bottom:4px">SCALE</label>
+              <input type="number" id="map-scale" value="1" step="0.05"
+                style="background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:10px;padding:5px 6px;border-radius:4px;width:100%;text-align:center">
+            </div>
+            <div>
+              <label style="font-family:var(--mono);font-size:9px;color:var(--text-label);display:block;margin-bottom:4px">DEADZONE</label>
+              <input type="number" id="map-deadzone" value="0.05" step="0.01" min="0" max="0.9"
+                style="background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:10px;padding:5px 6px;border-radius:4px;width:100%;text-align:center">
+            </div>
+            <div>
+              <label style="font-family:var(--mono);font-size:9px;color:var(--text-label);display:block;margin-bottom:4px">MODE</label>
+              <select id="map-mode" style="background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:10px;padding:5px 4px;border-radius:4px;width:100%">
+                <option value="delta">Delta</option>
+                <option value="absolute">Absolute</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <label style="font-family:var(--mono);font-size:9px;color:var(--text-label)">KEY</label>
+              <button class="key-capture-btn" id="key-capture-btn" onclick="inputSys.startKeyCapture()">Click</button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <label class="checkbox-row" style="margin:0">
+              <input type="checkbox" id="map-invert">
+              <span style="font-family:var(--mono);font-size:10px;color:var(--text-label)">Invert</span>
+            </label>
+          </div>
+          <button class="btn primary" onclick="inputSys.addMapping()" style="margin-bottom:14px">+ Add Mapping</button>
+
+          <table class="mapping-table" id="mapping-table">
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Target</th>
+                <th>Scale</th>
+                <th>Mode</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="mapping-tbody"></tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
   </main>
 
   <!-- TIMELINE -->
@@ -985,33 +1313,11 @@ function setCamPreset(x, y, z, rx, ry) {
   sendCamera();
 }
 
-// Keyboard camera nav
+// Keyboard camera nav — handled via inputSys mappings, but keep legacy WASD for non-mapped cameras
 const keys = {};
-document.addEventListener('keydown', (e) => {
-  if (e.target.tagName === 'INPUT') return;
-  keys[e.key.toLowerCase()] = true;
-});
-document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+// NOTE: Raw WASD movement is now handled by inputSys. This block exists as fallback
+// when no explicit mappings are set. inputSys keydown/keyup events take priority.
 
-setInterval(() => {
-  if (!document.getElementById('cam-keyboard').checked) return;
-  const speed = +document.getElementById('cam-speed').value;
-  let moved = false;
-  const cam = state.camera;
-  const ryRad = cam.ry * Math.PI / 180;
-  if (keys['w']) { cam.x += Math.sin(ryRad) * speed; cam.z -= Math.cos(ryRad) * speed; moved = true; }
-  if (keys['s']) { cam.x -= Math.sin(ryRad) * speed; cam.z += Math.cos(ryRad) * speed; moved = true; }
-  if (keys['a']) { cam.x -= Math.cos(ryRad) * speed; cam.z -= Math.sin(ryRad) * speed; moved = true; }
-  if (keys['d']) { cam.x += Math.cos(ryRad) * speed; cam.z += Math.sin(ryRad) * speed; moved = true; }
-  if (keys['q']) { cam.y -= speed; moved = true; }
-  if (keys['e']) { cam.y += speed; moved = true; }
-  if (moved) {
-    document.getElementById('cam-x').value = cam.x.toFixed(3);
-    document.getElementById('cam-y').value = cam.y.toFixed(3);
-    document.getElementById('cam-z').value = cam.z.toFixed(3);
-    send({ type: 'camera', ...cam });
-  }
-}, 50);
 
 // Mouse drag on the rotate pad
 let dragging = false, lastMouseX, lastMouseY;
@@ -1384,6 +1690,494 @@ function openViewer() {
 drawRuler(state.timeline.duration * pxPerSec);
 document.getElementById('tl-total-time').textContent = state.timeline.duration.toFixed(3) + 's';
 document.getElementById('trans-dur').textContent = state.timeline.duration.toFixed(3) + 's';
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INPUT SYSTEM — Gamepad · MIDI · Keyboard → Scene/Camera realtime mapping
+// Features: deadzone, invert, MIDI learn, presets, save/load, rumble feedback
+// ═══════════════════════════════════════════════════════════════════════════════
+const inputSys = (() => {
+
+  // ── State ────────────────────────────────────────────────────────────────
+  let mappings = [];
+  let mappingIdCounter = 0;
+  const liveValues = {};         // sourceKey → normalised -1..1 or 0..1
+  const prevBtnState = {};       // edge detection for buttons
+
+  // Keyboard
+  const heldKeys = new Set();
+  let capturingKey = false;
+  let capturedKey  = null;
+
+  // Gamepad
+  let gpIndex = null;
+  const GP_LABELS = ['A','B','X','Y','LB','RB','LT','RT','Sel','Strt','LS','RS','↑','↓','←','→'];
+
+  // MIDI
+  let midiAccess   = null;
+  let midiLearning = false;
+  let midiLearnTarget = null;
+  const MIDI_NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+
+  // Camera speed helper
+  const camSpeed = () => +(document.getElementById('cam-speed')?.value || 0.05);
+
+  // ── Dispatch ─────────────────────────────────────────────────────────────
+  function dispatch(target, raw, scale, mode, invert) {
+    const v = raw * scale * (invert ? -1 : 1);
+
+    if (target.startsWith('cam.')) {
+      const p = target.slice(4);
+      if (mode === 'absolute') {
+        const ranges = {x:[-20,20],y:[-20,20],z:[0.2,30],rx:[-89,89],ry:[-180,180],fov:[10,120]};
+        const [lo,hi] = ranges[p]||[-10,10];
+        state.camera[p] = lo + raw*(hi-lo)*(invert?-1:1);
+      } else {
+        state.camera[p] = (state.camera[p]||0) + v;
+      }
+      if (p==='rx') state.camera.rx = Math.max(-89,Math.min(89,state.camera.rx));
+      const fm = {x:'cam-x',y:'cam-y',z:'cam-z',rx:'cam-rx',ry:'cam-ry',fov:'cam-fov'};
+      const el = fm[p] && document.getElementById(fm[p]);
+      if (el) el.value = (+state.camera[p]).toFixed(2);
+      send({type:'camera',...state.camera});
+
+    } else if (target.startsWith('obj.')) {
+      if (!state.selectedId) return;
+      const obj = state.objects[state.selectedId];
+      if (!obj) return;
+      const sub = target.slice(4);
+      if (sub==='scale') {
+        obj.scale = Math.max(0.01, mode==='absolute' ? Math.abs(raw*scale*6) : obj.scale + v*0.02);
+        const el = document.getElementById('scale-slider');
+        if (el) el.value = obj.scale;
+      } else if (sub.startsWith('pos.')) {
+        const ax=sub.slice(4);
+        obj.position[ax] = mode==='absolute' ? v*10 : (obj.position[ax]||0)+v*0.04;
+        const el = document.getElementById('t'+ax); if (el) el.value=obj.position[ax].toFixed(3);
+      } else if (sub.startsWith('rot.')) {
+        const ax=sub.slice(4);
+        obj.rotation[ax] = mode==='absolute' ? v*180 : (obj.rotation[ax]||0)+v*2;
+        const el = document.getElementById('r'+ax); if (el) el.value=obj.rotation[ax].toFixed(1);
+      }
+      send({type:'object_transform',id:state.selectedId,
+            position:obj.position,rotation:obj.rotation,scale:obj.scale});
+
+    } else if (target==='transport.seek') {
+      const t = mode==='absolute'
+        ? Math.max(0,Math.min(state.timeline.duration, raw*state.timeline.duration*(invert?-1:1)))
+        : Math.max(0,Math.min(state.timeline.duration, state.timeline.currentTime+v*0.06));
+      seekTo(t);
+    }
+    // transport.play is handled via edge detection, not here
+  }
+
+  // ── Per-frame run ─────────────────────────────────────────────────────────
+  function runMappings() {
+    for (const m of mappings) {
+      const val = liveValues[m.source] ?? 0;
+      const dz  = m.deadzone ?? 0.05;
+      if (m.source.startsWith('gp_axis') || m.source.startsWith('midi_cc')) {
+        if (Math.abs(val) > dz)
+          dispatch(m.target, val, m.scale, m.mode||'delta', m.invert);
+      } else if (m.source.startsWith('gp_btn') || m.source.startsWith('kbd_')) {
+        if (val > 0.5 && (m.target.startsWith('cam.') || m.target.startsWith('obj.')))
+          dispatch(m.target, val, m.scale, 'delta', m.invert);
+      }
+    }
+
+    // Built-in WASD (only when no conflicting cam mapping and checkbox on)
+    if (document.getElementById('cam-keyboard')?.checked) {
+      const sp = camSpeed();
+      const c  = state.camera;
+      const yr = c.ry * Math.PI / 180;
+      let moved = false;
+      const mv = (dx,dy,dz)=>{ c.x+=dx; c.y+=dy; c.z+=dz; moved=true; };
+      if(heldKeys.has('KeyW'))      mv( Math.sin(yr)*sp, 0,-Math.cos(yr)*sp);
+      if(heldKeys.has('KeyS'))      mv(-Math.sin(yr)*sp, 0, Math.cos(yr)*sp);
+      if(heldKeys.has('KeyA'))      mv(-Math.cos(yr)*sp, 0,-Math.sin(yr)*sp);
+      if(heldKeys.has('KeyD'))      mv( Math.cos(yr)*sp, 0, Math.sin(yr)*sp);
+      if(heldKeys.has('KeyQ'))      mv(0,-sp,0);
+      if(heldKeys.has('KeyE'))      mv(0, sp,0);
+      if(heldKeys.has('ArrowLeft')) { c.ry-=sp*50; moved=true; }
+      if(heldKeys.has('ArrowRight')){ c.ry+=sp*50; moved=true; }
+      if(heldKeys.has('ArrowUp'))   { c.rx=Math.max(-89,c.rx-sp*50); moved=true; }
+      if(heldKeys.has('ArrowDown')) { c.rx=Math.min( 89,c.rx+sp*50); moved=true; }
+      if (moved) {
+        ['x','y','z','rx','ry'].forEach(p=>{
+          const el=document.getElementById('cam-'+p); if(el) el.value=(+c[p]).toFixed(2);
+        });
+        send({type:'camera',...c});
+      }
+    }
+  }
+
+  // ── GAMEPAD ───────────────────────────────────────────────────────────────
+  window.addEventListener('gamepadconnected', e=>{
+    gpIndex = e.gamepad.index;
+    document.getElementById('gp-name').textContent = e.gamepad.id.substring(0,44);
+    setStatus('gp',true);
+    buildGamepadUI(e.gamepad);
+    rumble(120,0.4,0.15);
+  });
+  window.addEventListener('gamepaddisconnected', e=>{
+    if(e.gamepad.index===gpIndex){ gpIndex=null; setStatus('gp',false);
+      document.getElementById('gp-name').textContent='No gamepad detected'; }
+  });
+
+  function setStatus(prefix, on) {
+    const el = document.getElementById(prefix+'-status');
+    if(!el) return;
+    el.textContent = on ? 'Connected' : 'Disconnected';
+    el.classList.toggle('connected', on);
+  }
+
+  function rumble(ms, strong=0.4, weak=0.1) {
+    if(gpIndex===null) return;
+    const gp=(navigator.getGamepads?.()??[])[gpIndex];
+    gp?.vibrationActuator?.playEffect?.('dual-rumble',{
+      startDelay:0, duration:ms, strongMagnitude:strong, weakMagnitude:weak
+    })?.catch(()=>{});
+  }
+
+  function buildGamepadUI(gp) {
+    const bc = document.getElementById('gp-buttons');
+    bc.innerHTML='';
+    const n = Math.min(gp.buttons.length,16);
+    for(let i=0;i<n;i++){
+      const el=document.createElement('div');
+      el.className='gp-btn-indicator'; el.textContent=GP_LABELS[i]??i; el.id='gp-btn-'+i;
+      el.title=`Btn ${i} — click to prefill source`;
+      el.onclick=()=>{ document.getElementById('map-source').value='gp_btn_'+i; };
+      bc.appendChild(el);
+    }
+    const bars=document.getElementById('gp-live-bars');
+    bars.innerHTML='';
+    const names=['Left X','Left Y','Right X','Right Y','L.Trigger','R.Trigger'];
+    for(let i=0;i<Math.min(gp.axes.length,6);i++){
+      const sIdx=Math.floor(i/2), ax=i%2===0?'x':'y';
+      bars.innerHTML+=`<div class="live-bar-wrap">
+        <span class="live-bar-label" style="cursor:pointer;user-select:none"
+          title="Click to prefill"
+          onclick="document.getElementById('map-source').value='gp_axis_${sIdx}_${ax}'">
+          ${names[i]||'Axis '+i}</span>
+        <div class="live-bar"><div class="live-bar-fill" id="gp-bar-${i}"></div></div>
+        <span class="live-bar-val" id="gp-bar-val-${i}">0.00</span></div>`;
+    }
+  }
+
+  function pollGamepad() {
+    if(gpIndex===null) return;
+    const gp=(navigator.getGamepads?.()??[])[gpIndex];
+    if(!gp) return;
+
+    gp.axes.forEach((v,i)=>{
+      const n=Math.max(-1,Math.min(1,v));
+      const sIdx=Math.floor(i/2), ax=i%2===0?'x':'y';
+      liveValues[`gp_axis_${sIdx}_${ax}`] = ax==='y'?-n:n;
+      // Shoulder triggers on axes 4&5 (some controllers)
+      if(i===4) liveValues['gp_axis_2']=(n+1)/2;
+      if(i===5) liveValues['gp_axis_3']=(n+1)/2;
+      const bar=document.getElementById('gp-bar-'+i);
+      const bv=document.getElementById('gp-bar-val-'+i);
+      if(bar) bar.style.width=((n+1)/2*100).toFixed(1)+'%';
+      if(bv)  bv.textContent=n.toFixed(2);
+    });
+    updateStick(0,gp.axes[0]??0,gp.axes[1]??0);
+    updateStick(1,gp.axes[2]??0,gp.axes[3]??0);
+
+    gp.buttons.forEach((btn,i)=>{
+      const pressed=btn.pressed||btn.value>0.5;
+      const key='gp_btn_'+i;
+      const was=prevBtnState[key]??false;
+      liveValues[key]=pressed?btn.value:0;
+      if(pressed&&!was){
+        rumble(35,0.12,0.04);
+        for(const m of mappings){
+          if(m.source===key&&m.target==='transport.play') togglePlay();
+        }
+      }
+      prevBtnState[key]=pressed;
+      const el=document.getElementById('gp-btn-'+i);
+      if(el) el.classList.toggle('pressed',pressed);
+    });
+  }
+
+  function updateStick(idx,x,y){
+    const d=document.getElementById('axis-dot-'+idx);
+    if(!d) return;
+    d.style.left=(50+x*38)+'%'; d.style.top=(50+y*38)+'%';
+  }
+
+  function scanGamepads(){
+    const all=navigator.getGamepads?.()??[];
+    for(let i=0;i<all.length;i++){
+      if(all[i]){ gpIndex=i;
+        document.getElementById('gp-name').textContent=all[i].id.substring(0,44);
+        setStatus('gp',true); buildGamepadUI(all[i]); rumble(150,0.5,0.2); return; }
+    }
+    document.getElementById('gp-name').textContent='No gamepad — press any button to connect';
+  }
+
+  // ── MIDI ──────────────────────────────────────────────────────────────────
+  async function initMIDI(){
+    if(!navigator.requestMIDIAccess){
+      alert('Web MIDI not available.\nUse Chrome or Edge desktop.'); return;
+    }
+    try{ midiAccess=await navigator.requestMIDIAccess({sysex:false}); }
+    catch(e){ alert('MIDI denied: '+e.message); return; }
+    const ins=[...midiAccess.inputs.values()];
+    if(!ins.length){ document.getElementById('midi-name').textContent='No MIDI inputs found'; return; }
+    document.getElementById('midi-name').textContent=ins.map(i=>i.name).join(' · ').substring(0,44);
+    setStatus('midi',true);
+    ins.forEach(i=>{ i.onmidimessage=handleMIDI; });
+    midiAccess.onstatechange=()=>{
+      const ii=[...midiAccess.inputs.values()];
+      ii.forEach(i=>{ i.onmidimessage=handleMIDI; });
+      document.getElementById('midi-name').textContent=ii.map(i=>i.name).join(' · ').substring(0,44);
+      setStatus('midi',ii.length>0);
+    };
+    buildMidiBars([1,7,10,11,74]);
+  }
+
+  function buildMidiBars(ccs){
+    const el=document.getElementById('midi-live-bars');
+    if(!el) return;
+    el.innerHTML=ccs.map(cc=>`<div class="live-bar-wrap">
+      <span class="live-bar-label" style="cursor:pointer;user-select:none" title="Click to prefill"
+        onclick="document.getElementById('map-source').value='midi_cc_${cc}'">CC ${cc}</span>
+      <div class="live-bar"><div class="live-bar-fill" id="midi-bar-${cc}"></div></div>
+      <span class="live-bar-val" id="midi-bar-val-${cc}">0</span></div>`).join('');
+  }
+
+  function handleMIDI(msg){
+    const [st,d1,d2]=msg.data;
+    const type=st&0xF0, ch=(st&0x0F)+1;
+    const chEl=document.getElementById('midi-ch');
+    const valEl=document.getElementById('midi-val');
+    const lastEl=document.getElementById('midi-last');
+    if(chEl) chEl.textContent=ch;
+    if(valEl) valEl.textContent=d2;
+
+    if(type===0xB0){
+      liveValues['midi_cc_'+d1]=d2/127;
+      if(lastEl) lastEl.textContent='CC'+d1;
+      const bar=document.getElementById('midi-bar-'+d1);
+      const bv=document.getElementById('midi-bar-val-'+d1);
+      if(bar) bar.style.width=(d2/127*100).toFixed(1)+'%';
+      if(bv)  bv.textContent=d2;
+      if(midiLearning&&midiLearnTarget){ finishLearn('midi_cc_'+d1); return; }
+      for(const m of mappings)
+        if(m.source==='midi_cc_'+d1) dispatch(m.target,d2/127,m.scale,'absolute',m.invert);
+
+    } else if(type===0x90&&d2>0){
+      const name=MIDI_NOTES[d1%12]+Math.floor(d1/12-1);
+      liveValues['midi_note']=d2/127;
+      if(lastEl) lastEl.textContent=name;
+      if(midiLearning&&midiLearnTarget){ finishLearn('midi_note'); return; }
+      for(const m of mappings)
+        if(m.source==='midi_note') dispatch(m.target,d2/127,m.scale,'absolute',m.invert);
+
+    } else if((type===0x90&&d2===0)||type===0x80){
+      liveValues['midi_note']=0;
+    }
+  }
+
+  function startMIDILearn(target){
+    midiLearning=true; midiLearnTarget=target;
+    const btn=document.getElementById('midi-learn-btn');
+    if(btn){ btn.textContent='● Listening…'; btn.style.color='var(--accent)'; }
+  }
+  function finishLearn(source){
+    midiLearning=false;
+    const id=++mappingIdCounter;
+    mappings.push({id,source,target:midiLearnTarget,scale:1,mode:'absolute',invert:false,deadzone:0});
+    midiLearnTarget=null;
+    saveMappings(); renderTable();
+    const btn=document.getElementById('midi-learn-btn');
+    if(btn){ btn.textContent='⊕ MIDI Learn'; btn.style.color=''; }
+  }
+
+  // ── KEYBOARD ──────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', e=>{
+    if(['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)) return;
+    if(capturingKey){
+      e.preventDefault();
+      capturedKey=e.code;
+      const btn=document.getElementById('key-capture-btn');
+      if(btn){ btn.textContent=e.code; btn.classList.remove('listening'); }
+      // Auto-add option to source select
+      const sel=document.getElementById('map-source');
+      let found=false;
+      for(const o of sel.options) if(o.value==='kbd_'+e.code){found=true;sel.value=o.value;break;}
+      if(!found){
+        const o=document.createElement('option');
+        o.value='kbd_'+e.code; o.textContent='⌨ '+e.code;
+        sel.appendChild(o); sel.value=o.value;
+      }
+      capturingKey=false; return;
+    }
+    if(!heldKeys.has(e.code)){
+      heldKeys.add(e.code);
+      liveValues['kbd_'+e.code]=1;
+      updateKbdDisplay();
+      // Edge-triggered mappings
+      for(const m of mappings){
+        if(m.source==='kbd_'+e.code&&m.target==='transport.play') togglePlay();
+      }
+    }
+  });
+  document.addEventListener('keyup', e=>{
+    heldKeys.delete(e.code);
+    liveValues['kbd_'+e.code]=0;
+    updateKbdDisplay();
+  });
+  function updateKbdDisplay(){
+    const el=document.getElementById('kbd-held');
+    if(!el) return;
+    el.textContent=[...heldKeys].map(k=>k.replace('Key','').replace('Digit','').replace('Arrow','')).join(' + ')||'none';
+  }
+  function startKeyCapture(){
+    capturingKey=true; capturedKey=null;
+    const btn=document.getElementById('key-capture-btn');
+    if(btn){ btn.textContent='Press key…'; btn.classList.add('listening'); }
+  }
+
+  // ── PRESETS ───────────────────────────────────────────────────────────────
+  const PRESETS={
+    'Xbox / Standard — Camera Fly':[
+      {source:'gp_axis_0_x',target:'cam.ry',  scale:2.5, mode:'delta',   invert:false,deadzone:0.08},
+      {source:'gp_axis_0_y',target:'cam.rx',  scale:1.8, mode:'delta',   invert:false,deadzone:0.08},
+      {source:'gp_axis_1_x',target:'cam.x',   scale:0.1, mode:'delta',   invert:false,deadzone:0.08},
+      {source:'gp_axis_1_y',target:'cam.z',   scale:0.1, mode:'delta',   invert:false,deadzone:0.08},
+      {source:'gp_axis_2',  target:'cam.y',   scale:0.07,mode:'delta',   invert:true, deadzone:0.04},
+      {source:'gp_axis_3',  target:'cam.y',   scale:0.07,mode:'delta',   invert:false,deadzone:0.04},
+      {source:'gp_btn_0',   target:'transport.play',scale:1,mode:'toggle',invert:false,deadzone:0},
+    ],
+    'Xbox / Standard — Object Control':[
+      {source:'gp_axis_0_x',target:'obj.rot.y',scale:2.5,mode:'delta',invert:false,deadzone:0.08},
+      {source:'gp_axis_0_y',target:'obj.rot.x',scale:2.5,mode:'delta',invert:false,deadzone:0.08},
+      {source:'gp_axis_1_x',target:'obj.pos.x',scale:0.05,mode:'delta',invert:false,deadzone:0.08},
+      {source:'gp_axis_1_y',target:'obj.pos.y',scale:0.05,mode:'delta',invert:false,deadzone:0.08},
+      {source:'gp_axis_2',  target:'obj.pos.z',scale:0.04,mode:'delta',invert:false,deadzone:0.04},
+      {source:'gp_axis_3',  target:'obj.pos.z',scale:0.04,mode:'delta',invert:true, deadzone:0.04},
+      {source:'gp_btn_3',   target:'transport.play',scale:1,mode:'toggle',invert:false,deadzone:0},
+    ],
+    'MIDI CC — Camera Absolutes':[
+      {source:'midi_cc_1', target:'cam.ry', scale:1,mode:'absolute',invert:false,deadzone:0},
+      {source:'midi_cc_7', target:'cam.z',  scale:1,mode:'absolute',invert:false,deadzone:0},
+      {source:'midi_cc_10',target:'cam.x',  scale:1,mode:'absolute',invert:false,deadzone:0},
+      {source:'midi_cc_11',target:'cam.y',  scale:1,mode:'absolute',invert:false,deadzone:0},
+      {source:'midi_cc_74',target:'cam.fov',scale:1,mode:'absolute',invert:false,deadzone:0},
+    ],
+    'MIDI CC — Object Sculpt':[
+      {source:'midi_cc_1', target:'obj.rot.y',scale:1,mode:'absolute',invert:false,deadzone:0},
+      {source:'midi_cc_7', target:'obj.pos.y',scale:1,mode:'absolute',invert:false,deadzone:0},
+      {source:'midi_cc_10',target:'obj.pos.x',scale:1,mode:'absolute',invert:false,deadzone:0},
+      {source:'midi_cc_74',target:'obj.scale',scale:1,mode:'absolute',invert:false,deadzone:0},
+    ],
+    'Keyboard — QWERTY + Space':[
+      {source:'kbd_KeyW',  target:'cam.z',   scale:0.1, mode:'delta',invert:true, deadzone:0},
+      {source:'kbd_KeyS',  target:'cam.z',   scale:0.1, mode:'delta',invert:false,deadzone:0},
+      {source:'kbd_KeyA',  target:'cam.x',   scale:0.1, mode:'delta',invert:true, deadzone:0},
+      {source:'kbd_KeyD',  target:'cam.x',   scale:0.1, mode:'delta',invert:false,deadzone:0},
+      {source:'kbd_KeyQ',  target:'cam.y',   scale:0.1, mode:'delta',invert:true, deadzone:0},
+      {source:'kbd_KeyE',  target:'cam.y',   scale:0.1, mode:'delta',invert:false,deadzone:0},
+      {source:'kbd_Space', target:'transport.play',scale:1,mode:'toggle',invert:false,deadzone:0},
+    ],
+    'Keyboard — Arrow Object Rotate':[
+      {source:'kbd_ArrowLeft', target:'obj.rot.y',scale:2,mode:'delta',invert:true, deadzone:0},
+      {source:'kbd_ArrowRight',target:'obj.rot.y',scale:2,mode:'delta',invert:false,deadzone:0},
+      {source:'kbd_ArrowUp',   target:'obj.rot.x',scale:2,mode:'delta',invert:true, deadzone:0},
+      {source:'kbd_ArrowDown', target:'obj.rot.x',scale:2,mode:'delta',invert:false,deadzone:0},
+    ],
+  };
+
+  function loadPreset(name){
+    const p=PRESETS[name]; if(!p) return;
+    p.forEach(m=>mappings.push({id:++mappingIdCounter,...m}));
+    saveMappings(); renderTable(); rumble(80,0.2,0.08);
+  }
+  function populatePresets(){
+    const sel=document.getElementById('preset-select');
+    if(!sel) return;
+    sel.innerHTML='<option value="">— Load Preset —</option>'+
+      Object.keys(PRESETS).map(k=>`<option value="${k}">${k}</option>`).join('');
+  }
+
+  // ── PERSIST ───────────────────────────────────────────────────────────────
+  function saveMappings(){
+    try{ localStorage.setItem('stage_mappings',JSON.stringify(mappings)); }catch(e){}
+  }
+  function loadSaved(){
+    try{
+      const s=localStorage.getItem('stage_mappings');
+      if(!s) return;
+      mappings=JSON.parse(s);
+      mappingIdCounter=mappings.reduce((mx,m)=>Math.max(mx,m.id||0),0);
+      renderTable();
+    }catch(e){}
+  }
+
+  // ── MAPPING CRUD ──────────────────────────────────────────────────────────
+  function addMapping(){
+    let source=document.getElementById('map-source').value;
+    if(!source) return;
+    if(source==='kbd_capture'){
+      if(!capturedKey){ alert('Click KEY button then press a key first.'); return; }
+      source='kbd_'+capturedKey;
+    }
+    const target  = document.getElementById('map-target').value;
+    const scale   = parseFloat(document.getElementById('map-scale').value)||1;
+    const deadzone= parseFloat(document.getElementById('map-deadzone')?.value||0.05);
+    const invert  = document.getElementById('map-invert')?.checked||false;
+    const modeEl  = document.getElementById('map-mode');
+    const mode    = modeEl?.value || ((target==='transport.seek'||source.startsWith('midi'))?'absolute':'delta');
+    mappings.push({id:++mappingIdCounter,source,target,scale,mode,invert,deadzone});
+    saveMappings(); renderTable();
+  }
+  function removeMapping(id){
+    mappings=mappings.filter(m=>m.id!==id);
+    saveMappings(); renderTable();
+  }
+  function clearAllMappings(){
+    if(!confirm('Remove all mappings?')) return;
+    mappings=[]; saveMappings(); renderTable();
+  }
+
+  // ── RENDER TABLE ─────────────────────────────────────────────────────────
+  function renderTable(){
+    const tbody=document.getElementById('mapping-tbody');
+    const cnt=document.getElementById('mapping-count');
+    if(!tbody) return;
+    if(cnt) cnt.textContent=mappings.length+' binding'+(mappings.length!==1?'s':'');
+    if(!mappings.length){
+      tbody.innerHTML=`<tr><td colspan="5" style="font-family:var(--mono);font-size:10px;
+        color:var(--text-label);text-align:center;padding:14px">
+        No mappings — add one or load a preset</td></tr>`;
+      return;
+    }
+    tbody.innerHTML=mappings.map(m=>`<tr>
+      <td><span class="mapping-source" title="${m.source}">${m.source.length>17?m.source.slice(0,16)+'…':m.source}</span></td>
+      <td><span class="mapping-target">${m.target}</span></td>
+      <td><span class="mapping-scale">×${m.scale}</span></td>
+      <td style="white-space:nowrap;font-family:var(--mono);font-size:9px;color:var(--text-label)">
+        ${m.mode||'delta'}${m.invert?' INV':''}${m.deadzone>0?' dz'+m.deadzone:''}</td>
+      <td><span class="mapping-del" onclick="inputSys.removeMapping(${m.id})">✕</span></td>
+    </tr>`).join('');
+  }
+
+  // ── RAF LOOP ──────────────────────────────────────────────────────────────
+  function tick(){ pollGamepad(); runMappings(); requestAnimationFrame(tick); }
+
+  // ── BOOT ─────────────────────────────────────────────────────────────────
+  loadSaved();
+  populatePresets();
+  requestAnimationFrame(tick);
+
+  return { scanGamepads, initMIDI, startMIDILearn,
+           addMapping, removeMapping, clearAllMappings,
+           loadPreset, startKeyCapture };
+})();
 </script>
 </body>
 </html>
