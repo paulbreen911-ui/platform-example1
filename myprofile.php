@@ -261,6 +261,7 @@ include 'header.php';
     <a class="profile-tab <?php echo $tab === 'productions' ? 'active' : ''; ?>" href="?tab=productions">Productions</a>
     <a class="profile-tab <?php echo $tab === 'forum'       ? 'active' : ''; ?>" href="?tab=forum">Forum posts</a>
     <a class="profile-tab <?php echo $tab === 'settings'    ? 'active' : ''; ?>" href="?tab=settings">Settings</a>
+    <a class="profile-tab" href="/tictactoe/dashboard.php">🎮 Games</a>
   </div>
 
   <!-- ── OVERVIEW ─────────────────────────────────────────── -->
@@ -322,7 +323,8 @@ include 'header.php';
 
     <div class="profile-actions">
       <a class="btn-ghost-lg" href="/">← Home</a>
-      <a class="btn-gold-lg" href="/app/dashboard.php">Dashboard →</a>
+      <a class="btn-gold-lg" href="/dashboard.php">Dashboard →</a>
+      <a class="btn-ghost-lg" href="/tictactoe/dashboard.php">🎮 Play Games</a>
       <a class="btn-ghost-lg" href="?tab=settings">Edit profile</a>
       <a class="btn-signin" href="/logout.php">Log out</a>
     </div>
