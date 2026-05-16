@@ -3,7 +3,7 @@ require_once '../config.php';
 require_once '../functions.php';
 
 $page_title = 'Tools';
-include 'header.php';
+include '../header.php';
 
 $tools = [
     [
@@ -127,4 +127,4 @@ $tools = [
 
 </div>
 
-<?php include 'footer.php'; ?>
+<?php include '../footer.php'; ?>
