@@ -1,9 +1,9 @@
 <?php
-require_once 'config.php';
-require_once 'functions.php';
+require_once '../config.php';
+require_once '../functions.php';
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: /myprofile.php');
+    header('Location: /user/myprofile.php');
     exit;
 }
 
@@ -15,7 +15,7 @@ $token = trim($_GET['token'] ?? '');
 $user  = null;
 
 if (empty($token)) {
-    header('Location: /forgot_password.php');
+    header('Location: /user/forgot_password.php');
     exit;
 }
 
@@ -58,7 +58,7 @@ if (!$invalid && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include 'header.php';
+include '../header.php';
 ?>
 
 <section class="auth-section">
@@ -117,4 +117,4 @@ include 'header.php';
   </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include '../footer.php'; ?>
