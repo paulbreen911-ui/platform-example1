@@ -1,6 +1,7 @@
 <?php
-require_once '../config.php';
-require_once '../functions.php';
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+
 require_login();
 
 header('Content-Type: application/json');
