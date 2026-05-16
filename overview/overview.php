@@ -31,6 +31,7 @@ main {
 .shell {
   display: flex;
   min-height: calc(100vh - var(--nav-h));
+  padding-top: var(--nav-h);
 }
 
 .sidebar {
@@ -658,12 +659,6 @@ main {
   </aside>
 
   <div class="dash-wrap">
-
-  <!-- Page header -->
-  <div class="dash-ph">
-    <div class="dash-ph-ey"><?php echo htmlspecialchars($date_label); ?></div>
-    <div class="dash-ph-title"><?php echo $greeting; ?>, <em><?php echo htmlspecialchars($first_name); ?></em></div>
-  </div>
 
   <!-- Live banner -->
   <div class="live-banner">
