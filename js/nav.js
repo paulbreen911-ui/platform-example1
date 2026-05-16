@@ -8,19 +8,19 @@
 // e.g. <script>window.PC_PAGE = 'dashboard'</script>
 
 const PC_PAGES = {
-  dashboard:   { label: 'Dashboard',    href: 'dashboard.html' },
-  messages:    { label: 'Messages',     href: 'messages.html' },
-  drive:       { label: 'My Drive',     href: 'drive.html' },
-  projects:    { label: 'Projects',     href: 'projects.html' },
-  productions: { label: 'Productions',  href: 'productions.html' },
-  calendar:    { label: 'Calendar',     href: 'calendar.html' },
-  tasks:       { label: 'Tasks',        href: 'tasks.html' },
+  dashboard:   { label: 'Overview',    href: 'overview.php' },
+  messages:    { label: 'Messages',     href: 'messages.php' },
+  drive:       { label: 'My Drive',     href: 'drive.php' },
+  projects:    { label: 'Projects',     href: 'projects.php' },
+  productions: { label: 'Productions',  href: 'productions.php' },
+  calendar:    { label: 'Calendar',     href: 'calendar.php' },
+  tasks:       { label: 'Tasks',        href: 'tasks.php' },
 };
 
 // Resolve path prefix — pages in /app/ need '../' to reach /shared/
-const IS_APP_PAGE = window.location.pathname.includes('/app/');
+const IS_APP_PAGE = window.location.pathname.includes('/overview/');
 const BASE = IS_APP_PAGE ? '../' : './';
-const APP  = IS_APP_PAGE ? '' : 'app/';
+const APP  = IS_APP_PAGE ? '' : 'overview/';
 
 // ── BUILD NAV ──
 function buildNav(breadcrumb) {
@@ -48,7 +48,7 @@ function buildNav(breadcrumb) {
 }
 
 function APP_PATH(page) {
-  return IS_APP_PAGE ? page : 'app/' + page;
+  return IS_APP_PAGE ? page : 'overview/' + page;
 }
 
 // ── BUILD SIDEBAR ──
@@ -63,7 +63,7 @@ function buildSidebar() {
 
     <div class="sb-sec">
       <span class="sb-lbl">Workspace</span>
-      ${sbLink('dashboard',  '◻',  'Dashboard',   '')}
+      ${sbLink('overview',  '◻',  'Overview',   '')}
       ${sbLink('messages',   '💬', 'Messages',    '<span class="sb-badge unread">4</span>')}
       ${sbLink('drive',      '📁', 'My Drive',    '')}
       ${sbLink('projects',   '🏗', 'Projects',    '<span class="sb-badge">2</span>')}
