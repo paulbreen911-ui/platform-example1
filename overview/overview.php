@@ -27,6 +27,27 @@ main {
   min-height: calc(100vh - var(--nav-h));
 }
 
+/* ── SHELL + SIDEBAR ────────────────────────────────────────────────────── */
+.shell {
+  display: flex;
+  min-height: calc(100vh - var(--nav-h));
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: .5px solid var(--border);
+  background: var(--dark);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+}
+
 .dash-wrap {
   max-width: 1280px;
   margin: 0 auto;
@@ -383,7 +404,10 @@ main {
 }
 </style>
 
-<div class="dash-wrap">
+<div class="shell">
+  <aside class="sidebar" id="pc-sidebar"></aside>
+
+  <div class="dash-wrap">
 
   <!-- Page header -->
   <div class="dash-ph">
@@ -696,6 +720,7 @@ main {
   </div><!-- /dash-grid -->
 
 </div><!-- /dash-wrap -->
+</div><!-- /shell -->
 
 <script>
 function toggleTask(el) {
@@ -704,5 +729,8 @@ function toggleTask(el) {
   if (tn) tn.classList.toggle('done');
 }
 </script>
+
+<script>window.PC_PAGE = 'dashboard';</script>
+<script src="../shared/nav.js"></script>
 
 <?php include __DIR__ . '/../footer.php'; ?>
