@@ -201,7 +201,7 @@ $member_since = date('F j, Y', strtotime($user['created_at']));
 // Avatar: use uploaded URL or fall back to initial
 $has_avatar = !empty($user['avatar_url']);
 
-include 'header.php';
+include '../header.php';
 ?>
 
 <section class="profile-section">
@@ -322,11 +322,11 @@ include 'header.php';
     <?php endif; ?>
 
     <div class="profile-actions">
-      <a class="btn-ghost-lg" href="/">← Home</a>
+      <a class="btn-ghost-lg" href="../">← Home</a>
       <a class="btn-gold-lg" href="/overview/overview.php">Overview →</a>
       <a class="btn-ghost-lg" href="/games/tictactoe/dashboard.php">🎮 Tic Tac Toe</a>
       <a class="btn-ghost-lg" href="?tab=settings">Edit profile</a>
-      <a class="btn-signin" href="/logout.php">Log out</a>
+      <a class="btn-signin" href="/user/logout.php">Log out</a>
     </div>
 
   <!-- ── PRODUCTIONS ───────────────────────────────────────── -->
