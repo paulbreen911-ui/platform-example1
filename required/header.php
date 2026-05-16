@@ -1,6 +1,6 @@
 <?php
 // Session is started in config.php, which must be included before header.php.
-if (!isset($pdo)) { require_once __DIR__ . '/config.php'; }
+if (!isset($pdo)) { require_once ROOT_PATH . '/config.php'; }
 if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; csrf_token(); }
 ?>
 <!DOCTYPE html>
@@ -14,6 +14,7 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/sidebar.css">
+  <script src="/js/nav.js"></script>
 </head>
 <body>
 
