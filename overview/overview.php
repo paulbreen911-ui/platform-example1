@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '../config.php';
-require_once __DIR__ . '../functions.php';
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
 require_login();
 
 $page_title = 'Overview';
-include __DIR__ . '../header.php';
+include __DIR__ . '/../header.php';
 
 $username    = $_SESSION['display_name'] ?? $_SESSION['username'] ?? 'there';
 $first_name  = explode(' ', $username)[0];
@@ -598,4 +598,4 @@ function toggleTask(el) {
 <script>window.PC_PAGE = 'dashboard';</script>
 <script src="/../js/nav.js"></script>
 
-<?php include __DIR__ . '../footer.php'; ?>
+<?php include __DIR__ . '/../footer.php'; ?>
