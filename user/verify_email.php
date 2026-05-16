@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-require_once 'functions.php';
+require_once '../config.php';
+require_once '../functions.php';
 
 $page_title = 'Verify Email';
 $token = trim($_GET['token'] ?? '');
@@ -28,7 +28,7 @@ if (!$ev || $ev['used'] || strtotime($ev['expires_at']) < time()) {
     $status = 'success';
 }
 
-include 'header.php';
+include '../header.php';
 ?>
 
 <section class="auth-section">
@@ -56,4 +56,4 @@ include 'header.php';
   </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include '../footer.php'; ?>
