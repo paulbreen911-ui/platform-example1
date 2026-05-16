@@ -30,15 +30,15 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
   </div>
   <div class="nav-right">
     <?php if (isset($_SESSION['user_id'])): ?>
-      <a class="nav-link" href="/myprofile.php"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
-      <a class="btn-signin" href="/logout.php">Log out</a>
+      <a class="nav-link" href="/user/myprofile.php"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
+      <a class="btn-signin" href="/user/logout.php">Log out</a>
     <?php else: ?>
       <a class="btn-demo" href="/overview/overview.php">
         <div class="btn-demo-dot"></div>
         Try demo
       </a>
-      <a class="btn-signin" href="/login.php">Sign in</a>
-      <a class="btn-join" href="/register.php">Join free →</a>
+      <a class="btn-signin" href="/user/login.php">Sign in</a>
+      <a class="btn-join" href="/user/register.php">Join free →</a>
     <?php endif; ?>
   </div>
   <!-- Mobile hamburger -->
@@ -60,11 +60,11 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
     <a class="mobile-nav-link" href="/store/#store" style="color:var(--gold)">Store</a>
     <div class="mobile-nav-divider"></div>
     <?php if (isset($_SESSION['user_id'])): ?>
-      <a class="mobile-nav-link" href="/myprofile.php">My Profile</a>
-      <a class="mobile-nav-link" href="/logout.php">Log out</a>
+      <a class="mobile-nav-link" href="/user/myprofile.php">My Profile</a>
+      <a class="mobile-nav-link" href="/user/logout.php">Log out</a>
     <?php else: ?>
-      <a class="mobile-nav-link" href="/login.php">Sign in</a>
-      <a class="btn-gold-lg" href="/register.php" style="margin-top:8px;text-align:center">Join free →</a>
+      <a class="mobile-nav-link" href="/user/login.php">Sign in</a>
+      <a class="btn-gold-lg" href="/user/register.php" style="margin-top:8px;text-align:center">Join free →</a>
     <?php endif; ?>
   </div>
 </div>
