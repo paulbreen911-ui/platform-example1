@@ -19,20 +19,21 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
 <nav class="nav">
   <a class="nav-logo" href="/">PRODUCTION<span>.</span>CENTRAL</a>
   <div class="nav-links">
-    <a class="nav-link" href="/forum.php">Forum</a>
-    <a class="nav-link" href="/#education">Education</a>
-    <a class="nav-link" href="/#reference">Reference</a>
-    <a class="nav-link" href="/#technology">Technology</a>
-    <a class="nav-link" href="/tools.php">Tools</a>
-    <a class="nav-link" href="/#life">Life</a>
-    <a class="nav-link store" href="/#store">Store</a>
+    <a class="nav-link" href="/overview/overview.php">Overview</a>
+    <a class="nav-link" href="/tools/tools.php">Tools</a>
+    <a class="nav-link" href="/reference/reference.php">Reference</a>
+    <a class="nav-link" href="/education/education.php">Education</a>
+    <a class="nav-link" href="/technology/technology.php">Technology</a>
+    <a class="nav-link" href="/forum/forum.php">Forum</a>
+    <a class="nav-link" href="/life/life.php">Life</a>
+    <a class="nav-link store" href="/store/#store">Store</a>
   </div>
   <div class="nav-right">
     <?php if (isset($_SESSION['user_id'])): ?>
       <a class="nav-link" href="/myprofile.php"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
       <a class="btn-signin" href="/logout.php">Log out</a>
     <?php else: ?>
-      <a class="btn-demo" href="/app/dashboard.html">
+      <a class="btn-demo" href="/overview/overview.php">
         <div class="btn-demo-dot"></div>
         Try demo
       </a>
@@ -49,13 +50,14 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
 <!-- Mobile nav drawer -->
 <div class="mobile-nav" id="mobile-nav">
   <div class="mobile-nav-inner">
-    <a class="mobile-nav-link" href="/forum.php">Forum</a>
-    <a class="mobile-nav-link" href="/#education">Education</a>
-    <a class="mobile-nav-link" href="/#reference">Reference</a>
-    <a class="mobile-nav-link" href="/#technology">Technology</a>
-    <a class="mobile-nav-link" href="/tools.php">Tools</a>
-    <a class="mobile-nav-link" href="/#life">Life</a>
-    <a class="mobile-nav-link" href="/#store" style="color:var(--gold)">Store</a>
+    <a class="mobile-nav-link" href="/overview/overview.php">Overview</a>
+    <a class="mobile-nav-link" href="/tools/tools.php">Tools</a>
+    <a class="mobile-nav-link" href="/reference/reference.php">Reference</a>
+    <a class="mobile-nav-link" href="/education/education.php">Education</a>
+    <a class="mobile-nav-link" href="/technology/technology.php">Technology</a>
+    <a class="mobile-nav-link" href="/forum/forum.php">Forum</a>
+    <a class="mobile-nav-link" href="/life/life.php">Life</a>
+    <a class="mobile-nav-link" href="/store/#store" style="color:var(--gold)">Store</a>
     <div class="mobile-nav-divider"></div>
     <?php if (isset($_SESSION['user_id'])): ?>
       <a class="mobile-nav-link" href="/myprofile.php">My Profile</a>

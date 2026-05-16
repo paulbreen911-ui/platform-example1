@@ -58,8 +58,8 @@ include 'header.php';
       <?php else: ?>
         <a class="btn-gold-lg" href="/register.php">Join free — it's open to all</a>
       <?php endif; ?>
-      <a class="btn-ghost-lg" href="#forum">Explore the platform ↓</a>
-      <a class="hero-demo-cta" href="/app/dashboard.html">
+      <a class="btn-ghost-lg" href="/forum/forum.php">Explore the platform ↓</a>
+      <a class="hero-demo-cta" href="/overview/overview.php">
         <div class="hero-demo-cta-dot"></div>
         Try the demo — no login needed
       </a>
@@ -81,13 +81,13 @@ include 'header.php';
   <div class="snav-label">Explore the platform</div>
   <div class="snav-grid">
     <a class="sc sc-profile" href="/myprofile.php"><div class="sc-icon">👤</div><div class="sc-name">My Profile</div><div class="sc-desc">Productions, shows &amp; settings</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-edu" href="#education"><div class="sc-icon">🎓</div><div class="sc-name">Education</div><div class="sc-desc">Docs, videos &amp; courses</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-ref" href="#reference"><div class="sc-icon">🗂</div><div class="sc-name">Reference</div><div class="sc-desc">Venues, scans &amp; shows</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-tech" href="#technology"><div class="sc-icon">⚙️</div><div class="sc-name">Technology</div><div class="sc-desc">Manuals, specs &amp; gear</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-tools" href="/tools.php"><div class="sc-icon">🔧</div><div class="sc-name">Tools</div><div class="sc-desc">Calculators &amp; test patterns</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-forum" href="/forum.php"><div class="sc-icon">💬</div><div class="sc-name">Forum</div><div class="sc-desc">Discussion, jobs &amp; gear</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-life" href="#life"><div class="sc-icon">🌿</div><div class="sc-name">Life</div><div class="sc-desc">Health, fitness &amp; wellness</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-store" href="#store"><div class="sc-icon">🛒</div><div class="sc-name">Store</div><div class="sc-desc">Gaff tape, duvatine &amp; merch</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-edu" href="education/education.php"><div class="sc-icon">🎓</div><div class="sc-name">Education</div><div class="sc-desc">Docs, videos &amp; courses</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-ref" href="reference/reference.php"><div class="sc-icon">🗂</div><div class="sc-name">Reference</div><div class="sc-desc">Venues, scans &amp; shows</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-tech" href="/technology/technology.php"><div class="sc-icon">⚙️</div><div class="sc-name">Technology</div><div class="sc-desc">Manuals, specs &amp; gear</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-tools" href="/tools/tools.php"><div class="sc-icon">🔧</div><div class="sc-name">Tools</div><div class="sc-desc">Calculators &amp; test patterns</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-forum" href="/forum/forum.php"><div class="sc-icon">💬</div><div class="sc-name">Forum</div><div class="sc-desc">Discussion, jobs &amp; gear</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-life" href="/life/life.php"><div class="sc-icon">🌿</div><div class="sc-name">Life</div><div class="sc-desc">Health, fitness &amp; wellness</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-store" href="/store/#store"><div class="sc-icon">🛒</div><div class="sc-name">Store</div><div class="sc-desc">Gaff tape, duvatine &amp; merch</div><div class="sc-arr">→</div></a>
   </div>
 </div>
 
@@ -100,7 +100,7 @@ include 'header.php';
       <div class="demo-band-sub">Click in to the full logged-in experience — dashboard, productions, live run of show, documents, and more.</div>
     </div>
   </div>
-  <a class="demo-band-btn" href="/app/dashboard.html">Open platform demo →</a>
+  <a class="demo-band-btn" href="/overview/overview.php">Open platform demo →</a>
 </div>
 
 <!-- TOOLS -->
@@ -110,7 +110,7 @@ include 'header.php';
     <a class="see-all" href="/tools.php">All tools →</a>
   </div>
   <div class="tools-grid">
-    <a class="tool-card" href="/tools/test-pattern-generator.html" style="text-decoration:none;color:inherit"><div class="tool-icon" style="background:#1A0E0E">📺</div><div class="tool-name">Test pattern generator</div><div class="tool-desc">Full-screen patterns for display calibration</div><span class="tool-tag">Launch tool</span></a>
+    <a class="tool-card" href="/tools/test-pattern-generator.php" style="text-decoration:none;color:inherit"><div class="tool-icon" style="background:#1A0E0E">📺</div><div class="tool-name">Test pattern generator</div><div class="tool-desc">Full-screen patterns for display calibration</div><span class="tool-tag">Launch tool</span></a>
     <div class="tool-card"><div class="tool-icon" style="background:#001A1A">📡</div><div class="tool-name">RF frequency planner</div><div class="tool-desc">Intermod-free wireless coordination</div><span class="tool-tag">Launch tool</span></div>
     <div class="tool-card"><div class="tool-icon" style="background:#0E1A14">📐</div><div class="tool-name">Throw distance calculator</div><div class="tool-desc">Projector lens and throw ratio</div><span class="tool-tag">Launch tool</span></div>
     <div class="tool-card"><div class="tool-icon" style="background:#1A1400">⚡</div><div class="tool-name">Power &amp; distro calculator</div><div class="tool-desc">Load calculations and circuit planning</div><span class="tool-tag">Launch tool</span></div>
@@ -133,7 +133,7 @@ include 'header.php';
 <section class="section" id="forum">
   <div class="sec-hd">
     <div><div class="sec-ey">Community</div><div class="sec-title">FORUM</div><div class="sec-sub">Open to everyone. Read without an account — join free to post.</div></div>
-    <a class="see-all" href="/forum.php">Browse all posts →</a>
+    <a class="see-all" href="/forum/forum.php">Browse all posts →</a>
   </div>
   <div class="forum-grid">
     <div class="forum-posts">
@@ -145,7 +145,7 @@ include 'header.php';
         <div class="fp"><div class="fp-left"><div class="fp-cat" style="color:var(--gold)">Contracts</div><div class="fp-title">Force majeure language that has actually held up — share your clauses</div><div class="fp-meta"><span>Tom R.</span><span>2d ago</span></div></div><div class="fp-replies"><div class="fp-n">47</div><div class="fp-l">replies</div></div></div>
       <?php else: ?>
         <?php foreach ($live_threads as $t): ?>
-          <a class="fp" href="/forum_thread.php?id=<?php echo $t['id']; ?>" style="text-decoration:none">
+          <a class="fp" href="/forum/forum_thread.php?id=<?php echo $t['id']; ?>" style="text-decoration:none">
             <div class="fp-left">
               <div class="fp-cat" style="color:<?php echo e($t['cat_color']); ?>"><?php echo e($t['cat_name']); ?></div>
               <div class="fp-title"><?php echo e($t['title']); ?></div>
@@ -216,7 +216,7 @@ include 'header.php';
     <?php else: ?>
       <a class="btn-gold-lg" href="/register.php">Create free account →</a>
       <a class="btn-ghost-lg" href="/login.php">Sign in</a>
-      <a class="hero-demo-cta" href="/app/dashboard.html" style="font-size:13px;padding:10px 20px">
+      <a class="hero-demo-cta" href="/overview/overview.php" style="font-size:13px;padding:10px 20px">
         <div class="hero-demo-cta-dot"></div>
         Or try the demo — no signup needed
       </a>
