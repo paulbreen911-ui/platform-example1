@@ -1,6 +1,9 @@
 <?php
 ob_start();
 
+// Redirects the root path of every folder so that when /app is referenced it pulls to the root, no more /../../../
+define('ROOT_PATH', __DIR__);
+
 // Database connection — Railway PostgreSQL
 $db_name     = getenv('PGDATABASE') ?: 'railway';
 $db_host     = getenv('PGHOST')     ?: 'postgres.railway.internal';
@@ -29,6 +32,3 @@ session_set_save_handler(new PgSessionHandler($pdo), true);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-// Redirects the root path of every folder so that when /app is referenced it pulls to the root, no more /../../../
-define('ROOT_PATH', __DIR__);
