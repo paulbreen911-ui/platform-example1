@@ -34,7 +34,7 @@ try {
         $_SESSION['username'] = $user['username'];
         // Regenerate session ID on login
         session_regenerate_id(true);
-        header('Location: /myprofile.php');
+        header('Location: /user/myprofile.php');
         exit;
     }
 
