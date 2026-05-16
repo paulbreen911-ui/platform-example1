@@ -1,9 +1,9 @@
 <?php
-require_once 'config.php';
-require_once 'functions.php';
+require_once '../config.php';
+require_once '../functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /login.php');
+    header('Location: /user/login.php');
     exit;
 }
 
@@ -14,12 +14,12 @@ $password = $_POST['password'] ?? '';
 $ip       = client_ip();
 
 if (empty($username) || empty($password)) {
-    header('Location: /login.php?error=required');
+    header('Location: /user/login.php?error=required');
     exit;
 }
 
 if (!rate_limit_check($pdo, "login:{$ip}", 'login', 10, 300)) {
-    header('Location: /login.php?error=ratelimit');
+    header('Location: /user/login.php?error=ratelimit');
     exit;
 }
 
@@ -38,7 +38,7 @@ try {
         exit;
     }
 
-    header('Location: /login.php?error=invalid');
+    header('Location: /user/login.php?error=invalid');
     exit;
 
 } catch (PDOException $e) {
