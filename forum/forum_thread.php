@@ -1,6 +1,6 @@
 <?php
-require_once './config.php';
-require_once './functions.php';
+require_once '../config.php';
+require_once '../functions.php';
 
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) { header('Location: /forum/forum.php'); exit; }
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
 }
 
 $page_title = $thread['title'];
-include './header.php';
+include '../header.php';
 ?>
 
 <div class="forum-page">
@@ -174,4 +174,4 @@ include './header.php';
 
 </div>
 
-<?php include './footer.php'; ?>
+<?php include '../footer.php'; ?>
