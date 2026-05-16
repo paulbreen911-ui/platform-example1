@@ -1,12 +1,8 @@
 <?php
-if (file_exists(__DIR__ . '/../config.php')) {
-    require_once __DIR__ . '/../config.php';
-}
-
+require_once __DIR__ . '/config.php';
 http_response_code(404);
 $page_title = '404 — Not Found';
-$header = file_exists(__DIR__ . '/../header.php') ? __DIR__ . '/../header.php' : null;
-if ($header) include $header;
+include ROOT_PATH . '/required/header.php';
 ?>
 
 <section class="error-section">
@@ -20,6 +16,5 @@ if ($header) include $header;
 </section>
 
 <?php
-$footer = file_exists(__DIR__ . '/../footer.php') ? __DIR__ . '/../footer.php' : null;
-if ($footer) include $footer;
+include ROOT_PATH . '/required/footer.php';
 ?>
