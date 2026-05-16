@@ -1,9 +1,12 @@
 <?php
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../functions.php';
-require_login();
+
 $page_title = 'Live ROS';
-include __DIR__ . '/../header.php';
+
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
+require_login();
+
 ?>
 <style>
 main { padding-top:0; background:#080808; min-height:calc(100vh - var(--nav-h)); }
@@ -266,4 +269,4 @@ renderCueList();
 updateCrewView();
 </script>
 
-<?php include __DIR__ . '/../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
