@@ -81,12 +81,12 @@ include 'header.php';
   <div class="snav-label">Explore the platform</div>
   <div class="snav-grid">
     <a class="sc sc-profile" href="/myprofile.php"><div class="sc-icon">👤</div><div class="sc-name">My Profile</div><div class="sc-desc">Productions, shows &amp; settings</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-edu" href="education/education.php"><div class="sc-icon">🎓</div><div class="sc-name">Education</div><div class="sc-desc">Docs, videos &amp; courses</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-ref" href="reference/reference.php"><div class="sc-icon">🗂</div><div class="sc-name">Reference</div><div class="sc-desc">Venues, scans &amp; shows</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-tech" href="/technology/technology.php"><div class="sc-icon">⚙️</div><div class="sc-name">Technology</div><div class="sc-desc">Manuals, specs &amp; gear</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-edu" href="education/#education"><div class="sc-icon">🎓</div><div class="sc-name">Education</div><div class="sc-desc">Docs, videos &amp; courses</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-ref" href="reference/#reference"><div class="sc-icon">🗂</div><div class="sc-name">Reference</div><div class="sc-desc">Venues, scans &amp; shows</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-tech" href="/technology/#technology"><div class="sc-icon">⚙️</div><div class="sc-name">Technology</div><div class="sc-desc">Manuals, specs &amp; gear</div><div class="sc-arr">→</div></a>
     <a class="sc sc-tools" href="/tools/tools.php"><div class="sc-icon">🔧</div><div class="sc-name">Tools</div><div class="sc-desc">Calculators &amp; test patterns</div><div class="sc-arr">→</div></a>
     <a class="sc sc-forum" href="/forum/forum.php"><div class="sc-icon">💬</div><div class="sc-name">Forum</div><div class="sc-desc">Discussion, jobs &amp; gear</div><div class="sc-arr">→</div></a>
-    <a class="sc sc-life" href="/life/life.php"><div class="sc-icon">🌿</div><div class="sc-name">Life</div><div class="sc-desc">Health, fitness &amp; wellness</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-life" href="/life/#life"><div class="sc-icon">🌿</div><div class="sc-name">Life</div><div class="sc-desc">Health, fitness &amp; wellness</div><div class="sc-arr">→</div></a>
     <a class="sc sc-store" href="/store/#store"><div class="sc-icon">🛒</div><div class="sc-name">Store</div><div class="sc-desc">Gaff tape, duvatine &amp; merch</div><div class="sc-arr">→</div></a>
   </div>
 </div>

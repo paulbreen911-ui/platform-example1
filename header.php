@@ -21,11 +21,11 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
   <div class="nav-links">
     <a class="nav-link" href="/overview/overview.php">Overview</a>
     <a class="nav-link" href="/tools/tools.php">Tools</a>
-    <a class="nav-link" href="/reference/reference.php">Reference</a>
-    <a class="nav-link" href="/education/education.php">Education</a>
-    <a class="nav-link" href="/technology/technology.php">Technology</a>
+    <a class="nav-link" href="/reference/#reference">Reference</a>
+    <a class="nav-link" href="/education/#education">Education</a>
+    <a class="nav-link" href="/technology/#technology">Technology</a>
     <a class="nav-link" href="/forum/forum.php">Forum</a>
-    <a class="nav-link" href="/life/life.php">Life</a>
+    <a class="nav-link" href="/life/#life">Life</a>
     <a class="nav-link store" href="/store/#store">Store</a>
   </div>
   <div class="nav-right">
@@ -52,9 +52,9 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
   <div class="mobile-nav-inner">
     <a class="mobile-nav-link" href="/overview/overview.php">Overview</a>
     <a class="mobile-nav-link" href="/tools/tools.php">Tools</a>
-    <a class="mobile-nav-link" href="/reference/reference.php">Reference</a>
-    <a class="mobile-nav-link" href="/education/education.php">Education</a>
-    <a class="mobile-nav-link" href="/technology/technology.php">Technology</a>
+    <a class="mobile-nav-link" href="/reference/#reference">Reference</a>
+    <a class="mobile-nav-link" href="/education/#education">Education</a>
+    <a class="mobile-nav-link" href="/technology/#technology">Technology</a>
     <a class="mobile-nav-link" href="/forum/forum.php">Forum</a>
     <a class="mobile-nav-link" href="/life/life.php">Life</a>
     <a class="mobile-nav-link" href="/store/#store" style="color:var(--gold)">Store</a>
