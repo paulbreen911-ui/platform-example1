@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../functions.php';
+require_once ROOT_PATH . '/functions.php';
+
 require_login();
 
 $id = $_GET['id'] ?? 'sphere';
@@ -12,7 +13,7 @@ $projects = [
 ];
 $proj = $projects[$id] ?? $projects['sphere'];
 $page_title = ucwords(strtolower($proj['name']));
-include __DIR__ . '/../header.php';
+include ROOT_PATH . '/required/header.php';
 ?>
 <style>
 main { padding-top:0; background:var(--black); min-height:calc(100vh - var(--nav-h)); }
@@ -418,4 +419,4 @@ function sendProjMsg() {
 function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
 </script>
 
-<?php include __DIR__ . '/../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
