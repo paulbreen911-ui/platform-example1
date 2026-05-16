@@ -1,8 +1,11 @@
 <?php
-require_once '../config.php';
-require_once '../functions.php';
 
 $page_title = 'Verify Email';
+
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
+
 $token = trim($_GET['token'] ?? '');
 
 if (empty($token)) {
@@ -56,4 +59,4 @@ include '../header.php';
   </div>
 </section>
 
-<?php include '../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
