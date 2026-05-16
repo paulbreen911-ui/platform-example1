@@ -54,9 +54,9 @@ include 'header.php';
     <p class="hero-sub">The hub for everyone behind the show — producers, stage managers, technical crew, and the full team that makes live events happen. Project management, production planning, run of show, and crew collaboration — all in one place.</p>
     <div class="hero-ctas">
       <?php if (isset($_SESSION['user_id'])): ?>
-        <a class="btn-gold-lg" href="/myprofile.php">Go to my profile →</a>
+        <a class="btn-gold-lg" href="/user/myprofile.php">Go to my profile →</a>
       <?php else: ?>
-        <a class="btn-gold-lg" href="/register.php">Join free — it's open to all</a>
+        <a class="btn-gold-lg" href="/user/register.php">Join free — it's open to all</a>
       <?php endif; ?>
       <a class="btn-ghost-lg" href="/forum/forum.php">Explore the platform ↓</a>
       <a class="hero-demo-cta" href="/overview/overview.php">
@@ -80,7 +80,7 @@ include 'header.php';
 <div class="section-nav">
   <div class="snav-label">Explore the platform</div>
   <div class="snav-grid">
-    <a class="sc sc-profile" href="/myprofile.php"><div class="sc-icon">👤</div><div class="sc-name">My Profile</div><div class="sc-desc">Productions, shows &amp; settings</div><div class="sc-arr">→</div></a>
+    <a class="sc sc-profile" href="/user/myprofile.php"><div class="sc-icon">👤</div><div class="sc-name">My Profile</div><div class="sc-desc">Productions, shows &amp; settings</div><div class="sc-arr">→</div></a>
     <a class="sc sc-edu" href="education/#education"><div class="sc-icon">🎓</div><div class="sc-name">Education</div><div class="sc-desc">Docs, videos &amp; courses</div><div class="sc-arr">→</div></a>
     <a class="sc sc-ref" href="reference/#reference"><div class="sc-icon">🗂</div><div class="sc-name">Reference</div><div class="sc-desc">Venues, scans &amp; shows</div><div class="sc-arr">→</div></a>
     <a class="sc sc-tech" href="/technology/#technology"><div class="sc-icon">⚙️</div><div class="sc-name">Technology</div><div class="sc-desc">Manuals, specs &amp; gear</div><div class="sc-arr">→</div></a>
@@ -107,7 +107,7 @@ include 'header.php';
 <section class="section" id="tools">
   <div class="sec-hd">
     <div><div class="sec-ey">Utilities</div><div class="sec-title">TOOLS</div><div class="sec-sub">Interactive technical utilities — use them on site, in prep, or in the truck.</div></div>
-    <a class="see-all" href="/tools.php">All tools →</a>
+    <a class="see-all" href="/tools/tools.php">All tools →</a>
   </div>
   <div class="tools-grid">
     <a class="tool-card" href="/tools/test-pattern-generator.php" style="text-decoration:none;color:inherit"><div class="tool-icon" style="background:#1A0E0E">📺</div><div class="tool-name">Test pattern generator</div><div class="tool-desc">Full-screen patterns for display calibration</div><span class="tool-tag">Launch tool</span></a>
@@ -194,7 +194,7 @@ include 'header.php';
   </div>
   <div style="background:var(--dark-2);border:.5px solid var(--gold-bd);border-radius:12px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;max-width:680px">
     <div><div style="font-size:14px;font-weight:500;color:var(--gold);margin-bottom:6px">Store launching soon</div><div style="font-size:13px;color:var(--text-2)">Gaff tape, duvatine, crew merch, and industry-curated gear. Join free to get notified.</div></div>
-    <a class="btn-gold-lg" href="/register.php" style="flex-shrink:0;margin-left:24px">Get notified →</a>
+    <a class="btn-gold-lg" href="/user/register.php" style="flex-shrink:0;margin-left:24px">Get notified →</a>
   </div>
 </section>
 
@@ -212,10 +212,10 @@ include 'header.php';
   </div>
   <div class="join-ctas">
     <?php if (isset($_SESSION['user_id'])): ?>
-      <a class="btn-gold-lg" href="/myprofile.php">Go to my profile →</a>
+      <a class="btn-gold-lg" href="/user/myprofile.php">Go to my profile →</a>
     <?php else: ?>
-      <a class="btn-gold-lg" href="/register.php">Create free account →</a>
-      <a class="btn-ghost-lg" href="/login.php">Sign in</a>
+      <a class="btn-gold-lg" href="/user/register.php">Create free account →</a>
+      <a class="btn-ghost-lg" href="/user/login.php">Sign in</a>
       <a class="hero-demo-cta" href="/overview/overview.php" style="font-size:13px;padding:10px 20px">
         <div class="hero-demo-cta-dot"></div>
         Or try the demo — no signup needed
