@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-require_once 'functions.php';
+require_once './config.php';
+require_once './functions.php';
 require_login();
 
 $page_title = 'New Thread';
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include 'header.php';
+include './header.php';
 ?>
 
 <div class="forum-page">
@@ -209,4 +209,4 @@ include 'header.php';
   </div>
 </div>
 
-<?php include 'footer.php'; ?>
+<?php include './footer.php'; ?>
