@@ -152,7 +152,7 @@ function send_password_reset(PDO $pdo, array $user): bool {
     $pdo->prepare('INSERT INTO password_resets (user_id, token) VALUES (?, ?)')
         ->execute([$user['id'], $token]);
 
-    $link = 'https://www.productioncentral.org/reset_password.php?token=' . urlencode($token);
+    $link = 'https://www.productioncentral.org/user/reset_password.php?token=' . urlencode($token);
     $body = <<<TEXT
 Hi {$user['username']},
 
@@ -178,7 +178,7 @@ function send_verification_email(PDO $pdo, array $user): bool {
     $pdo->prepare('INSERT INTO email_verifications (user_id, token) VALUES (?, ?)')
         ->execute([$user['id'], $token]);
 
-    $link = 'https://www.productioncentral.org/verify_email.php?token=' . urlencode($token);
+    $link = 'https://www.productioncentral.org/user/verify_email.php?token=' . urlencode($token);
     $body = <<<TEXT
 Hi {$user['username']},
 
@@ -209,7 +209,7 @@ function get_user_by_id(PDO $pdo, int $id): ?array {
 /**
  * Require a logged-in session or redirect to login.
  */
-function require_login(string $redirect = '/login.php'): void {
+function require_login(string $redirect = '/user/login.php'): void {
     if (empty($_SESSION['user_id'])) {
         header('Location: ' . $redirect);
         exit;
