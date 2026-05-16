@@ -4,10 +4,10 @@ if ($_SERVER['HTTP_HOST'] === 'productioncentral.org') {
     exit;
 }
 
-require_once 'config.php';
-require_once 'functions.php';
-
+require_once __DIR__ . '/config.php';
+require_once ROOT_PATH . '/functions.php';
 $page_title = 'Home';
+include ROOT_PATH . '/required/header.php';
 
 // Live forum threads for homepage
 $live_threads = [];
@@ -38,8 +38,7 @@ try {
 } catch (PDOException $e) {
     // Tables not yet created — site loads with placeholder content
 }
-
-include 'header.php';
+    
 ?>
 
 <!-- HERO -->
@@ -224,4 +223,4 @@ include 'header.php';
   </div>
 </div>
 
-<?php include 'footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
