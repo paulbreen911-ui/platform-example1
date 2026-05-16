@@ -5,10 +5,10 @@
 
 // ── ACTIVE PAGE DETECTION ──
 // Each page sets window.PC_PAGE before loading this script
-// e.g. <script>window.PC_PAGE = 'dashboard'</script>
+// e.g. <script>window.PC_PAGE = 'overview'</script>
 
 const PC_PAGES = {
-  dashboard:   { label: 'Overview',    href: 'overview.php' },
+  overview:   { label: 'Overview',    href: 'overview.php' },
   messages:    { label: 'Messages',     href: 'messages.php' },
   drive:       { label: 'My Drive',     href: 'drive.php' },
   projects:    { label: 'Projects',     href: 'projects.php' },
@@ -30,7 +30,7 @@ function buildNav(breadcrumb) {
   nav.innerHTML = `
     <a class="nav-logo" href="${BASE}.php">PRODUCTION<span>.</span>CENTRAL</a>
     <div class="nav-bc" id="nav-bc">
-      ${breadcrumb || '<span class="cur">' + (PC_PAGES[window.PC_PAGE]?.label || 'Dashboard') + '</span>'}
+      ${breadcrumb || '<span class="cur">' + (PC_PAGES[window.PC_PAGE]?.label || 'Overview') + '</span>'}
     </div>
     <div class="nav-search" style="margin-left:16px">
       <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
