@@ -13,6 +13,7 @@ if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
 </head>
 <body>
 
