@@ -1,14 +1,14 @@
 <?php
-require_once 'config.php';
-require_once 'functions.php';
+require_once '../config.php';
+require_once '../functions.php';
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: /myprofile.php');
+    header('Location: /user/myprofile.php');
     exit;
 }
 
 $page_title = 'Sign In';
-include 'header.php';
+include '../header.php';
 ?>
 
 <section class="auth-section">
@@ -36,7 +36,7 @@ include 'header.php';
       <div class="auth-success">Password reset. You can sign in with your new password.</div>
     <?php endif; ?>
 
-    <form method="POST" action="/login_process.php" class="auth-form">
+    <form method="POST" action="/user/login_process.php" class="auth-form">
       <?php echo csrf_field(); ?>
       <div class="auth-field">
         <label for="username">Username</label>
@@ -50,11 +50,11 @@ include 'header.php';
     </form>
 
     <div class="auth-footer">
-      <p>Don't have an account? <a href="/register.php">Join free</a></p>
-      <p><a href="/forgot_password.php">Forgot your password?</a></p>
+      <p>Don't have an account? <a href="/user/register.php">Join free</a></p>
+      <p><a href="/user/forgot_password.php">Forgot your password?</a></p>
       <p class="auth-demo">Demo: <strong>testuser</strong> / <strong>password123</strong></p>
     </div>
   </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include '../footer.php'; ?>
