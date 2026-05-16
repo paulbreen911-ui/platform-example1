@@ -1,6 +1,7 @@
 <?php
-require_once '../config.php';
-require_once '../functions.php';
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: /user/myprofile.php');
@@ -8,7 +9,7 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $page_title = 'Sign In';
-include '../header.php';
+
 ?>
 
 <section class="auth-section">
@@ -57,4 +58,4 @@ include '../header.php';
   </div>
 </section>
 
-<?php include '../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
