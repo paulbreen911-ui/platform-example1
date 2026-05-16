@@ -1,9 +1,9 @@
 <?php
-require_once 'config.php';
-require_once 'functions.php';
+require_once '../config.php';
+require_once '../functions.php';
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: /myprofile.php');
+    header('Location: /user/myprofile.php');
     exit;
 }
 
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $new_user = ['id' => $new_id, 'username' => $username, 'email' => $email];
             send_verification_email($pdo, $new_user);
 
-            header('Location: /login.php?registered=1');
+            header('Location: /user/login.php?registered=1');
             exit;
         } catch (PDOException $e) {
             $errors[] = 'Could not create account. Please try again.';
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include 'header.php';
+include '../header.php';
 ?>
 
 <section class="auth-section">
@@ -129,9 +129,9 @@ include 'header.php';
     </form>
 
     <div class="auth-footer">
-      <p>Already have an account? <a href="/login.php">Sign in</a></p>
+      <p>Already have an account? <a href="/user/login.php">Sign in</a></p>
     </div>
   </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include '../footer.php'; ?>
