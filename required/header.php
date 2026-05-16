@@ -1,7 +1,7 @@
 <?php
 // Session is started in config.php, which must be included before header.php.
 if (!isset($pdo)) { require_once ROOT_PATH . '/config.php'; }
-if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; csrf_token(); }
+//if (!isset($_SESSION['csrf_token'])) { require_once __DIR__ . '/functions.php'; csrf_token(); }
 ?>
 <!DOCTYPE html>
 <html lang="en">
