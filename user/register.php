@@ -1,13 +1,16 @@
 <?php
-require_once '../config.php';
-require_once '../functions.php';
+
+$page_title = 'Join For Free';
+
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: /user/myprofile.php');
     exit;
 }
 
-$page_title = 'Join Free';
 $errors = [];
 $values = ['username' => '', 'email' => ''];
 
@@ -134,4 +137,4 @@ include '../header.php';
   </div>
 </section>
 
-<?php include '../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
