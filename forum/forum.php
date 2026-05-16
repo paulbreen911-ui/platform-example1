@@ -1,6 +1,6 @@
 <?php
-require_once './config.php';
-require_once './functions.php';
+require_once '../config.php';
+require_once '../functions.php';
 
 $page_title = 'Forum';
 
@@ -35,7 +35,7 @@ $trending = $pdo->query('
     LIMIT  5
 ')->fetchAll();
 
-include './header.php';
+include '../header.php';
 ?>
 
 <div class="forum-page">
@@ -188,4 +188,4 @@ include './header.php';
   </div>
 </div>
 
-<?php include './footer.php'; ?>
+<?php include '../footer.php'; ?>
