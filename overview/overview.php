@@ -38,11 +38,124 @@ main {
   flex-shrink: 0;
   border-right: .5px solid var(--border);
   background: var(--dark);
-  padding: 20px 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  overflow-y: auto;
 }
+
+.sb-new {
+  display: block;
+  margin: 16px 12px 8px;
+  padding: 8px 12px;
+  background: rgba(201,168,76,.1);
+  border: .5px solid rgba(201,168,76,.25);
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gold);
+  text-decoration: none;
+  text-align: center;
+  transition: background .15s;
+}
+.sb-new:hover { background: rgba(201,168,76,.18); }
+
+.sb-sec {
+  padding: 12px 0 4px;
+  border-top: .5px solid var(--border);
+}
+.sb-sec:first-of-type { border-top: none; }
+
+.sb-lbl {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 0 16px 6px;
+}
+
+.sb-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 16px;
+  font-size: 12px;
+  color: var(--text-2);
+  text-decoration: none;
+  border-radius: 0;
+  transition: background .12s, color .12s;
+  position: relative;
+}
+.sb-link:hover { background: var(--dark-2); color: var(--text-1); }
+.sb-link.active { color: var(--gold); background: rgba(201,168,76,.07); }
+.sb-link .icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+
+.sb-badge {
+  margin-left: auto;
+  font-size: 10px;
+  background: var(--dark-3);
+  color: var(--text-3);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-weight: 600;
+}
+.sb-badge.unread {
+  background: rgba(201,168,76,.15);
+  color: var(--gold);
+}
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 16px;
+  font-size: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background .12s;
+}
+.sb-item:hover { background: var(--dark-2); color: var(--text-1); }
+.sb-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sb-iname { flex: 1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-live-tag {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #E24B4A;
+  background: rgba(226,75,74,.12);
+  border: .5px solid rgba(226,75,74,.3);
+  border-radius: 3px;
+  padding: 1px 5px;
+  flex-shrink: 0;
+}
+
+.sb-bottom {
+  margin-top: auto;
+  padding: 14px 16px;
+  border-top: .5px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sb-uav {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: rgba(201,168,76,.15);
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sb-uname { font-size: 12px; font-weight: 600; color: var(--text-1); }
+.sb-urole { font-size: 10px; color: var(--text-3); margin-top: 1px; }
 
 @media (max-width: 900px) {
   .sidebar { display: none; }
@@ -402,10 +515,147 @@ main {
 @media (max-width: 420px) {
   .stat-row { grid-template-columns: 1fr; }
 }
+
+/* ── SIDEBAR ─────────────────────────────────────────────────────────────── */
+.sb-new {
+  display: block; margin: 0 12px 16px;
+  padding: 8px 12px; border-radius: 7px;
+  background: var(--gold-dim); border: .5px solid var(--gold-bd);
+  color: var(--gold); font-size: 11px; font-weight: 600;
+  text-decoration: none; text-align: center;
+  transition: background .15s;
+}
+.sb-new:hover { background: rgba(232,184,75,.22); }
+.sb-sec { margin-bottom: 20px; }
+.sb-lbl {
+  display: block; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-3);
+  padding: 0 16px; margin-bottom: 4px;
+}
+.sb-link {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 16px; font-size: 12px; color: var(--text-2);
+  text-decoration: none; border-radius: 6px; margin: 1px 8px;
+  transition: background .12s, color .12s; position: relative;
+}
+.sb-link:hover { background: rgba(255,255,255,.06); color: var(--text-1); }
+.sb-link.active {
+  background: rgba(232,184,75,.10); color: var(--gold);
+  border: .5px solid var(--gold-bd);
+}
+.sb-link .icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+.sb-badge {
+  margin-left: auto; font-size: 10px; font-weight: 600;
+  background: rgba(255,255,255,.08); color: var(--text-3);
+  padding: 1px 6px; border-radius: 10px;
+}
+.sb-badge.unread { background: rgba(232,184,75,.15); color: var(--gold); }
+.sb-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 6px 16px; font-size: 12px; color: var(--text-2);
+  cursor: pointer; margin: 1px 8px; border-radius: 6px;
+  transition: background .12s;
+}
+.sb-item:hover { background: rgba(255,255,255,.05); }
+.sb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sb-iname { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
+.sb-live-tag {
+  font-size: 8px; font-weight: 700; letter-spacing: 1px;
+  color: #E8350A; background: rgba(232,53,10,.12);
+  border: .5px solid rgba(232,53,10,.3);
+  padding: 1px 5px; border-radius: 3px; flex-shrink: 0;
+}
+.sb-bottom {
+  margin-top: auto; padding: 14px 16px;
+  border-top: .5px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.sb-uav {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--gold-dim); border: .5px solid var(--gold-bd);
+  color: var(--gold); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sb-uname { font-size: 12px; font-weight: 500; color: var(--text-1); }
+.sb-urole { font-size: 10px; color: var(--text-3); }
+/* Nav icon buttons */
+.nav-ib {
+  position: relative; width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; cursor: pointer; color: var(--text-2);
+  transition: background .12s; text-decoration: none;
+}
+.nav-ib:hover { background: rgba(255,255,255,.07); }
+.nav-pip {
+  position: absolute; top: 5px; right: 5px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
+}
+.nav-av {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--gold-dim); border: .5px solid var(--gold-bd);
+  color: var(--gold); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.nav-bc { font-size: 12px; color: var(--text-2); }
+.nav-bc .cur { color: var(--text-1); font-weight: 500; }
+.nav-search {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-3);
+  background: rgba(255,255,255,.05); border: .5px solid var(--border);
+  padding: 6px 12px; border-radius: 7px; cursor: text;
+  transition: border-color .15s;
+}
+.nav-search:hover { border-color: rgba(255,255,255,.18); }
 </style>
 
 <div class="shell">
-  <aside class="sidebar" id="pc-sidebar"></aside>
+  <aside class="sidebar" id="pc-sidebar">
+    <a class="sb-new" href="/overview/new-production.php">+ New project / production</a>
+
+    <div class="sb-sec">
+      <span class="sb-lbl">Workspace</span>
+      <a class="sb-link<?php echo $page_title==='Overview'   ? ' active' : ''; ?>" href="/overview/overview.php"><span class="icon">◻</span>Dashboard</a>
+      <a class="sb-link<?php echo $page_title==='Messages'   ? ' active' : ''; ?>" href="/overview/messages.php"><span class="icon">💬</span>Messages<span class="sb-badge unread">4</span></a>
+      <a class="sb-link<?php echo $page_title==='Drive'      ? ' active' : ''; ?>" href="/overview/drive.php"><span class="icon">📁</span>My Drive</a>
+      <a class="sb-link<?php echo $page_title==='Projects'   ? ' active' : ''; ?>" href="/overview/projects.php"><span class="icon">🏗</span>Projects<span class="sb-badge">2</span></a>
+      <a class="sb-link<?php echo $page_title==='Productions'? ' active' : ''; ?>" href="/overview/productions.php"><span class="icon">🎭</span>Productions<span class="sb-badge">3</span></a>
+      <a class="sb-link<?php echo $page_title==='Calendar'   ? ' active' : ''; ?>" href="/overview/calendar.php"><span class="icon">📅</span>Calendar</a>
+      <a class="sb-link<?php echo $page_title==='Tasks'      ? ' active' : ''; ?>" href="/overview/tasks.php"><span class="icon">✅</span>Tasks<span class="sb-badge">11</span></a>
+    </div>
+
+    <div class="sb-sec">
+      <span class="sb-lbl">Active now</span>
+      <div class="sb-item" onclick="location.href='/overview/production.php?id=gala'">
+        <div class="sb-dot" style="background:#E24B4A"></div>
+        <div class="sb-iname">Summerset Gala</div>
+        <span class="sb-live-tag">LIVE</span>
+      </div>
+      <div class="sb-item" onclick="location.href='/overview/production.php?id=summit'">
+        <div class="sb-dot" style="background:#378ADD"></div>
+        <div class="sb-iname">Tech Summit 2025</div>
+      </div>
+      <div class="sb-item" onclick="location.href='/overview/project.php?id=sphere'">
+        <div class="sb-dot" style="background:#4DB6AC"></div>
+        <div class="sb-iname">Sphere Residency</div>
+      </div>
+    </div>
+
+    <div class="sb-sec">
+      <span class="sb-lbl">Platform</span>
+      <a class="sb-link" href="#"><span class="icon">💬</span>Forum</a>
+      <a class="sb-link" href="#"><span class="icon">🔧</span>Tools</a>
+      <a class="sb-link" href="#"><span class="icon">🎓</span>Education</a>
+    </div>
+
+    <div class="sb-bottom">
+      <div class="sb-uav">JK</div>
+      <div>
+        <div class="sb-uname"><?php echo htmlspecialchars($username); ?></div>
+        <div class="sb-urole">Senior producer</div>
+      </div>
+    </div>
+  </aside>
 
   <div class="dash-wrap">
 
@@ -731,6 +981,6 @@ function toggleTask(el) {
 </script>
 
 <script>window.PC_PAGE = 'dashboard';</script>
-<script src="../shared/nav.js"></script>
+<script src="/js/nav.js"></script>
 
 <?php include __DIR__ . '/../footer.php'; ?>
