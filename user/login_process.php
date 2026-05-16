@@ -1,6 +1,9 @@
 <?php
-require_once '../config.php';
-require_once '../functions.php';
+$page_title = 'Login Process';
+
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /user/login.php');
