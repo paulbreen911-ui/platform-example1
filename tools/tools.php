@@ -1,9 +1,10 @@
 <?php
-require_once '../config.php';
-require_once '../functions.php';
 
 $page_title = 'Tools';
-include '../header.php';
+
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
 
 $tools = [
     [
@@ -127,4 +128,4 @@ $tools = [
 
 </div>
 
-<?php include '../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
