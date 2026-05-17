@@ -1,9 +1,11 @@
 <?php
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../functions.php';
 
 $page_title = 'Test Pattern Generator';
-include __DIR__ . '/../header.php';
+
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
+
 ?>
 
 <style>
@@ -1412,4 +1414,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php include __DIR__ . '/../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
