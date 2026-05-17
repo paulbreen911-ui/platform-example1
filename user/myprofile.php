@@ -204,7 +204,6 @@ $member_since = date('F j, Y', strtotime($user['created_at']));
 // Avatar: use uploaded URL or fall back to initial
 $has_avatar = !empty($user['avatar_url']);
 
-include '../header.php';
 ?>
 
 <section class="profile-section">
