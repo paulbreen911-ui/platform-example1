@@ -33,12 +33,12 @@ if (!isset($pdo)) { require_once ROOT_PATH . '/config.php'; }
   <div class="nav-right">
     <?php if (isset($_SESSION['user_id'])): ?>
       <a class="nav-link" href="/user/myprofile.php"><?php echo htmlspecialchars($_SESSION['username']); ?></a>
-      <a class="btn-signin" href="/user/logout.php">Log out</a>
-    <?php else: ?>
       <a class="btn-demo" href="/overview/overview.php">
         <div class="btn-demo-dot"></div>
-        Try demo
+        Overview
       </a>
+      <a class="btn-signin" href="/user/logout.php">Log out</a>
+    <?php else: ?>
       <a class="btn-signin" href="/user/login.php">Sign in</a>
       <a class="btn-join" href="/user/register.php">Join free →</a>
     <?php endif; ?>
