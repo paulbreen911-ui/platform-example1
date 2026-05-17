@@ -14,5 +14,22 @@
   <div class="footer-copy">© 2026 Production Central</div>
 </footer>
 
+<!-- Design token live-preview listener (harmless on production, only fires when postMessage received) -->
+<script>
+(function () {
+  var _dtStyle = null;
+  window.addEventListener('message', function (e) {
+    if (!e.data || e.data.type !== 'DT_TOKENS') return;
+    if (e.origin !== window.location.origin) return; // same-origin only
+    if (!_dtStyle) {
+      _dtStyle = document.createElement('style');
+      _dtStyle.id = 'dt-live-tokens';
+      document.head.appendChild(_dtStyle);
+    }
+    _dtStyle.textContent = e.data.css;
+  });
+})();
+</script>
+
 </body>
 </html>
