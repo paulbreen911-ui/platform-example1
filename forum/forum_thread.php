@@ -1,6 +1,9 @@
 <?php
-require_once '../config.php';
-require_once '../functions.php';
+
+$page_title = $thread['title'];
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
 
 $id = (int)($_GET['id'] ?? 0);
 if (!$id) { header('Location: /forum/forum.php'); exit; }
@@ -71,8 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
     }
 }
 
-$page_title = $thread['title'];
-include '../header.php';
 ?>
 
 <div class="forum-page">
@@ -174,4 +175,4 @@ include '../header.php';
 
 </div>
 
-<?php include '../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
