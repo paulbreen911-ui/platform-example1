@@ -272,7 +272,7 @@ main {
 </style>
 
 <div class="shell">
-  <?php include __DIR__ . '../sidebar.php'; ?>
+  <?php include ROOT_PATH . '/required/sidebar.php'; ?>
 
   <div class="dash-wrap">
 
