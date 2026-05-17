@@ -1,9 +1,11 @@
 <?php
-require_once '../config.php';
-require_once '../functions.php';
+$page_title = 'New Thread';
+
+require_once __DIR__ . '/../config.php';
+require_once ROOT_PATH . '/functions.php';
+include ROOT_PATH . '/required/header.php';
 require_login();
 
-$page_title = 'New Thread';
 $errors = [];
 
 $categories = $pdo->query('SELECT id, name, slug, color FROM forum_categories ORDER BY sort_order')->fetchAll();
@@ -83,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include '../header.php';
 ?>
 
 <div class="forum-page">
@@ -209,4 +210,4 @@ include '../header.php';
   </div>
 </div>
 
-<?php include '../footer.php'; ?>
+<?php include ROOT_PATH . '/required/footer.php'; ?>
