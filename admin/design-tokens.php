@@ -3,7 +3,7 @@
 // Temporary internal tool — not linked publicly.
 require_once __DIR__ . '/../config.php';
 $page_title = 'Design Tokens';
-require_once ROOT_PATH . '/header.php';
+require_once __DIR__ . '/../required/header.php';
 ?>
 
 <link rel="stylesheet" href="/css/design-tokens.css">
@@ -317,4 +317,4 @@ require_once ROOT_PATH . '/header.php';
 
 <script src="/js/design-tokens.js"></script>
 
-<?php require_once ROOT_PATH . '/footer.php'; ?>
+<?php require_once __DIR__ . '/../required/footer.php'; ?>
